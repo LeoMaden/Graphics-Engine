@@ -12,6 +12,7 @@ namespace Engine {
 	public:
 		bool Create();
 		void RunSystemEventLoop();
+		bool CreateContext();
 
 	protected:
 		void OnClose();

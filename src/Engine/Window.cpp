@@ -4,7 +4,7 @@
 
 namespace Engine {
 
-    /*static*/ LRESULT Window::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+    /*static*/ LRESULT CALLBACK Window::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
         Window* senderWindow;
         if (uMsg == WM_CREATE)
@@ -30,20 +30,19 @@ namespace Engine {
     bool Window::Create()
 	{
         // Register the window class.
-		const wchar_t WND_CLASS[] = L"Main Window";
-
         WNDCLASS wc = { };
 
         wc.lpfnWndProc = WindowProc;
         wc.hInstance = NULL;
-        wc.lpszClassName = WND_CLASS;
+        wc.lpszClassName = L"Main Window";
+        wc.style = CS_OWNDC;                // Unique context for each window in class
 
         RegisterClass(&wc);
 
         // Create the window.
         HWND hwnd = CreateWindowEx(
             0,                              // Optional window styles.
-            WND_CLASS,                      // Window class
+            wc.lpszClassName,               // Window class
             L"Main Window",                 // Window text
             WS_OVERLAPPEDWINDOW,            // Window style
 
@@ -75,6 +74,48 @@ namespace Engine {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }
+    }
+
+    bool Window::CreateContext()
+    {
+        // Device context.
+        HDC hdc = GetDC(m_HWnd);
+
+        PIXELFORMATDESCRIPTOR pfd =
+        {
+            sizeof(PIXELFORMATDESCRIPTOR),
+            1,
+            PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,    // Flags
+            PFD_TYPE_RGBA,        // The kind of framebuffer. RGBA or palette.
+            32,                   // Colordepth of the framebuffer.
+            0, 0, 0, 0, 0, 0,
+            0,
+            0,
+            0,
+            0, 0, 0, 0,
+            24,                   // Number of bits for the depthbuffer
+            8,                    // Number of bits for the stencilbuffer
+            0,                    // Number of Aux buffers in the framebuffer.
+            PFD_MAIN_PLANE,
+            0,
+            0, 0, 0
+        };
+
+        int format = ChoosePixelFormat(hdc, &pfd);
+        if (format == 0)
+        {
+            return false;       // Pixel format invalid.
+        }
+        SetPixelFormat(hdc, format, &pfd);
+
+        // OpenGL rendering context.
+        HGLRC glContext = wglCreateContext(hdc);
+        BOOL ok = wglMakeCurrent(hdc, glContext);
+        if (!ok)
+        {
+            return false;       // OpenGL context not created.
+        }
+        return true;
     }
 
     /*protected*/ void Window::OnClose()
