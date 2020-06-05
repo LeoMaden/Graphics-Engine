@@ -1,9 +1,14 @@
-#include "Print.h"
+#include <windows.h>
+#include "Window.h"
 
 int main()
 {
-	Print();
+    Engine::Window* window = new Engine::Window();
 
-	std::cin.get();
-	return 0;
+    window->Create();
+    window->RunSystemEventLoop();
+
+    delete window;
+
+    return 0;
 }

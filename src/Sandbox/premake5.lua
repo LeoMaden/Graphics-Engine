@@ -1,4 +1,5 @@
 project "Sandbox"
+    --kind "WindowedApp"
     kind "ConsoleApp"
     language "C++"
 
