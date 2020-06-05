@@ -11,6 +11,7 @@ project "Engine"
     
     includedirs {
         "../../Dependencies/glad/include",
+        "../../Dependencies/OpenGL",
     }
 
     links {
