@@ -4,10 +4,13 @@ project "Engine"
 
     files {
         "**.cpp",
-        "**.h"
+        "**.h",
+        "../../Dependencies/glad/**.c",
+        "../../Dependencies/glad/**.h",
     }
     
     includedirs {
+        "../../Dependencies/glad/include",
     }
 
     links {

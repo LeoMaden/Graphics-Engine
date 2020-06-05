@@ -13,7 +13,8 @@ project "Sandbox"
     }
 
     links {
-        "Engine"
+        "Engine",
+        "opengl32"
     }
 
     --defines {
