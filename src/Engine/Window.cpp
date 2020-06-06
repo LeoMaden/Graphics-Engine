@@ -202,6 +202,7 @@ namespace Engine {
 			WGL_CONTEXT_MAJOR_VERSION_ARB, major_min,
 			WGL_CONTEXT_MINOR_VERSION_ARB, minor_min,
 			WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
+			WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_DEBUG_BIT_ARB,
 			0
 		};
 
@@ -226,6 +227,8 @@ namespace Engine {
 		gladLoadGL();
 
 		std::cout << "LOADED OPEN GL VERSION: " << glGetString(GL_VERSION) << std::endl;
+		std::cout << "VENDOR: " << glGetString(GL_VENDOR) << std::endl;
+		std::cout << "RENDERER: " << glGetString(GL_RENDERER) << std::endl;
 
 		glViewport(0, 0, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 

@@ -1,4 +1,5 @@
 #include "Window.h"
+#include "Renderer2D.h"
 
 #include <iostream>
 
@@ -9,8 +10,12 @@ int main()
 	window->Create();
 	window->CreateContext();
 
+	Engine::Renderer2D::Setup();
+
 	while (!window->ShouldClose) 
 	{
+		Engine::Renderer2D::DrawSquare();
+
 		window->SwapBuffers();
 		window->PollEvents();
 	}
