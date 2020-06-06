@@ -10,6 +10,7 @@ project "Engine"
     includedirs {
         "../../Dependencies/glad/include",
         "../../Dependencies/OpenGL",
+        "../../Dependencies/glm",
     }
 
     links {
