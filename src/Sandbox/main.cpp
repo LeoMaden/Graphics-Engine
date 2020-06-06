@@ -1,15 +1,21 @@
-#include <windows.h>
 #include "Window.h"
+
+#include <iostream>
 
 int main()
 {
-    Engine::Window* window = new Engine::Window();
+	Engine::Window* window = new Engine::Window();
 
-    window->Create();
-    window->CreateContext();
-    window->RunSystemEventLoop();
+	window->Create();
+	window->CreateContext();
 
-    delete window;
+	while (!window->ShouldClose) 
+	{
+		window->SwapBuffers();
+		window->PollEvents();
+	}
 
-    return 0;
+	delete window;
+
+	return 0;
 }
