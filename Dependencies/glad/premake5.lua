@@ -1,9 +1,9 @@
-project "Engine"
+project "glad"
     kind "StaticLib"
-    language "C++"
+    language "C"
 
     files {
-        "**.cpp",
+        "**.c",
         "**.h"
     }
     
@@ -13,7 +13,6 @@ project "Engine"
     }
 
     links {
-        "glad"
     }
 
     defines {
@@ -22,5 +21,5 @@ project "Engine"
     --pchheader "PulsePCH.h"
     --pchsource "Source/PulsePCH.cpp"
 
-    targetdir ("../../Bin/" .. outputdir .. "Engine")
-    objdir ("../../Build/" .. outputdir .. "Engine")
+    targetdir ("../../Bin/" .. outputdir .. "glad")
+    objdir ("../../Build/" .. outputdir .. "glad")
