@@ -18,7 +18,7 @@ namespace Engine {
 
 		while (getline(file, line))
 		{
-			buffer << line;
+			buffer << line << "\n";
 		}
 		file.close();
 

@@ -2,6 +2,7 @@
 #include "Log.h"
 
 #include "OpenGL/VertexArray.h"
+#include "OpenGL/Shader.h"
 
 #include <glad/glad.h>
 #include <iostream>
@@ -54,43 +55,12 @@ namespace Engine {
 
 		VertexArray vao(vbo, ibo);
 
-		char* vsSource = R"(
-			#version 450 core
-			layout (location = 0) in vec3 aPosition;
-			layout (location = 1) in vec3 aColor;
+		Shader shader;
+		shader.AddVertexShader("res/shaders/basic.vert");
+		shader.AddFragmentShader("res/shaders/basic.frag");
 
-			out vec3 oColor;
-
-			void main() 
-			{
-				oColor = aColor;
-				gl_Position = vec4(aPosition, 1.0);
-			})";
-
-		char* fsSource = R"(
-			#version 450 core
-			out vec4 vColor;
-
-			in vec3 oColor;
-
-			void main() 
-			{
-				vColor = vec4(oColor, 1.0);
-			})";
-
-		GLuint vs = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(vs, 1, &vsSource, nullptr);
-		glCompileShader(vs);
-
-		GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(fs, 1, &fsSource, nullptr);
-		glCompileShader(fs);
-
-		GLuint prog = glCreateProgram();
-		glAttachShader(prog, vs);
-		glAttachShader(prog, fs); 
-		glLinkProgram(prog);
-		glUseProgram(prog);
+		shader.Link();
+		shader.Bind();
 	}
 
 	/*static*/ void Renderer2D::DrawSquare()
