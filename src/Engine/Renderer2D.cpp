@@ -1,4 +1,5 @@
 #include "Renderer2D.h"
+#include "Log.h"
 
 #include <glad/glad.h>
 #include <iostream>
@@ -11,11 +12,18 @@ namespace Engine {
 		glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
 		if (flags & GL_CONTEXT_FLAG_DEBUG_BIT) 
 		{
-			std::cout << "Debug enabled" << std::endl;	
+			LOG_INFO("Open GL Debug enabled");
 			
 			auto callback = [](GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 			{
-				std::cout << "GL ERROR: " << message << std::endl;
+				if (severity == GL_DEBUG_SEVERITY_HIGH)
+				{
+					LOG_ERROR("Open GL: {}", message);
+				}
+				else
+				{
+					LOG_WARN("Open GL: {}", message);
+				}
 			};
 
 			glEnable(GL_DEBUG_OUTPUT);
@@ -23,7 +31,7 @@ namespace Engine {
 		}
 		else
 		{
-			std::cout << "Debug not enabled" << std::endl;
+			LOG_INFO("Open GL Debug not enabled");
 		}
 
 		float vertices[]{

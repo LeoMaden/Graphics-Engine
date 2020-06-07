@@ -10,9 +10,6 @@ int main()
 
 	Engine::Log::Init();
 
-	LOG_ERROR("Error");
-	LOG_INFO("Info");
-
 	window->Create();
 	window->CreateContext();
 

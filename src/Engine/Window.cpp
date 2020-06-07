@@ -131,46 +131,28 @@ namespace Engine {
 		};
 
 		int fakeFormat = ChoosePixelFormat(fakeDC, &fakePfd);
-		if (!fakeFormat)
-		{
-			std::cerr << "ChoosePixelFormat() failed" << std::endl;
-			return false;
-		}
-		if (!SetPixelFormat(fakeDC, fakeFormat, &fakePfd)) {
-			std::cerr << "SetPixelFormat() failed" << std::endl;
-			return false;
-		}
+		ASSERT(fakeFormat, "Failed to choose pixel format");
+
+		BOOL ok = SetPixelFormat(fakeDC, fakeFormat, &fakePfd);
+		ASSERT(ok, "Failed to set pixel format");
 
 		// Create fake OpenGL context.
 		HGLRC fakeRC = wglCreateContext(fakeDC);
-		if (!fakeRC)
-		{
-			std::cerr << "wglCreateContext() failed" << std::endl;
-			return false;
-		}
+		ASSERT(fakeRC, "Failed to initialise OpenGL");
 
-		if (!wglMakeCurrent(fakeDC, fakeRC))
-		{
-			std::cerr << "wglMakeCurrent() failed" << std::endl;
-			return false;
-		}
+		ok = wglMakeCurrent(fakeDC, fakeRC);
+		ASSERT(ok, "Failed to initialise OpenGL");
 
 		gladLoadGL();
 
 		// Load create real OpenGL context.
 		PFNWGLCHOOSEPIXELFORMATARBPROC wglChoosePixelFormatARB = nullptr;
-		wglChoosePixelFormatARB = reinterpret_cast<PFNWGLCHOOSEPIXELFORMATARBPROC>(wglGetProcAddress("wglChoosePixelFormatARB"));
-		if (!wglChoosePixelFormatARB) {
-			std::cerr << "wglGetProcAddress() failed" << std::endl;
-			return false;
-		}
+		wglChoosePixelFormatARB = (PFNWGLCHOOSEPIXELFORMATARBPROC)wglGetProcAddress("wglChoosePixelFormatARB");
+		ASSERT(wglChoosePixelFormatARB, "Failed to get ARB Pixel Format extension");
 
 		PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB = nullptr;
-		wglCreateContextAttribsARB = reinterpret_cast<PFNWGLCREATECONTEXTATTRIBSARBPROC>(wglGetProcAddress("wglCreateContextAttribsARB"));
-		if (!wglCreateContextAttribsARB) {
-			std::cerr << "wglGetProcAddress() failed" << std::endl;
-			return false;
-		}
+		wglCreateContextAttribsARB = (PFNWGLCREATECONTEXTATTRIBSARBPROC)wglGetProcAddress("wglCreateContextAttribsARB");
+		ASSERT(wglCreateContextAttribsARB, "Failed to get ARB Context Attribs extension");
 
 		HDC realDC = GetDC(m_HWnd);
 		const int pixelAttribs[] = {
@@ -187,12 +169,8 @@ namespace Engine {
 		};
 
 		int pixelFormatID; UINT numFormats;
-		bool status = wglChoosePixelFormatARB(realDC, pixelAttribs, NULL, 1, &pixelFormatID, &numFormats);
-
-		if (!status || !numFormats) {
-			std::cout << "wglChoosePixelFormatARB() failed." << std::endl;
-			return false;
-		}
+		ok = wglChoosePixelFormatARB(realDC, pixelAttribs, NULL, 1, &pixelFormatID, &numFormats);
+		ASSERT(ok && numFormats, "Failed to choose ARB pixel format");
 
 		PIXELFORMATDESCRIPTOR pfd;
 		DescribePixelFormat(realDC, pixelFormatID, sizeof(pfd), &pfd);
@@ -208,10 +186,7 @@ namespace Engine {
 		};
 
 		HGLRC realRC = wglCreateContextAttribsARB(realDC, 0, contextAttribs);
-		if (!realRC) {
-			std::cout << "wglCreateContextAttribsARB() failed." << std::endl;
-			return false;
-		}
+		ASSERT(realRC, "Failed to create ARB context attribs");
 
 		// Delete fake context and window.
 		wglMakeCurrent(NULL, NULL);
@@ -223,9 +198,13 @@ namespace Engine {
 
 		gladLoadGL();
 
-		std::cout << "LOADED OPEN GL VERSION: " << glGetString(GL_VERSION) << std::endl;
+		LOG_INFO("Loaded Open GL version {}", glGetString(GL_VERSION));
+		LOG_INFO("\tVendor {}", glGetString(GL_VENDOR));
+		LOG_INFO("\tRenderer {}", glGetString(GL_RENDERER));
+
+	/*	std::cout << "LOADED OPEN GL VERSION: " << glGetString(GL_VERSION) << std::endl;
 		std::cout << "VENDOR: " << glGetString(GL_VENDOR) << std::endl;
-		std::cout << "RENDERER: " << glGetString(GL_RENDERER) << std::endl;
+		std::cout << "RENDERER: " << glGetString(GL_RENDERER) << std::endl;*/
 
 		glViewport(0, 0, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 
