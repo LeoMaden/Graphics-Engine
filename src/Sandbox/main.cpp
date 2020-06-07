@@ -7,14 +7,14 @@
 
 int main()
 {
-	Engine::Window* window = new Engine::Window();
-
 	Engine::Log::Init();
+
+	Engine::Window* window = new Engine::Window();
 
 	window->Create();
 	window->CreateContext();
 
-	Engine::Renderer2D::Setup();
+	Engine::Renderer2D::Init();
 
 	while (!window->ShouldClose) 
 	{

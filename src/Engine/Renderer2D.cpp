@@ -9,7 +9,10 @@
 
 namespace Engine {
 
-	/*static*/ void Renderer2D::Setup()
+	/*static*/ std::unique_ptr<Shader>	Renderer2D::s_FlatColorShader;
+	/*static*/ std::vector<float>		Renderer2D::s_UnitSquarePositions;
+
+	/*static*/ void Renderer2D::Init()
 	{
 		GLint flags;
 		glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
@@ -37,30 +40,31 @@ namespace Engine {
 			LOG_INFO("Open GL Debug not enabled");
 		}
 
-		std::vector<float> vertices{
-			-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-			 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-			 0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 1.0f,
-			-0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 0.0f
+		s_UnitSquarePositions = {
+			-0.5f, -0.5f, 0.0f,
+			 0.5f, -0.5f, 0.0f,
+			 0.5f,  0.5f, 0.0f,
+			-0.5f,  0.5f, 0.0f
 		};
 		std::vector<uint32_t> indices{
 			0, 1, 2, 2, 3, 0
 		};
 
-		VertexBuffer vbo(vertices);
+		VertexBuffer vbo(s_UnitSquarePositions);
 		vbo.AddLayout(0, GL_FLOAT, 3);
-		vbo.AddLayout(1, GL_FLOAT, 3);
 
 		IndexBuffer ibo(indices);
 
 		VertexArray vao(vbo, ibo);
 
-		Shader shader;
-		shader.AddVertexShader("res/shaders/basic.vert");
-		shader.AddFragmentShader("res/shaders/basic.frag");
+		s_FlatColorShader = std::make_unique<Shader>();
+		s_FlatColorShader->AddVertexShader("res/shaders/FlatColor.vert");
+		s_FlatColorShader->AddFragmentShader("res/shaders/FlatColor.frag");
 
-		shader.Link();
-		shader.Bind();
+		s_FlatColorShader->Link();
+		s_FlatColorShader->Bind();
+
+		s_FlatColorShader->SetVec3("uColor", { 1.0f, 0.0f, 0.0f });
 	}
 
 	/*static*/ void Renderer2D::DrawSquare()

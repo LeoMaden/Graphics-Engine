@@ -5,9 +5,11 @@ namespace Engine {
 
 	Shader::Shader()
 		: m_ProgId(0), m_ShaderIds()
+		, m_UniformCache()
 	{
 		m_ProgId = glCreateProgram();
 	}
+
 
 	void Shader::AddVertexShader(const std::string& path)
 	{
@@ -18,6 +20,7 @@ namespace Engine {
 	{
 		AddShader(path, GL_FRAGMENT_SHADER);
 	}
+
 
 	void Shader::Link() const
 	{
@@ -34,6 +37,20 @@ namespace Engine {
 		glUseProgram(m_ProgId);
 	}
 
+
+	void Shader::SetVec3(const std::string& name, const glm::vec3& vec)
+	{
+		GLint loc = GetLocation(name);
+		glUniform3f(loc, vec.x, vec.y, vec.z);
+	}
+
+	void Shader::SetVec4(const std::string& name, const glm::vec4& vec)
+	{
+		GLint loc = GetLocation(name);
+		glUniform4f(loc, vec.x, vec.y, vec.z, vec.w);
+	}
+	
+
 	void Shader::AddShader(const std::string& path, GLenum type)
 	{
 		std::string srcStr = Utils::LoadFile(path);
@@ -45,6 +62,19 @@ namespace Engine {
 
 		glAttachShader(m_ProgId, id);
 		m_ShaderIds.push_back(id);
+	}
+
+	GLint Shader::GetLocation(const std::string& name) const
+	{
+		if (m_UniformCache.find(name) == m_UniformCache.end())
+		{
+			// Not found.
+			GLint loc = glGetUniformLocation(m_ProgId, name.c_str());
+			m_UniformCache[name] = loc;
+			return loc;
+		}
+
+		return m_UniformCache[name];
 	}
 
 }
