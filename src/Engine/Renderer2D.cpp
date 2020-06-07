@@ -37,7 +37,7 @@ namespace Engine {
 			0, 1, 2, 2, 3, 0
 		};
 
-		GLuint vbo = -1;
+		GLuint vbo;
 		GLuint ibo;
 		GLuint vao;
 

@@ -11,6 +11,7 @@ project "Engine"
         "../../Dependencies/glad/include",
         "../../Dependencies/OpenGL",
         "../../Dependencies/glm",
+        "../../Dependencies/spdlog"
     }
 
     links {

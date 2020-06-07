@@ -9,7 +9,8 @@ project "Sandbox"
     }
     
     includedirs {
-        "../Engine"
+        "../Engine",
+        "../../Dependencies/spdlog"
     }
 
     links {

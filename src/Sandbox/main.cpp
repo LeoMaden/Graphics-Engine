@@ -1,11 +1,17 @@
 #include "Window.h"
 #include "Renderer2D.h"
+#include "Log.h"
 
 #include <iostream>
 
 int main()
 {
 	Engine::Window* window = new Engine::Window();
+
+	Engine::Log::Init();
+
+	LOG_ERROR("Error");
+	LOG_INFO("Info");
 
 	window->Create();
 	window->CreateContext();

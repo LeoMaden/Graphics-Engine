@@ -1,4 +1,5 @@
 #include "Window.h"
+#include "Log.h"
 
 #include <iostream>
 #include <glad/glad.h>
@@ -23,8 +24,8 @@ namespace Engine {
 
 		switch (uMsg)
 		{
-		case WM_CLOSE:		  senderWindow->OnClose();		return 0;
-		case WM_DESTROY:		PostQuitMessage(0);			 return 0;
+		case WM_CLOSE:			senderWindow->OnClose();		return 0;
+		case WM_DESTROY:		PostQuitMessage(0);				return 0;
 		}
 
 		return DefWindowProc(hwnd, uMsg, wParam, lParam);
@@ -218,11 +219,7 @@ namespace Engine {
 		ReleaseDC(fakeWnd, fakeDC);
 		DestroyWindow(fakeWnd);
 
-		if (!wglMakeCurrent(realDC, realRC))
-		{
-			std::cerr << "wglMakeCurrent() failed" << std::endl;
-			return false;
-		}
+		ASSERT(wglMakeCurrent(realDC, realRC), "Could not make OpenGL context current");
 
 		gladLoadGL();
 
