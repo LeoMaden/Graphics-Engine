@@ -1,71 +1,34 @@
-#include "Window.h"
-#include "Renderer2D.h"
+#include "Application.h"
 #include "Log.h"
-#include "Utils.h"
-
-#include "Events/KeyEvents.h"
+#include "Renderer2D.h"
 
 #include <iostream>
 
-
-static void OnKeyDown(Engine::KeyDownEvent& e)
+class SandboxApp : public Engine::Application
 {
-	LOG_DEBUG("Key down: {}", e.GetKeyCode());
-
-	e.SetHandled(true);
-}
-
-static void OnKeyUp(Engine::KeyUpEvent& e)
-{
-	LOG_DEBUG("Key up: {}", e.GetKeyCode());
-	e.SetHandled(true);
-}
-
-template<typename EventT, typename HandlerT>
-static void Dispatch(Engine::Event& e, HandlerT& handler)
-{
-	if (typeid(e) == typeid(EventT))
+public:
+	virtual void OnStartup() override
 	{
-		EventT& specificEvent = static_cast<EventT&>(e);
-		handler(specificEvent);
+		LOG_DEBUG("App startup");
+		Engine::Renderer2D::Init();
 	}
-}
 
-
-void EventCallback(Engine::Event& e)
-{
-	Dispatch<Engine::KeyDownEvent>(e, OnKeyDown);
-	Dispatch<Engine::KeyUpEvent>(e, OnKeyUp);
-
-	if (e.IsHandled() == false)
+	virtual void OnUpdate(float timestep) override
 	{
-		LOG_DEBUG("Unknown event");
+		Engine::Renderer2D::DrawSquare();
 	}
-}
-
+};
 
 int main()
 {
-	Engine::Log::Init();
+	SandboxApp* app = new SandboxApp();
 
-	Engine::Window* window = new Engine::Window();
+	app->Run();
 
-	window->Create();
-	window->CreateContext();
-	window->SetCallback(EventCallback);
+	delete app;
 
-	Engine::Renderer2D::Init();
-
-	while (!window->ShouldClose()) 
-	{
-		Engine::Renderer2D::DrawSquare();
-
-		window->SwapBuffers();
-		window->PollEvents();
-	}
-
-	delete window;
-
+	LOG_DEBUG("Main end");
+	std::cin.get();
 	return 0;
 }
 

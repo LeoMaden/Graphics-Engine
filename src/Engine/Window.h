@@ -2,6 +2,8 @@
 
 #include <Windows.h>
 
+#include <functional>
+
 #include "Events/Event.h"
 #include "Events/KeyEvents.h"
 
@@ -12,12 +14,15 @@ namespace Engine {
 	private:
 		static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
+		using Callback = std::function<void(Event&)>;
+
 	public:
 		bool Create();
 		bool CreateContext();
 
 		void SetCallback(Callback callback)		{ m_Callback = callback; }
 		bool ShouldClose() const				{ return m_ShouldClose; }
+		void Close() { OnClose(); }
 
 		void PollEvents();
 		void SwapBuffers();

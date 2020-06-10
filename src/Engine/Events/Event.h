@@ -25,8 +25,16 @@ namespace Engine {
 		bool		m_Handled = false;
 	};
 
-	using Callback = void (*)(Event&);
-	using Handler = bool (*)(Event&);
+
+	template<typename EventT>
+	void DispatchEvent(Engine::Event& e, std::function<void(EventT&)> handler)
+	{
+		if (typeid(e) == typeid(EventT))
+		{
+			EventT& specificEvent = static_cast<EventT&>(e);
+			handler(specificEvent);
+		}
+	}
 
 
 
