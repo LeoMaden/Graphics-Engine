@@ -8,17 +8,8 @@
 
 namespace Engine {
 
-	static std::vector<std::pair<KeyCode, int>> KeyCodeConvertion{
-		{ KeyCode::Mouse1, VK_LBUTTON },
-		{ KeyCode::Mouse2, VK_RBUTTON },
-		{ KeyCode::Mouse3, VK_MBUTTON },		
-
-		{ KeyCode::Enter, VK_RETURN },
-		{ KeyCode::LShift, VK_SHIFT },
-		{ KeyCode::LCtrl,  VK_CONTROL },
-		{ KeyCode::Escape, VK_ESCAPE },
-		{ KeyCode::Spacebar, VK_SPACE },
-
+	static std::vector<std::pair<KeyCode, int>> KeyCodeConvertion		
+	{
 		{ KeyCode::A, 0x41 },
 		{ KeyCode::B, 0x42 },
 		{ KeyCode::C, 0x43 },
@@ -45,6 +36,44 @@ namespace Engine {
 		{ KeyCode::X, 0x58 },
 		{ KeyCode::Y, 0x59 },
 		{ KeyCode::Z, 0x5A },
+
+		{ KeyCode::LShift,		VK_SHIFT },
+		{ KeyCode::LCtrl,		VK_CONTROL },
+		{ KeyCode::Enter,		VK_RETURN },
+		{ KeyCode::Backspace,	VK_BACK },
+		{ KeyCode::Escape,		VK_ESCAPE },
+		{ KeyCode::Spacebar,	VK_SPACE },
+		
+		{ KeyCode::D0, 0x30 },
+		{ KeyCode::D1, 0x31 },
+		{ KeyCode::D2, 0x32 },
+		{ KeyCode::D3, 0x33 },
+		{ KeyCode::D4, 0x34 },
+		{ KeyCode::D5, 0x35 },
+		{ KeyCode::D6, 0x36 },
+		{ KeyCode::D7, 0x37 },
+		{ KeyCode::D8, 0x38 },
+		{ KeyCode::D9, 0x39 },
+	
+		{ KeyCode::Mouse1, VK_LBUTTON },
+		{ KeyCode::Mouse2, VK_RBUTTON },
+		{ KeyCode::Mouse3, VK_MBUTTON },
+
+		{ KeyCode::Up,		VK_UP },
+		{ KeyCode::Down,	VK_DOWN },
+		{ KeyCode::Left,	VK_LEFT },
+		{ KeyCode::Right,	VK_RIGHT },
+
+		{ KeyCode::KP0, 0x60 },
+		{ KeyCode::KP1, 0x61 },
+		{ KeyCode::KP2, 0x62 },
+		{ KeyCode::KP3, 0x63 },
+		{ KeyCode::KP4, 0x64 },
+		{ KeyCode::KP5, 0x65 },
+		{ KeyCode::KP6, 0x66 },
+		{ KeyCode::KP7, 0x67 },
+		{ KeyCode::KP8, 0x68 },
+		{ KeyCode::KP9, 0x69 }
 	};
 
 	static std::unordered_map<KeyCode, int> GetWin32KeyCode = []()

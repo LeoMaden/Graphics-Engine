@@ -25,7 +25,11 @@ namespace Engine {
 		Mouse4, Mouse5, Mouse6,
 
 		// D-Pad
-		Up, Down, Left, Right
+		Up, Down, Left, Right,
+
+		// Keypad
+		KP0, KP1, KP2, KP3, KP4,
+		KP5, KP6, KP7, KP8, KP9
 
 	};
 

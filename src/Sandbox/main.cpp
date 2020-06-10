@@ -16,9 +16,6 @@ public:
 	virtual void OnUpdate(float timestep) override
 	{
 		Engine::Renderer2D::DrawSquare();
-
-		bool wDown = m_Window->IsKeyDown(Engine::KeyCode::W);
-		LOG_DEBUG(wDown);
 	}
 };
 

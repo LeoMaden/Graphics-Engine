@@ -46,7 +46,7 @@ namespace Engine {
 
 	void Application::OnKeyDown(KeyDownEvent& e)
 	{
-		LOG_DEBUG("Key down");
+		LOG_DEBUG("Key down: {}", e.GetKeyCode());
 		switch (e.GetKeyCode())
 		{
 		case KeyCode::Escape:
