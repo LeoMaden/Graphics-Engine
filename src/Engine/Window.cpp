@@ -8,6 +8,98 @@
 
 namespace Engine {
 
+	static KeyCode GetKeyCode(WPARAM wParam)
+	{
+		switch (wParam)
+		{
+		// Mouse buttons
+		case VK_LBUTTON:	return KeyCode::Mouse1; // Left click
+		case VK_RBUTTON:	return KeyCode::Mouse2; // Right click
+		case VK_MBUTTON:	return KeyCode::Mouse3; // Middle click
+
+		case VK_RETURN:		return KeyCode::Enter;
+		case VK_SHIFT:		return KeyCode::LShift;
+		case VK_CONTROL:	return KeyCode::LCtrl;
+		case VK_ESCAPE:		return KeyCode::Escape;
+		case VK_SPACE:		return KeyCode::Spacebar;
+
+		// D-Pad
+		case VK_UP:			return KeyCode::Up;
+		case VK_DOWN:		return KeyCode::Down;
+		case VK_LEFT:		return KeyCode::Left;
+		case VK_RIGHT:		return KeyCode::Right;
+
+		// Num row
+		case 0x30: 		return KeyCode::D0;
+		case 0x31: 		return KeyCode::D1;
+		case 0x32: 		return KeyCode::D2;
+		case 0x33: 		return KeyCode::D3;
+		case 0x34: 		return KeyCode::D4;
+		case 0x35: 		return KeyCode::D5;
+		case 0x36: 		return KeyCode::D6;
+		case 0x37: 		return KeyCode::D7;
+		case 0x38: 		return KeyCode::D8;
+		case 0x39: 		return KeyCode::D9;
+
+		// Main keyboard
+		case 0x41: 		return KeyCode::A;
+		case 0x42: 		return KeyCode::B;
+		case 0x43: 		return KeyCode::C;
+		case 0x44: 		return KeyCode::D;
+		case 0x45: 		return KeyCode::E;
+		case 0x46: 		return KeyCode::F;
+		case 0x47: 		return KeyCode::G;
+		case 0x48: 		return KeyCode::H;
+		case 0x49: 		return KeyCode::I;
+		case 0x4A: 		return KeyCode::J;
+		case 0x4B: 		return KeyCode::K;
+		case 0x4C: 		return KeyCode::L;
+		case 0x4D: 		return KeyCode::M;
+		case 0x4E: 		return KeyCode::N;
+		case 0x4F: 		return KeyCode::O;
+		case 0x50: 		return KeyCode::P;
+		case 0x51: 		return KeyCode::Q;
+		case 0x52: 		return KeyCode::R;
+		case 0x53: 		return KeyCode::S;
+		case 0x54: 		return KeyCode::T;
+		case 0x55: 		return KeyCode::U;
+		case 0x56: 		return KeyCode::V;
+		case 0x57: 		return KeyCode::W;
+		case 0x58: 		return KeyCode::X;
+		case 0x59: 		return KeyCode::Y;
+		case 0x5A: 		return KeyCode::Z;
+		}
+
+		return KeyCode::None;
+	}
+
+
+	//static KeyFlags GetKeyFlags(LPARAM lParam)
+	//{
+	//	bool extended = lParam & (1 << 24);
+	//	bool altDown = lParam & (1 << 29);
+
+	//	//KeyFlags flags = extended ? KeyFlags::Extended : KeyFlags::None;
+	//	//flags = altDown ? flags | KeyFlags::AltDown : flags;
+
+	//	return KeyFlags::AltDown;
+	//}
+
+	static void OnKeyDown(Window* sender, WPARAM wParam, LPARAM lParam)
+	{
+		KeyCode code = GetKeyCode(wParam);
+		//KeyFlags flags = GetKeyFlags(lParam);
+		KeyDownEvent e(code);//, flags);
+		sender->OnEvent(e);
+	}
+
+	static void OnKeyUp(Window* sender, WPARAM wParam, LPARAM lParam)
+	{
+		KeyCode code = GetKeyCode(wParam);
+		KeyUpEvent e(code);
+		sender->OnEvent(e);
+	}
+
 	/*static*/ LRESULT CALLBACK Window::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		Window* senderWindow;
@@ -26,6 +118,10 @@ namespace Engine {
 		{
 		case WM_CLOSE:			senderWindow->OnClose();		return 0;
 		case WM_DESTROY:		PostQuitMessage(0);				return 0;
+
+		// Mouse events.
+		case WM_KEYDOWN:		OnKeyDown(senderWindow, wParam, lParam);	return 0;
+		case WM_KEYUP:			OnKeyUp(senderWindow, wParam, lParam);		return 0;
 		}
 
 		return DefWindowProc(hwnd, uMsg, wParam, lParam);
@@ -230,7 +326,7 @@ namespace Engine {
 
 	/*protected*/ void Window::OnClose()
 	{
-		ShouldClose = true;
+		m_ShouldClose = true;
 		DestroyWindow(m_HWnd);
 	}
 
