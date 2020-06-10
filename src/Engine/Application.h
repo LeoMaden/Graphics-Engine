@@ -19,7 +19,6 @@ namespace Engine {
 	protected:
 		void OnKeyDown(KeyDownEvent& e);
 
-	private:
 		Window* m_Window;
 	};
 

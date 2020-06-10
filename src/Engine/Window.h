@@ -22,12 +22,14 @@ namespace Engine {
 
 		void SetCallback(Callback callback)		{ m_Callback = callback; }
 		bool ShouldClose() const				{ return m_ShouldClose; }
-		void Close() { OnClose(); }
+		void Close()							{ OnClose(); }
 
 		void PollEvents();
 		void SwapBuffers();
 
-		void OnEvent(Event& e) { m_Callback(e); }
+		void OnEvent(Event& e)		{ m_Callback(e); }
+
+		bool IsKeyDown(KeyCode key);
 
 	protected:
 		void OnClose();
