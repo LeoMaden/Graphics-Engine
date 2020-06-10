@@ -15,13 +15,10 @@ namespace Engine {
 	class Event
 	{
 	public:
-		virtual EventType	GetType()		const { return m_Type; }
-		virtual bool		IsHandled()		const { return m_Handled; }
-
-		virtual void		SetHandled(bool b) { m_Handled = b; }
+		virtual bool		IsHandled()		const	{ return m_Handled; }
+		virtual void		SetHandled(bool b)		{ m_Handled = b; }
 
 	protected:
-		EventType	m_Type = EventType::None;
 		bool		m_Handled = false;
 	};
 

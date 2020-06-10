@@ -33,6 +33,7 @@ namespace Engine {
 
 	protected:
 		void OnClose();
+		//void OnResize()
 
 
 	private:

@@ -1,6 +1,10 @@
 #include "Window.h"
 #include "Log.h"
 
+#include "Events/MouseEvents.h"
+
+#include <windowsx.h>
+
 #include <iostream>
 #include <glad/glad.h>
 #include <GL/wglext.h>
@@ -96,173 +100,20 @@ namespace Engine {
 		return codes;
 	}();
 
-	//static KeyCode GetKeyCode(WPARAM wParam)
-	//{
-	//	switch (wParam)
-	//	{
-	//	// Mouse buttons
-	//	case VK_LBUTTON:	return KeyCode::Mouse1; // Left click
-	//	case VK_RBUTTON:	return KeyCode::Mouse2; // Right click
-	//	case VK_MBUTTON:	return KeyCode::Mouse3; // Middle click
 
-	//	case VK_RETURN:		return KeyCode::Enter;
-	//	case VK_SHIFT:		return KeyCode::LShift;
-	//	case VK_CONTROL:	return KeyCode::LCtrl;
-	//	case VK_ESCAPE:		return KeyCode::Escape;
-	//	case VK_SPACE:		return KeyCode::Spacebar;
+	static KeyFlags GetKeyFlags(LPARAM lParam)
+	{
+		KeyFlags flags;
+		flags.Extended = lParam & (1 << 24);
 
-	//	// D-Pad
-	//	case VK_UP:			return KeyCode::Up;
-	//	case VK_DOWN:		return KeyCode::Down;
-	//	case VK_LEFT:		return KeyCode::Left;
-	//	case VK_RIGHT:		return KeyCode::Right;
-
-	//	// Num row
-	//	case 0x30: 		return KeyCode::D0;
-	//	case 0x31: 		return KeyCode::D1;
-	//	case 0x32: 		return KeyCode::D2;
-	//	case 0x33: 		return KeyCode::D3;
-	//	case 0x34: 		return KeyCode::D4;
-	//	case 0x35: 		return KeyCode::D5;
-	//	case 0x36: 		return KeyCode::D6;
-	//	case 0x37: 		return KeyCode::D7;
-	//	case 0x38: 		return KeyCode::D8;
-	//	case 0x39: 		return KeyCode::D9;
-
-	//	// Main keyboard
-	//	case 0x41: 		return KeyCode::A;
-	//	case 0x42: 		return KeyCode::B;
-	//	case 0x43: 		return KeyCode::C;
-	//	case 0x44: 		return KeyCode::D;
-	//	case 0x45: 		return KeyCode::E;
-	//	case 0x46: 		return KeyCode::F;
-	//	case 0x47: 		return KeyCode::G;
-	//	case 0x48: 		return KeyCode::H;
-	//	case 0x49: 		return KeyCode::I;
-	//	case 0x4A: 		return KeyCode::J;
-	//	case 0x4B: 		return KeyCode::K;
-	//	case 0x4C: 		return KeyCode::L;
-	//	case 0x4D: 		return KeyCode::M;
-	//	case 0x4E: 		return KeyCode::N;
-	//	case 0x4F: 		return KeyCode::O;
-	//	case 0x50: 		return KeyCode::P;
-	//	case 0x51: 		return KeyCode::Q;
-	//	case 0x52: 		return KeyCode::R;
-	//	case 0x53: 		return KeyCode::S;
-	//	case 0x54: 		return KeyCode::T;
-	//	case 0x55: 		return KeyCode::U;
-	//	case 0x56: 		return KeyCode::V;
-	//	case 0x57: 		return KeyCode::W;
-	//	case 0x58: 		return KeyCode::X;
-	//	case 0x59: 		return KeyCode::Y;
-	//	case 0x5A: 		return KeyCode::Z;
-	//	}
-
-	//	return KeyCode::None;
-	//}
-
-	//static int GetKeyCode(KeyCode code)
-	//{
-	//	switch (code)
-	//	{
-	//	case KeyCode::A: 		return 0x41;
-	//	case KeyCode::B: 		return 0x42;
-	//	case KeyCode::C: 		return 0x43;
-	//	case KeyCode::D: 		return 0x44;
-	//	case KeyCode::E: 		return 0x45;
-	//	case KeyCode::F: 		return 0x46;
-	//	case KeyCode::G: 		return 0x47;
-	//	case KeyCode::H: 		return 0x48;
-	//	case KeyCode::I: 		return 0x49;
-	//	case KeyCode::J: 		return 0x4A;
-	//	case KeyCode::K: 		return 0x4B;
-	//	case KeyCode::L: 		return 0x4C;
-	//	case KeyCode::M: 		return 0x4D;
-	//	case KeyCode::N: 		return 0x4E;
-	//	case KeyCode::O: 		return 0x4F;
-	//	case KeyCode::P: 		return 0x50;
-	//	case KeyCode::Q: 		return 0x51;
-	//	case KeyCode::R: 		return 0x52;
-	//	case KeyCode::S: 		return 0x53;
-	//	case KeyCode::T: 		return 0x54;
-	//	case KeyCode::U: 		return 0x55;
-	//	case KeyCode::V: 		return 0x56;
-	//	case KeyCode::W: 		return 0x57;
-	//	case KeyCode::X: 		return 0x58;
-	//	case KeyCode::Y: 		return 0x59;
-	//	case KeyCode::Z: 		return 0x5A;
-
-	//	case KeyCode::LShift:		VK_SHIFT;
-	//	case KeyCode::LCtrl:		VK_CONTROL;
-	//	case KeyCode::Enter:		VK_RETURN;
-	//	case KeyCode::Backspace:	VK_BACK;
-	//	case KeyCode::Escape:
-	//		break;
-	//	case KeyCode::Spacebar:
-	//		break;
-	//	case KeyCode::D0:
-	//		break;
-	//	case KeyCode::D1:
-	//		break;
-	//	case KeyCode::D2:
-	//		break;
-	//	case KeyCode::D3:
-	//		break;
-	//	case KeyCode::D4:
-	//		break;
-	//	case KeyCode::D5:
-	//		break;
-	//	case KeyCode::D6:
-	//		break;
-	//	case KeyCode::D7:
-	//		break;
-	//	case KeyCode::D8:
-	//		break;
-	//	case KeyCode::D9:
-	//		break;
-	//	case KeyCode::Mouse1:
-	//		break;
-	//	case KeyCode::Mouse2:
-	//		break;
-	//	case KeyCode::Mouse3:
-	//		break;
-	//	case KeyCode::Mouse4:
-	//		break;
-	//	case KeyCode::Mouse5:
-	//		break;
-	//	case KeyCode::Mouse6:
-	//		break;
-	//	case KeyCode::Up:
-	//		break;
-	//	case KeyCode::Down:
-	//		break;
-	//	case KeyCode::Left:
-	//		break;
-	//	case KeyCode::Right:
-	//		break;
-	//	default:
-	//		break;
-	//	}
-	//	return 0x07;
-	//};
-
-
-	//static KeyFlags GetKeyFlags(LPARAM lParam)
-	//{
-	//	bool extended = lParam & (1 << 24);
-	//	bool altDown = lParam & (1 << 29);
-
-	//	//KeyFlags flags = extended ? KeyFlags::Extended : KeyFlags::None;
-	//	//flags = altDown ? flags | KeyFlags::AltDown : flags;
-
-	//	return KeyFlags::AltDown;
-	//}
+		return flags;
+	}
 
 	static void OnKeyDown(Window* sender, WPARAM wParam, LPARAM lParam)
 	{
 		KeyCode code = GetEngineKeyCode[wParam];
-		//KeyFlags flags = GetKeyFlags(lParam);
-		KeyDownEvent e(code);//, flags);
+		KeyFlags flags = GetKeyFlags(lParam);
+		KeyDownEvent e(code, flags);
 		sender->OnEvent(e);
 	}
 
@@ -270,6 +121,15 @@ namespace Engine {
 	{
 		KeyCode code = GetEngineKeyCode[wParam];
 		KeyUpEvent e(code);
+		sender->OnEvent(e);
+	}
+
+	static void OnMouseMove(Window* sender, WPARAM wParam, LPARAM lParam)
+	{
+		int xPos = GET_X_LPARAM(lParam);
+		int yPos = GET_Y_LPARAM(lParam);
+
+		MouseMoveEvent e(xPos, yPos);
 		sender->OnEvent(e);
 	}
 
@@ -292,9 +152,12 @@ namespace Engine {
 		case WM_CLOSE:			senderWindow->OnClose();		return 0;
 		case WM_DESTROY:		PostQuitMessage(0);				return 0;
 
-		// Mouse events.
+		// Key events.
 		case WM_KEYDOWN:		OnKeyDown(senderWindow, wParam, lParam);	return 0;
 		case WM_KEYUP:			OnKeyUp(senderWindow, wParam, lParam);		return 0;
+
+		// Mouse events.
+		case WM_MOUSEMOVE:		OnMouseMove(senderWindow, wParam, lParam);	return 0;
 		}
 
 		return DefWindowProc(hwnd, uMsg, wParam, lParam);

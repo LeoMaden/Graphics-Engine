@@ -1,6 +1,7 @@
 #pragma once
 #include "Window.h"
 #include "Events/Event.h"
+#include "Events/MouseEvents.h"
 
 namespace Engine {
 
