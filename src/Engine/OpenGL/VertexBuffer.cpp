@@ -29,7 +29,7 @@ namespace Engine {
 
 	void VertexBuffer::SetData(void* data, uint32_t size)
 	{
-		ASSERT(size < m_Capacity, "Buffer is not large enough");
+		ASSERT(size <= m_Capacity, "Buffer is not large enough");
 
 		glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
 	}

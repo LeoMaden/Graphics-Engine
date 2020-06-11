@@ -26,18 +26,20 @@ public:
 		m_CameraController.OnUpdate(timestep);
 
 		Engine::Renderer2D::BeginScene(m_CameraController.GetCamera());
-
 		Engine::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f, 1.0f });
-
+		Engine::Renderer2D::DrawQuad({ 2.0f, 0.0f }, { 1.0f, 1.0f }, { 1.0f, 0.0f, 1.0f, 1.0f });
+		Engine::Renderer2D::DrawQuad({ -2.0f, 0.0f }, { 1.0f, 2.0f }, { 1.0f, 0.6f, 0.2f, 1.0f });
 		Engine::Renderer2D::EndScene();
 
 		Engine::Renderer2D::BeginScene(m_CameraController.GetCamera());
-
-		Engine::Renderer2D::DrawQuad({ 2.0f, 0.0f }, { 1.0f, 1.0f }, { 1.0f, 0.0f, 1.0f, 1.0f });
-		Engine::Renderer2D::DrawQuad({ -2.0f, 0.0f }, { 1.0f, 2.0f }, { 1.0f, 0.6f, 0.2f, 1.0f });
-
+		for (int i = 0; i < 500; i++)
+		{
+			for (int j = 0; j < 500; j++)
+			{
+				Engine::Renderer2D::DrawQuad({ i, j }, { 0.9f, 0.9f }, { 0.0f, 0.0f, 1.0f, 1.0f });
+			}
+		}
 		Engine::Renderer2D::EndScene();
-
 	}
 
 private:
