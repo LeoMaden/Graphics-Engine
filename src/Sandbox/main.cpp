@@ -2,7 +2,7 @@
 #include "Log.h"
 #include "Renderer2D.h"
 
-#include "Camera/Camera2D.h"
+#include "Camera/CameraController2D.h"
 
 #include <iostream>
 
@@ -14,33 +14,23 @@ public:
 		LOG_DEBUG("App startup");
 		Engine::Renderer2D::Init();
 
-		m_Camera.SetProjection({ 16, 9 }, { 8, 4.5f });
+		Engine::Camera2D cam;
+		cam.SetProjection({ 16, 9 }, { 8, 4.5f });
+
+		m_CameraController.SetCamera(cam);
+		m_CameraController.SetKeyDownFunc([&](Engine::KeyCode k) { return m_Window->IsKeyDown(k); });
 	}
 
 	virtual void OnUpdate(float timestep) override
 	{
-		float speed = 0.1f;
+		m_CameraController.OnUpdate(timestep);
 
-		bool wDown = m_Window->IsKeyDown(Engine::KeyCode::W);
-		bool sDown = m_Window->IsKeyDown(Engine::KeyCode::S);
-
-		if (wDown)
-		{
-			m_Camera.Move({ 0.0f, -timestep * speed, 0.0f });
-		}
-
-		if (sDown)
-		{
-			m_Camera.Move({ 0.0f, timestep * speed, 0.0f });
-		}
-
-
-		Engine::Renderer2D::BeginScene(m_Camera);
+		Engine::Renderer2D::BeginScene(m_CameraController.GetCamera());
 		Engine::Renderer2D::DrawSquare();
 	}
 
 private:
-	Engine::Camera2D m_Camera;
+	Engine::CameraController2D m_CameraController;
 };
 
 int main()

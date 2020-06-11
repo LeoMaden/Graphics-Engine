@@ -1,11 +1,13 @@
 #include "Camera2D.h"
 
+#include "Log.h"
+
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace Engine {
 
 	Camera2D::Camera2D()
-		: m_ProjMatrix(1.0f), m_ViewMatrix(1.0f), m_ViewProjMat(1.0f)
+		: m_Position(0.0f), m_ProjMatrix(1.0f), m_ViewMatrix(1.0f), m_ViewProjMat(1.0f)
 	{
 	}
 
