@@ -11,6 +11,7 @@ namespace Engine {
 
 	/*static*/ std::unique_ptr<Shader>	Renderer2D::s_FlatColorShader;
 	/*static*/ std::vector<float>		Renderer2D::s_UnitSquarePositions;
+	/*static*/ glm::mat4				Renderer2D::s_SceneViewProjMat(1.0f);
 
 	/*static*/ void Renderer2D::Init()
 	{
@@ -69,7 +70,13 @@ namespace Engine {
 
 	/*static*/ void Renderer2D::DrawSquare()
 	{
+		s_FlatColorShader->SetMat4("u_Transform", s_SceneViewProjMat);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	}
+
+	void Renderer2D::BeginScene(const Camera& camera)
+	{
+		s_SceneViewProjMat = camera.GetViewProjMat();
 	}
 
 }

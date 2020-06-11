@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "Log.h"
+#include "RenderCommand.h"
 
 namespace Engine {
 
@@ -37,10 +38,13 @@ namespace Engine {
 
 		while (!m_Window->ShouldClose())
 		{
-			OnUpdate(0.0f);
+			RenderCommand::Clear();
+
+			OnUpdate(1.0f / 60.0f);
 
 			m_Window->SwapBuffers();
 			m_Window->PollEvents();
+			Sleep(1.0f / 60.0f);
 		}
 	}
 

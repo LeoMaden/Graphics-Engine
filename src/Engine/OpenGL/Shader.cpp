@@ -1,6 +1,8 @@
 #include "Shader.h"
 #include "Utils.h"
 
+#include <glm/gtc/type_ptr.hpp>
+
 namespace Engine {
 
 	Shader::Shader()
@@ -48,6 +50,12 @@ namespace Engine {
 	{
 		GLint loc = GetLocation(name);
 		glUniform4f(loc, vec.x, vec.y, vec.z, vec.w);
+	}
+
+	void Shader::SetMat4(const std::string& name, const glm::mat4& mat)
+	{
+		GLint loc = GetLocation(name);
+		glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mat));
 	}
 	
 
