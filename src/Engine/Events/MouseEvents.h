@@ -24,7 +24,7 @@ namespace Engine {
 	{
 	public:
 		MouseDownEvent(KeyCode mouseCode, KeyCode modifier)
-			: m_MouseCode(mouseCode)
+			: m_MouseCode(mouseCode), m_Modifier(modifier)
 		{
 		}
 

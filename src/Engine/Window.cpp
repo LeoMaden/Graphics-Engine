@@ -133,6 +133,19 @@ namespace Engine {
 		sender->OnEvent(e);
 	}
 
+	static void OnResize(LPARAM lParam)
+	{
+		int width = LOWORD(lParam);
+		int height = HIWORD(lParam);
+
+		if (!wglGetCurrentContext())
+		{
+			return;
+		}
+
+		glViewport(0, 0, width, height);
+	}
+
 	/*static*/ LRESULT CALLBACK Window::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		Window* senderWindow;
@@ -158,6 +171,9 @@ namespace Engine {
 
 		// Mouse events.
 		case WM_MOUSEMOVE:		OnMouseMove(senderWindow, wParam, lParam);	return 0;
+
+		// Window events.
+		case WM_SIZE:			OnResize(lParam);							return 0;
 		}
 
 		return DefWindowProc(hwnd, uMsg, wParam, lParam);
@@ -186,6 +202,8 @@ namespace Engine {
 		winSize.right = DEFAULT_WINDOW_WIDTH;
 
 		AdjustWindowRect(&winSize, WS_OVERLAPPEDWINDOW, FALSE);
+		LONG winWidth = winSize.right - winSize.left;
+		LONG winHeight = winSize.bottom - winSize.top;
 
 		HWND hwnd = CreateWindowEx(
 			0,								// Optional window styles.
@@ -194,7 +212,7 @@ namespace Engine {
 			WS_OVERLAPPEDWINDOW,			// Window style
 
 			// Size and position
-			CW_USEDEFAULT, CW_USEDEFAULT, winSize.right, winSize.bottom,
+			CW_USEDEFAULT, CW_USEDEFAULT, winWidth, winHeight,
 
 			NULL,			// Parent window	
 			NULL,			// Menu
