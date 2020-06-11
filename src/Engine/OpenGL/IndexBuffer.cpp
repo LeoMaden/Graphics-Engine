@@ -24,7 +24,7 @@ namespace Engine {
 
 	void IndexBuffer::SetIndices(void* indices, uint32_t size)
 	{
-		ASSERT(size < m_Capacity, "Buffer is not large enough");
+		ASSERT(size <= m_Capacity, "Buffer is not large enough");
 
 		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, size, indices);
 	}

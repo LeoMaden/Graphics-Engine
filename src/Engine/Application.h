@@ -23,8 +23,8 @@ namespace Engine {
 	protected:
 		void OnKeyDown(KeyDownEvent& e);
 
-		Window* m_Window;
-		TimePoint m_LastFrameTime;
+		Window*		m_Window;
+		TimePoint	m_LastFrameTime;
 
 	};
 

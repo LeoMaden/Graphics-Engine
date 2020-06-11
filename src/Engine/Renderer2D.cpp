@@ -8,7 +8,7 @@
 
 namespace Engine {
 
-	static struct QuadVertex
+	struct QuadVertex
 	{
 		glm::vec3 Position;
 		glm::vec4 Color;
@@ -26,7 +26,7 @@ namespace Engine {
 		IndexBuffer* IBO;
 		VertexArray* VAO;
 
-		uint32_t QuadsPerBatch = 1000;
+		uint32_t QuadsPerBatch = 10000;
 		uint32_t QuadCount = 0;
 
 		uint32_t VBOSize = 4 * QuadsPerBatch * sizeof(QuadVertex);
@@ -42,6 +42,7 @@ namespace Engine {
 	};
 
 	static Renderer2DData s_Data;
+	Renderer2D::Statistics Renderer2D::Stats;
 
 	/*static*/ void Renderer2D::Init()
 	{
@@ -101,6 +102,22 @@ namespace Engine {
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	}
 
+	void Renderer2D::FlushAndReset()
+	{
+		s_Data.VBO->SetData(s_Data.BatchData, s_Data.VertexCount * sizeof(QuadVertex));
+		s_Data.IBO->SetIndices(s_Data.BatchIndices, s_Data.IndexCount * sizeof(IndexType));
+
+		glDrawElements(GL_TRIANGLES, s_Data.IndexCount, GL_UNSIGNED_SHORT, 0);
+		Stats.Draws++;
+
+		s_Data.QuadCount = 0;
+		s_Data.VertexCount = 0;
+		s_Data.IndexCount = 0;
+
+		s_Data.BatchDataInsPtr = s_Data.BatchData;
+		s_Data.BatchIndicesInsPtr = s_Data.BatchIndices;
+	}
+
 	void Renderer2D::BeginScene(const Camera& camera)
 	{
 		s_Data.SceneViewProjMat = camera.GetViewProjMat();
@@ -116,15 +133,17 @@ namespace Engine {
 
 	void Renderer2D::EndScene()
 	{
-		s_Data.VBO->SetData(s_Data.BatchData, s_Data.VertexCount * sizeof(QuadVertex));
-		s_Data.IBO->SetIndices(s_Data.BatchIndices, s_Data.IndexCount * sizeof(IndexType));
-
-		glDrawElements(GL_TRIANGLES, s_Data.IndexCount, GL_UNSIGNED_SHORT, 0);
+		FlushAndReset();
 	}
 
 
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
 	{
+		if (s_Data.QuadCount >= s_Data.QuadsPerBatch)
+		{
+			FlushAndReset();
+		}
+
 		QuadVertex vertices[4];
 		IndexType indices[6];
 
@@ -157,6 +176,8 @@ namespace Engine {
 
 		s_Data.BatchDataInsPtr += 4 * sizeof(QuadVertex);
 		s_Data.BatchIndicesInsPtr += 6 * sizeof(IndexType);
+
+		Stats.Quads++;
 	}
 
 }
