@@ -11,15 +11,13 @@ namespace Engine {
 		~IndexBuffer();
 
 		void Bind() const;
-		void SetIndices(const std::vector<uint32_t>& indices);
+		void SetIndices(void* indices, uint32_t size);
 
-		uint32_t						GetId()			const { return m_Id; }
-		const std::vector<uint32_t>&	GetIndices()	const { return m_Indices; }
+		uint32_t GetId() const { return m_Id; }
 
 	private:
 		GLuint					m_Id;
 		uint32_t				m_Capacity;
-		std::vector<uint32_t>	m_Indices;
 	};
 
 } 

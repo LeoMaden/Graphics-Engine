@@ -8,14 +8,23 @@
 
 namespace Engine {
 
-	/*static*/ std::unique_ptr<Shader>	Renderer2D::s_FlatColorShader;
-	/*static*/ std::vector<float>		Renderer2D::s_UnitSquarePositions;
-	/*static*/ glm::mat4				Renderer2D::s_SceneViewProjMat(1.0f);
+	struct Renderer2DData
+	{
+		std::unique_ptr<Shader>	FlatColorShader;
+		glm::vec3				UnitSquarePositions[4];
+		glm::mat4				SceneViewProjMat;
 
-	/*static*/ VertexBuffer*			Renderer2D::s_VBO;
-	/*static*/ IndexBuffer*				Renderer2D::s_IBO;
-	/*static*/ VertexArray*				Renderer2D::s_VAO;
+		VertexBuffer* VBO;
+		IndexBuffer* IBO;
+		VertexArray* VAO;
+	};
 
+	static Renderer2DData s_Data;
+
+	static struct QuadVertex
+	{
+		glm::vec3 Position = { 0.0f, 0.0f, 0.0f };
+	};
 
 	/*static*/ void Renderer2D::Init()
 	{
@@ -45,53 +54,64 @@ namespace Engine {
 			LOG_INFO("Open GL Debug not enabled");
 		}
 
-		s_UnitSquarePositions = {
-			-0.5f, -0.5f, 0.0f,
-			 0.5f, -0.5f, 0.0f,
-			 0.5f,  0.5f, 0.0f,
-			-0.5f,  0.5f, 0.0f
-		};
-		std::vector<uint32_t> indices{
+		s_Data.UnitSquarePositions[0] = { -0.5f, -0.5f, 0.0f };
+		s_Data.UnitSquarePositions[1] = { 0.5f, -0.5f, 0.0f };
+		s_Data.UnitSquarePositions[2] = { 0.5f,  0.5f, 0.0f };
+		s_Data.UnitSquarePositions[3] = { -0.5f,  0.5f, 0.0f };
+
+		uint16_t indices[] {
 			0, 1, 2, 2, 3, 0
 		};
 
-		s_VBO = new VertexBuffer(16);
-		s_VBO->SetData(s_UnitSquarePositions);
-		s_VBO->AddLayout(0, GL_FLOAT, 3);
+		s_Data.VBO = new VertexBuffer(1024);
+		s_Data.VBO->AddLayout(0, GL_FLOAT, 3);
 
-		s_IBO = new IndexBuffer(16);
-		s_IBO->SetIndices(indices);
+		s_Data.IBO = new IndexBuffer(1024);
+		s_Data.IBO->SetIndices(indices, sizeof(indices));
 
-		s_VAO = new VertexArray(*s_VBO, *s_IBO);
+		s_Data.VAO = new VertexArray(*s_Data.VBO, *s_Data.IBO);
 
-		s_FlatColorShader = std::make_unique<Shader>();
-		s_FlatColorShader->AddVertexShader("res/shaders/FlatColor.vert");
-		s_FlatColorShader->AddFragmentShader("res/shaders/FlatColor.frag");
+		s_Data.FlatColorShader = std::make_unique<Shader>();
+		s_Data.FlatColorShader->AddVertexShader("res/shaders/FlatColor.vert");
+		s_Data.FlatColorShader->AddFragmentShader("res/shaders/FlatColor.frag");
 
-		s_FlatColorShader->Link();
-		s_FlatColorShader->Bind();
+		s_Data.FlatColorShader->Link();
+		s_Data.FlatColorShader->Bind();
 
-		s_FlatColorShader->SetVec3("uColor", { 1.0f, 0.0f, 0.0f });
+		s_Data.FlatColorShader->SetVec3("uColor", { 1.0f, 0.0f, 0.0f });
 	}
 
 	/*static*/ void Renderer2D::DrawSquare()
 	{
-		s_FlatColorShader->SetMat4("u_Transform", s_SceneViewProjMat);
+		s_Data.FlatColorShader->SetMat4("u_Transform", s_Data.SceneViewProjMat);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	}
 
 	void Renderer2D::BeginScene(const Camera& camera)
 	{
-		s_SceneViewProjMat = camera.GetViewProjMat();
+		s_Data.SceneViewProjMat = camera.GetViewProjMat();
 	}
 
 
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
 	{
-		s_FlatColorShader->SetVec4("u_Color", color);
-		s_FlatColorShader->SetMat4("u_Transform", s_SceneViewProjMat);
+		QuadVertex vertices[4];
 
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glm::vec3 pos3 = glm::vec3(position, 0.0f);
+		glm::vec3 size3 = glm::vec3(size, 0.0f);
+
+
+		vertices[0].Position = s_Data.UnitSquarePositions[0] * size3 + pos3;
+		vertices[1].Position = s_Data.UnitSquarePositions[1] * size3 + pos3;
+		vertices[2].Position = s_Data.UnitSquarePositions[2] * size3 + pos3;
+		vertices[3].Position = s_Data.UnitSquarePositions[3] * size3 + pos3;
+
+		s_Data.VBO->SetData(vertices, sizeof(vertices));
+
+		s_Data.FlatColorShader->SetVec4("u_Color", color);
+		s_Data.FlatColorShader->SetMat4("u_Transform", s_Data.SceneViewProjMat);
+
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
 	}
 
 }

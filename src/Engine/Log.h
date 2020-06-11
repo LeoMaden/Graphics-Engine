@@ -22,4 +22,4 @@ namespace Engine {
 #define LOG_CRITICAL(...)	Engine::Log::Logger->critical(__VA_ARGS__)
 
 #define BREAK __debugbreak()
-#define ASSERT(x, ...)		if(!x) { LOG_ERROR(__VA_ARGS__); BREAK; }
+#define ASSERT(x, ...)		if(!(x)) { LOG_ERROR(__VA_ARGS__); BREAK; }

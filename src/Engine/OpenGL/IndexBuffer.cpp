@@ -5,11 +5,11 @@
 namespace Engine {
 
 	IndexBuffer::IndexBuffer(uint32_t capacity)
-		: m_Id(0), m_Capacity(capacity), m_Indices()
+		: m_Id(0), m_Capacity(capacity)
 	{
 		glCreateBuffers(1, &m_Id);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Id);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, capacity * sizeof(uint32_t), nullptr, GL_DYNAMIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, capacity, nullptr, GL_DYNAMIC_DRAW);
 	}
 
 	IndexBuffer::~IndexBuffer()
@@ -22,13 +22,11 @@ namespace Engine {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Id);
 	}
 
-	void IndexBuffer::SetIndices(const std::vector<uint32_t>& indices)
+	void IndexBuffer::SetIndices(void* indices, uint32_t size)
 	{
-		ASSERT(indices.size() > m_Capacity, "Buffer is not large enough");
+		ASSERT(size < m_Capacity, "Buffer is not large enough");
 
-		m_Indices = indices;
-
-		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, m_Indices.size() * sizeof(uint32_t), m_Indices.data());
+		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, size, indices);
 	}
 
 }
