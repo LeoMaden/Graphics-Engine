@@ -31,6 +31,8 @@ namespace Engine {
 
 		bool IsKeyDown(KeyCode key);
 
+		bool DestroyContext();
+
 	protected:
 		void OnClose();
 		//void OnResize()

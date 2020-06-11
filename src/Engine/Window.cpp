@@ -367,9 +367,21 @@ namespace Engine {
 		return state & (1 << 15);
 	}
 
+	bool Window::DestroyContext()
+	{
+		HDC dc = GetDC(m_HWnd);
+		HGLRC rc = wglGetCurrentContext();
+
+		wglDeleteContext(rc);
+		DeleteDC(dc);
+
+		return true;
+	}
+
 	/*protected*/ void Window::OnClose()
 	{
 		m_ShouldClose = true;
+		DestroyContext();
 		DestroyWindow(m_HWnd);
 	}
 
