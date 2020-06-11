@@ -22,7 +22,7 @@ namespace Engine {
 	private:
 		Camera2D			m_Camera;
 		IsKeyDownFunc		m_KeyDownFunc;
-		float				m_Speed = 0.1f;
+		float				m_Speed = 5.0f;
 	};
 
 }

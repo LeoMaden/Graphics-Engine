@@ -38,13 +38,18 @@ namespace Engine {
 
 		while (!m_Window->ShouldClose())
 		{
+			TimePoint current = std::chrono::high_resolution_clock::now();
+			float timestep = (current - m_LastFrameTime).count() / 1e9;
+			m_LastFrameTime = current;
+
+			LOG_TRACE("Frame time {} ({} fps)", timestep, 1.0f / timestep);
+
 			RenderCommand::Clear();
 
-			OnUpdate(1.0f / 60.0f);
+			OnUpdate(timestep);
 
 			m_Window->SwapBuffers();
 			m_Window->PollEvents();
-			Sleep(1.0f / 60.0f);
 		}
 	}
 
