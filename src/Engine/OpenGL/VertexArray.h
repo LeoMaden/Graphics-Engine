@@ -8,6 +8,7 @@ namespace Engine {
 	{
 	public:
 		VertexArray(VertexBuffer& vbo, IndexBuffer& ibo);
+		~VertexArray();
 
 	private:
 		GLuint			m_Id;

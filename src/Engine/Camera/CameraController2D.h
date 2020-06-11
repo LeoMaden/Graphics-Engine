@@ -16,8 +16,8 @@ namespace Engine {
 
 		virtual void OnUpdate(float timestep) override;
 
-		virtual const Camera& GetCamera() const override { return m_Camera; }
-		void SetCamera(const Camera2D& camera) { m_Camera = camera; }
+		virtual const Camera& GetCamera() const override	{ return m_Camera; }
+		void SetCamera(const Camera2D& camera)				{ m_Camera = camera; }
 
 	private:
 		Camera2D			m_Camera;

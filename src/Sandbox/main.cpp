@@ -26,7 +26,7 @@ public:
 		m_CameraController.OnUpdate(timestep);
 
 		Engine::Renderer2D::BeginScene(m_CameraController.GetCamera());
-		Engine::Renderer2D::DrawSquare();
+		Engine::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f, 1.0f });
 	}
 
 private:

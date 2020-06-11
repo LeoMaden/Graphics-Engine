@@ -43,4 +43,9 @@ namespace Engine {
 		}
 	}
 
+	VertexArray::~VertexArray()
+	{
+		glDeleteVertexArrays(1, &m_Id);
+	}
+
 }
