@@ -28,4 +28,6 @@ outputdir = "%{cfg.platform}-%{cfg.buildcfg}/"
 include "src/Sandbox/premake5.lua"
 include "src/Engine/premake5.lua"
 
-include "Dependencies/glad/premake5.lua"
+group "Dependencies"
+    include "Dependencies/glad/premake5.lua"
+group ""
