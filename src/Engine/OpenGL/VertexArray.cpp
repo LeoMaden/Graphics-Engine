@@ -8,6 +8,7 @@ namespace Engine {
 		switch (type)
 		{
 		case GL_FLOAT:			return sizeof(float);
+		case GL_INT:			return sizeof(int);
 		}
 
 		ASSERT(false, "Unsupported type");
@@ -46,6 +47,11 @@ namespace Engine {
 	VertexArray::~VertexArray()
 	{
 		glDeleteVertexArrays(1, &m_Id);
+	}
+
+	void VertexArray::Bind() const
+	{
+		glBindVertexArray(m_Id);
 	}
 
 }

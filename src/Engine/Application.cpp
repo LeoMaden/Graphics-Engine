@@ -50,7 +50,7 @@ namespace Engine {
 
 			OnUpdate(timestep);
 
-			LOG_TRACE("FPS: {:.0f}, Draws: {}, Quads: {}", 1.0f / timestep, Renderer2D::Stats.Draws, Renderer2D::Stats.Quads);
+			LOG_TRACE("FPS: {:.0f}, Draws: {}, Quads: {}, Textures: {}", 1.0f / timestep, Renderer2D::Stats.Draws, Renderer2D::Stats.Quads, Renderer2D::Stats.Textures);
 			Renderer2D::Stats.Reset();
 
 			m_Window->SwapBuffers();

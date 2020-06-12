@@ -23,6 +23,9 @@ namespace Engine {
 		void SetVec4(const std::string& name, const glm::vec4& vec);
 		void SetMat4(const std::string& name, const glm::mat4& mat);
 
+		void SetInt(const std::string& name, int val);
+		void SetIntArray(const std::string& name, int* vals, uint32_t size);
+
 	protected:
 		void AddShader(const std::string& path, GLenum type);
 		GLint GetLocation(const std::string& name) const;

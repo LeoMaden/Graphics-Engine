@@ -57,6 +57,18 @@ namespace Engine {
 		GLint loc = GetLocation(name);
 		glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mat));
 	}
+
+	void Shader::SetInt(const std::string& name, int val)
+	{
+		GLint loc = GetLocation(name);
+		glUniform1i(loc, val);
+	}
+
+	void Shader::SetIntArray(const std::string& name, int* vals, uint32_t count)
+	{
+		GLint loc = GetLocation(name);
+		glUniform1iv(loc, count, vals);
+	}
 	
 
 	void Shader::AddShader(const std::string& path, GLenum type)

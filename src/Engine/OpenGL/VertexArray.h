@@ -10,6 +10,8 @@ namespace Engine {
 		VertexArray(VertexBuffer& vbo, IndexBuffer& ibo);
 		~VertexArray();
 
+		void Bind() const;
+
 	private:
 		GLuint			m_Id;
 		VertexBuffer&	m_Vbo;

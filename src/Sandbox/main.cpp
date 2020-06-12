@@ -21,7 +21,13 @@ public:
 		m_CameraController.SetCamera(cam);
 		m_CameraController.SetKeyDownFunc([&](Engine::KeyCode k) { return m_Window->IsKeyDown(k); });
 
-		Engine::RenderCommand::EnableBlending();
+		//Engine::RenderCommand::EnableBlending();
+
+		m_Tex.Bind(0);
+		m_Tex.SetImage("res/images/apple2.png");
+
+		m_Tex2.Bind(0);
+		m_Tex2.SetImage("res/images/cam.png");
 	}
 
 	virtual void OnUpdate(float timestep) override
@@ -29,9 +35,14 @@ public:
 		m_CameraController.OnUpdate(timestep);
 
 		Engine::Renderer2D::BeginScene(m_CameraController.GetCamera());
+
 		Engine::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f, 1.0f });
 		Engine::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 10.0f, 10.0f }, { 0.0f, 0.0f, 1.0f, 1.0f }, { 0.0f, 0.0f });
 		Engine::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, { 1.0f, 0.5f, 0.2f, 0.5f }, { 0.2f, 0.2f });
+
+		Engine::Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 2.0f, 2.0f }, { 0.0f, 0.0f }, m_Tex);
+		Engine::Renderer2D::DrawQuad({ -3.0f, 0.0f }, { 2.0f, 2.0f }, { 0.0f, 0.0f }, m_Tex);
+
 		Engine::Renderer2D::EndScene();
 
 		//Engine::Renderer2D::BeginScene(m_CameraController.GetCamera());
@@ -46,7 +57,9 @@ public:
 	}
 
 private:
-	Engine::CameraController2D m_CameraController;
+	Engine::CameraController2D	m_CameraController;
+	Engine::Texture2D			m_Tex;
+	Engine::Texture2D			m_Tex2;
 };
 
 int main()
