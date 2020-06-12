@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "Log.h"
 #include "Renderer2D.h"
+#include "RenderCommand.h"
 
 #include "Camera/CameraController2D.h"
 
@@ -19,6 +20,8 @@ public:
 
 		m_CameraController.SetCamera(cam);
 		m_CameraController.SetKeyDownFunc([&](Engine::KeyCode k) { return m_Window->IsKeyDown(k); });
+
+		Engine::RenderCommand::EnableBlending();
 	}
 
 	virtual void OnUpdate(float timestep) override
@@ -27,19 +30,19 @@ public:
 
 		Engine::Renderer2D::BeginScene(m_CameraController.GetCamera());
 		Engine::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f, 1.0f });
-		Engine::Renderer2D::DrawQuad({ 2.0f, 0.0f }, { 1.0f, 1.0f }, { 1.0f, 0.0f, 1.0f, 1.0f });
-		Engine::Renderer2D::DrawQuad({ -2.0f, 0.0f }, { 1.0f, 2.0f }, { 1.0f, 0.6f, 0.2f, 1.0f });
+		Engine::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 10.0f, 10.0f }, { 0.0f, 0.0f, 1.0f, 1.0f }, { 0.0f, 0.0f });
+		Engine::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, { 1.0f, 0.5f, 0.2f, 0.5f }, { 0.2f, 0.2f });
 		Engine::Renderer2D::EndScene();
 
-		Engine::Renderer2D::BeginScene(m_CameraController.GetCamera());
-		for (int i = 0; i < 500; i++)
-		{
-			for (int j = 0; j < 500; j++)
-			{
-				Engine::Renderer2D::DrawQuad({ i, j }, { 0.9f, 0.9f }, { 0.0f, 0.0f, 1.0f, 1.0f });
-			}
-		}
-		Engine::Renderer2D::EndScene();
+		//Engine::Renderer2D::BeginScene(m_CameraController.GetCamera());
+		//for (int i = 0; i < 50; i++)
+		//{
+		//	for (int j = 0; j < 50; j++)
+		//	{
+		//		Engine::Renderer2D::DrawQuad({ i, j }, { 0.9f, 0.9f }, { 0.0f, 0.0f, 1.0f, 1.0f });
+		//	}
+		//}
+		//Engine::Renderer2D::EndScene();
 	}
 
 private:

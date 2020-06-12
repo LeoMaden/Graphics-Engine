@@ -19,7 +19,7 @@ namespace Engine {
 	struct Renderer2DData
 	{
 		std::unique_ptr<Shader>	FlatColorShader;
-		glm::vec3				UnitSquarePositions[4];
+		glm::vec2				UnitSquarePositions[4];
 		glm::mat4				SceneViewProjMat;
 
 		VertexBuffer* VBO;
@@ -72,10 +72,10 @@ namespace Engine {
 			LOG_INFO("Open GL Debug not enabled");
 		}
 
-		s_Data.UnitSquarePositions[0] = { -0.5f, -0.5f, 0.0f };
-		s_Data.UnitSquarePositions[1] = { 0.5f, -0.5f, 0.0f };
-		s_Data.UnitSquarePositions[2] = { 0.5f,  0.5f, 0.0f };
-		s_Data.UnitSquarePositions[3] = { -0.5f,  0.5f, 0.0f };
+		s_Data.UnitSquarePositions[0] = { 0.0f, 0.0f };
+		s_Data.UnitSquarePositions[1] = { 1.0f, 0.0f };
+		s_Data.UnitSquarePositions[2] = { 1.0f, 1.0f };
+		s_Data.UnitSquarePositions[3] = { 0.0f, 1.0f };
 
 		s_Data.VBO = new VertexBuffer(s_Data.VBOSize);
 		s_Data.VBO->AddLayout(0, GL_FLOAT, 3); // Position
@@ -139,6 +139,11 @@ namespace Engine {
 
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
 	{
+		DrawQuad(position, size, color, size / 2.0f);
+	}
+
+	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color, const glm::vec2& centre)
+	{
 		if (s_Data.QuadCount >= s_Data.QuadsPerBatch)
 		{
 			FlushAndReset();
@@ -147,9 +152,6 @@ namespace Engine {
 		QuadVertex vertices[4];
 		IndexType indices[6];
 
-		glm::vec3 pos3 = glm::vec3(position, 0.0f);
-		glm::vec3 size3 = glm::vec3(size, 0.0f);
-
 		indices[0] = 0 + 4 * s_Data.QuadCount;
 		indices[1] = 1 + 4 * s_Data.QuadCount;
 		indices[2] = 2 + 4 * s_Data.QuadCount;
@@ -157,10 +159,10 @@ namespace Engine {
 		indices[4] = 3 + 4 * s_Data.QuadCount;
 		indices[5] = 0 + 4 * s_Data.QuadCount;
 
-		vertices[0].Position = s_Data.UnitSquarePositions[0] * size3 + pos3;
-		vertices[1].Position = s_Data.UnitSquarePositions[1] * size3 + pos3;
-		vertices[2].Position = s_Data.UnitSquarePositions[2] * size3 + pos3;
-		vertices[3].Position = s_Data.UnitSquarePositions[3] * size3 + pos3;
+		vertices[0].Position = glm::vec3((s_Data.UnitSquarePositions[0] - centre) * size + position, 0.0f);
+		vertices[1].Position = glm::vec3((s_Data.UnitSquarePositions[1] - centre) * size + position, 0.0f);
+		vertices[2].Position = glm::vec3((s_Data.UnitSquarePositions[2] - centre) * size + position, 0.0f);
+		vertices[3].Position = glm::vec3((s_Data.UnitSquarePositions[3] - centre) * size + position, 0.0f);
 
 		vertices[0].Color = color;
 		vertices[1].Color = color;

@@ -6,6 +6,8 @@ namespace Engine {
 	{
 	public:
 		static void Clear();
+
+		static void EnableBlending(bool setting = true);
 	};
 
 }
