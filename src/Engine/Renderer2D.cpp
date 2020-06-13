@@ -252,12 +252,12 @@ namespace Engine {
 		Stats.Quads++;
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Texture2D& texture)
+	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Texture2DBase& texture)
 	{
 		DrawQuad(position, size, texture, size / 2.0f);
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Texture2D& texture, const glm::vec2& centre)
+	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Texture2DBase& texture, const glm::vec2& centre)
 	{
 		if (s_Data.TextureBatch.QuadCount >= s_Data.TextureBatch.QuadsPerBatch)
 		{
@@ -300,10 +300,10 @@ namespace Engine {
 		vertices[2].Position = glm::vec3((s_Data.UnitSquarePositions[2] - centre) * size + position, 0.0f);
 		vertices[3].Position = glm::vec3((s_Data.UnitSquarePositions[3] - centre) * size + position, 0.0f);
 
-		vertices[0].TexCoord = { 0.0f, 0.0f };
-		vertices[1].TexCoord = { 1.0f, 0.0f };
-		vertices[2].TexCoord = { 1.0f, 1.0f };
-		vertices[3].TexCoord = { 0.0f, 1.0f };
+		vertices[0].TexCoord = texture.GetTexCoord(0);
+		vertices[1].TexCoord = texture.GetTexCoord(1);
+		vertices[2].TexCoord = texture.GetTexCoord(2);
+		vertices[3].TexCoord = texture.GetTexCoord(3);
 
 		vertices[0].TexSlot = texId;
 		vertices[1].TexSlot = texId;

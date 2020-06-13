@@ -1,7 +1,7 @@
 #pragma once
 #include "OpenGL/Shader.h"
 #include "OpenGL/VertexArray.h"
-#include "OpenGL/Texture2D.h"
+#include "OpenGL/Texture2DBase.h"
 
 #include "Camera/Camera.h"
 
@@ -22,8 +22,8 @@ namespace Engine {
 
 		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
 		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color, const glm::vec2& centre);
-		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Texture2D& texture);
-		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Texture2D& texture, const glm::vec2& centre);
+		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Texture2DBase& texture);
+		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Texture2DBase& texture, const glm::vec2& centre);
 
 		struct Statistics
 		{

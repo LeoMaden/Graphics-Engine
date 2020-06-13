@@ -4,6 +4,7 @@
 #include "RenderCommand.h"
 
 #include "Camera/CameraController2D.h"
+#include "OpenGL/SubTexture2D.h"
 
 #include <iostream>
 
@@ -24,11 +25,15 @@ public:
 
 		Engine::RenderCommand::EnableBlending(true);
 
-		m_Tex.Bind(0);
-		m_Tex.SetImage("res/images/apple.jpg");
+		m_Tex = new Engine::Texture2D();
+		m_Tex->SetImage("res/images/apple.jpg");
 
-		m_Tex2.Bind(0);
-		m_Tex2.SetImage("res/images/cam.png");
+		m_Tex2 = new Engine::Texture2D();
+		m_Tex2->SetImage("res/images/cam.png");
+
+		m_SubTex = new Engine::SubTexture2D(*m_Tex, 
+			{ 0, 0 }, { 100, 100 }, { 3, 2 });
+	
 	}
 
 	virtual void OnUpdate(float timestep) override
@@ -56,12 +61,12 @@ public:
 				if ((i + j) % 2 == 0)
 				{
 					//Engine::Renderer2D::DrawQuad({ i, j }, { 0.9f, 0.9f }, { i / 50.0f, j / 50.0f, 0.3f, 1.0f }, { 0.0f, 0.0f });
-					Engine::Renderer2D::DrawQuad({ i, j }, { 0.9f, 0.9f }, m_Tex, { 0.0f, 0.0f });
+					Engine::Renderer2D::DrawQuad({ i, j }, { 0.9f, 0.9f }, *m_SubTex, { 0.0f, 0.0f });
 				}
 				else
 				{
 					//Engine::Renderer2D::DrawQuad({ i, j }, { 0.9f, 0.9f }, { i / 50.0f, j / 50.0f, 0.3f, 1.0f }, { 0.0f, 0.0f });
-					Engine::Renderer2D::DrawQuad({ i, j }, { 0.9f, 0.9f }, m_Tex2, { 0.0f, 0.0f });
+					Engine::Renderer2D::DrawQuad({ i, j }, { 0.9f, 0.9f }, *m_Tex2, { 0.0f, 0.0f });
 				}
 			}
 		}
@@ -70,8 +75,9 @@ public:
 
 private:
 	Engine::CameraController2D	m_CameraController;
-	Engine::Texture2D			m_Tex;
-	Engine::Texture2D			m_Tex2;
+	Engine::Texture2D*			m_Tex;
+	Engine::Texture2D*			m_Tex2;
+	Engine::SubTexture2D*		m_SubTex;
 };
 
 int main()

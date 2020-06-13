@@ -16,6 +16,11 @@ namespace Engine {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		m_TexCoords[0] = { 0, 0 };
+		m_TexCoords[1] = { 1, 0 };
+		m_TexCoords[2] = { 1, 1 };
+		m_TexCoords[3] = { 0, 1 };
 	}
 
 	Texture2D::~Texture2D()
