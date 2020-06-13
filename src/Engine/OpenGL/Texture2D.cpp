@@ -30,9 +30,8 @@ namespace Engine {
 
 	void Texture2D::SetImage(const std::string& path)
 	{
-		Utils::ImageProps props;
-		uint8_t* data = Utils::LoadImage(path, &props);
-		SetImage(data, props);
+		uint8_t* data = Utils::LoadImage(path, &m_Props);
+		SetImage(data, m_Props);
 		Utils::FreeImage(data);
 	}
 

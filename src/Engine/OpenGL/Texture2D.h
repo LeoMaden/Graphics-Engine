@@ -17,8 +17,13 @@ namespace Engine {
 		void SetImage(const std::string& path);
 		void SetImage(uint8_t* data, const Utils::ImageProps& props);
 
+		int GetWidth()		const { return m_Props.Width; }
+		int GetHeight()		const { return m_Props.Height; }
+		int GetChannels()	const { return m_Props.Channels; }
+
 	private:
 		GLuint m_Id;
+		Utils::ImageProps m_Props;
 	};
 
 }
