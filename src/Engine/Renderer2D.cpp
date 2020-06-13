@@ -252,7 +252,12 @@ namespace Engine {
 		Stats.Quads++;
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec2& centre, const Texture2D& texture)
+	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Texture2D& texture)
+	{
+		DrawQuad(position, size, texture, size / 2.0f);
+	}
+
+	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Texture2D& texture, const glm::vec2& centre)
 	{
 		if (s_Data.TextureBatch.QuadCount >= s_Data.TextureBatch.QuadsPerBatch)
 		{
@@ -277,7 +282,7 @@ namespace Engine {
 			texture.Bind(texId);
 
 			s_Data.CurrentTexSlot++;
-			Stats.Textures++;
+			Stats.Textures = s_Data.CurrentTexSlot;
 		}
 
 		TexturedQuadVertex vertices[4];

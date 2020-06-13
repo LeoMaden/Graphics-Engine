@@ -46,7 +46,7 @@ namespace Engine {
 			float timestep = (current - m_LastFrameTime).count() / 1e9;
 			m_LastFrameTime = current;
 
-			RenderCommand::Clear();
+			RenderCommand::Clear({ 0.8f, 0.8f, 0.8f, 1.0f });
 
 			OnUpdate(timestep);
 

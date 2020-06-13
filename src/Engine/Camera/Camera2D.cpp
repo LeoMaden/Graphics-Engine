@@ -7,7 +7,7 @@
 namespace Engine {
 
 	Camera2D::Camera2D()
-		: m_Position(0.0f), m_ProjMatrix(1.0f), m_ViewMatrix(1.0f), m_ViewProjMat(1.0f)
+		: m_Position(0.0f, 0.0f, -1.0f), m_ProjMatrix(1.0f), m_ViewMatrix(1.0f), m_ViewProjMat(1.0f)
 	{
 	}
 
@@ -35,7 +35,7 @@ namespace Engine {
 		float bottom = -centre.y;
 		float top = size.y - centre.y;
 
-		m_ProjMatrix = glm::ortho(left, right, bottom, top);
+		m_ProjMatrix = glm::ortho(left, right, bottom, top, 0.0f, 100.0f);
 		RecalcViewProj();
 	}
 

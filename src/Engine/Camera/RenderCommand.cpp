@@ -9,6 +9,12 @@ namespace Engine {
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
+	void RenderCommand::Clear(const glm::vec4& color)
+	{
+		glClear(GL_COLOR_BUFFER_BIT);
+		glClearColor(color.r, color.g, color.b, color.a);
+	}
+
 	void RenderCommand::EnableBlending(bool setting)
 	{
 		if (setting == false)
