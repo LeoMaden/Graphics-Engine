@@ -25,14 +25,20 @@ public:
 
 		Engine::RenderCommand::EnableBlending(true);
 
-		m_Tex = new Engine::Texture2D();
-		m_Tex->SetImage("res/images/apple.jpg");
+		m_SpriteSheet = new Engine::Texture2D();
+		m_SpriteSheet->SetImage("res/images/spritesheet.png");
 
-		m_Tex2 = new Engine::Texture2D();
-		m_Tex2->SetImage("res/images/cam.png");
+		Engine::SubTexture2D::SubTexture2DData subTexData;
+		subTexData.Origin = { 0, 0 };
+		subTexData.Padding = { 0, 2, 2, 0 };
+		subTexData.SpriteSize = { 1, 1 };
+		subTexData.UnitSize = { 72, 72 };
 
-		m_SubTex = new Engine::SubTexture2D(*m_Tex, 
-			{ 0, 0 }, { 100, 100 }, { 3, 2 });
+		subTexData.Location = { 7, 4 };
+		m_GrassTex = new Engine::SubTexture2D(*m_SpriteSheet, subTexData);
+
+		subTexData.Location = { 10, 0 };
+		m_StoneTex = new Engine::SubTexture2D(*m_SpriteSheet, subTexData);
 	
 	}
 
@@ -61,12 +67,12 @@ public:
 				if ((i + j) % 2 == 0)
 				{
 					//Engine::Renderer2D::DrawQuad({ i, j }, { 0.9f, 0.9f }, { i / 50.0f, j / 50.0f, 0.3f, 1.0f }, { 0.0f, 0.0f });
-					Engine::Renderer2D::DrawQuad({ i, j }, { 0.9f, 0.9f }, *m_SubTex, { 0.0f, 0.0f });
+					Engine::Renderer2D::DrawQuad({ i, j }, { 0.9f, 0.9f }, *m_GrassTex, { 0.0f, 0.0f });
 				}
 				else
 				{
 					//Engine::Renderer2D::DrawQuad({ i, j }, { 0.9f, 0.9f }, { i / 50.0f, j / 50.0f, 0.3f, 1.0f }, { 0.0f, 0.0f });
-					Engine::Renderer2D::DrawQuad({ i, j }, { 0.9f, 0.9f }, *m_Tex2, { 0.0f, 0.0f });
+					Engine::Renderer2D::DrawQuad({ i, j }, { 0.9f, 0.9f }, *m_StoneTex, { 0.0f, 0.0f });
 				}
 			}
 		}
@@ -75,9 +81,9 @@ public:
 
 private:
 	Engine::CameraController2D	m_CameraController;
-	Engine::Texture2D*			m_Tex;
-	Engine::Texture2D*			m_Tex2;
-	Engine::SubTexture2D*		m_SubTex;
+	Engine::Texture2D*			m_SpriteSheet;
+	Engine::SubTexture2D*		m_GrassTex;
+	Engine::SubTexture2D*		m_StoneTex;
 };
 
 int main()

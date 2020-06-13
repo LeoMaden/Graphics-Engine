@@ -7,10 +7,16 @@ namespace Engine {
 	class SubTexture2D : public Texture2DBase
 	{
 	public:
-		SubTexture2D(const Texture2D& texture, 
-			const glm::vec2& location, 
-			const glm::vec2 unitSize, 
-			const glm::vec2& spriteSize = { 1.0f, 1.0f });
+		struct SubTexture2DData
+		{
+			glm::vec2 Location;
+			glm::vec2 UnitSize;
+			glm::vec4 Padding; // Top right bottom left
+			glm::vec2 Origin;
+			glm::vec2 SpriteSize = { 1.0f, 1.0f };
+		};
+
+		SubTexture2D(const Texture2D& texture, const SubTexture2DData& data);
 
 		virtual uint32_t GetId()							const override { return m_Texture.GetId(); }
 		virtual void Bind(uint32_t slot)					const override;
