@@ -53,7 +53,7 @@ namespace Engine {
 			ASSERT(false, "Format unsupported");
 		}
 
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, props.Width, props.Height, 0, format, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, props.Width, props.Height, 0, format, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 

@@ -8,8 +8,6 @@ uniform sampler2D u_Textures[32];
 
 void main() 
 {
-	//o_Color = vec4(v_TexCoord, v_TexSlot, 1.0);
-
 	switch(int(v_TexSlot))
 	{
 		case 0: o_Color = texture(u_Textures[0], v_TexCoord); break;
