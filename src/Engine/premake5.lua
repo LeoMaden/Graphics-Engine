@@ -17,7 +17,8 @@ project "Engine"
     }
 
     links {
-        "glad"
+        "glad",
+        "freetype"
     }
 
     defines {
