@@ -30,5 +30,4 @@ include "src/Engine/premake5.lua"
 
 group "Dependencies"
     include "Dependencies/glad/premake5.lua"
-    include "Dependencies/freetype/premake5.lua"
 group ""

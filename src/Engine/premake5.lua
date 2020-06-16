@@ -13,13 +13,11 @@ project "Engine"
         "../../Dependencies/OpenGL",
         "../../Dependencies/glm",
         "../../Dependencies/spdlog",
-        "../../Dependencies/stb_image",
-        "../../Dependencies/freetype/include"
+        "../../Dependencies/stb_image"
     }
 
     links {
-        "glad",
-        "freetype"
+        "glad"
     }
 
     defines {
