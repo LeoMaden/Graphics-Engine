@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Window.h"
+#include <functional>
 
 namespace Engine {
 
