@@ -2,6 +2,8 @@
 #include "Event.h"
 #include "KeyCodes.h"
 
+#include <glm/glm.hpp>
+
 namespace Engine {
 
 	class MouseMoveEvent : public Event
@@ -34,6 +36,24 @@ namespace Engine {
 	private:
 		KeyCode m_MouseCode;
 		KeyCode m_Modifier;
+	};
+
+	class MouseScrollEvent : public Event
+	{
+	public:
+		MouseScrollEvent(int distance, ModifierKeys modifier, const glm::vec2& pos)
+			: m_Dist(distance), m_Modifier(modifier), m_Pos(pos)
+		{
+		}
+
+		int				GetDistance() const { return m_Dist; }
+		ModifierKeys	GetModifier() const { return m_Modifier; }
+		glm::vec2		GetPosition() const { return m_Pos; }
+
+	private:
+		int				m_Dist;
+		ModifierKeys	m_Modifier;
+		glm::vec2		m_Pos;
 	};
 
 }

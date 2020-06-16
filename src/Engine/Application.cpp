@@ -32,6 +32,7 @@ namespace Engine {
 	{
 		DispatchEvent<KeyDownEvent>(e, BIND_EVENT_FUNC(OnKeyDown, KeyDownEvent));
 		DispatchEvent<WindowResizeEvent>(e, BIND_EVENT_FUNC(OnWindowResize, WindowResizeEvent));
+		DispatchEvent<MouseScrollEvent>(e, BIND_EVENT_FUNC(OnMouseScroll, MouseScrollEvent));
 	}
 
 	void Application::Run()
@@ -70,6 +71,10 @@ namespace Engine {
 	}
 
 	void Application::OnWindowResize(WindowResizeEvent& e)
+	{
+	}
+
+	void Application::OnMouseScroll(MouseScrollEvent& e)
 	{
 	}
 

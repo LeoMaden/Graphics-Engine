@@ -84,6 +84,11 @@ public:
 		m_CameraController.OnWindowResize(e);
 	}
 
+	virtual void OnMouseScroll(Engine::MouseScrollEvent& e) override
+	{
+		m_CameraController.OnMouseScroll(e);
+	}
+
 private:
 	Engine::CameraController2D	m_CameraController;
 	Engine::Texture2D*			m_SpriteSheet;

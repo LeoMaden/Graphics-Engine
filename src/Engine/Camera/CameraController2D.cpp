@@ -29,11 +29,7 @@ namespace Engine {
 	void CameraController2D::SetCamera(const Camera2D& camera)
 	{
 		m_Camera = camera;
-
-		glm::vec2 size = { m_Zoom * m_Aspect, m_Zoom };
-		glm::vec2 centre = size / 2.0f;
-
-		m_Camera.SetProjection(size, centre);
+		UpdateProjection();
 	}
 
 	void CameraController2D::OnWindowResize(WindowResizeEvent& e)
@@ -42,7 +38,17 @@ namespace Engine {
 		int h = e.GetHeight();
 
 		m_Aspect = (float)w / (float)h;
+		UpdateProjection();
+	}
 
+	void CameraController2D::OnMouseScroll(MouseScrollEvent& e)
+	{
+		m_Zoom -= e.GetDistance() * m_ScrollSpeed;
+		UpdateProjection();
+	}
+
+	void CameraController2D::UpdateProjection()
+	{
 		glm::vec2 size = { m_Zoom * m_Aspect, m_Zoom };
 		glm::vec2 centre = size / 2.0f;
 

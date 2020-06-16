@@ -24,6 +24,7 @@ namespace Engine {
 	protected:
 		virtual void OnKeyDown(KeyDownEvent& e);
 		virtual void OnWindowResize(WindowResizeEvent& e);
+		virtual void OnMouseScroll(MouseScrollEvent& e);
 
 		Window*		m_Window;
 		TimePoint	m_LastFrameTime;

@@ -110,6 +110,20 @@ namespace Engine {
 		return flags;
 	}
 
+	static ModifierKeys GetModKeys(WPARAM wParam)
+	{
+		int fwKeys = GET_KEYSTATE_WPARAM(wParam);
+
+		ModifierKeys m;
+		m.Ctrl = fwKeys & MK_CONTROL;
+		m.Shift = fwKeys & MK_SHIFT;
+		m.Mouse1 = fwKeys & MK_LBUTTON;
+		m.Mouse2 = fwKeys & MK_RBUTTON;
+		m.Mouse3 = fwKeys & MK_MBUTTON;
+
+		return m;
+	}
+
 	static void OnKeyDown(Window* sender, WPARAM wParam, LPARAM lParam)
 	{
 		KeyCode code = GetEngineKeyCode[wParam];
@@ -131,6 +145,17 @@ namespace Engine {
 		int yPos = GET_Y_LPARAM(lParam);
 
 		MouseMoveEvent e(xPos, yPos);
+		sender->Callback(e);
+	}
+
+	static void OnMouseScroll(Window* sender, WPARAM wParam, LPARAM lParam)
+	{
+		int dist = GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
+		ModifierKeys modKey = GetModKeys(wParam);
+		int xPos = GET_X_LPARAM(lParam);
+		int yPos = GET_Y_LPARAM(lParam);
+
+		MouseScrollEvent e(dist, modKey, { xPos, yPos });
 		sender->Callback(e);
 	}
 
@@ -174,10 +199,11 @@ namespace Engine {
 		case WM_KEYUP:			OnKeyUp(senderWindow, wParam, lParam);		return 0;
 
 		// Mouse events.
-		case WM_MOUSEMOVE:		OnMouseMove(senderWindow, wParam, lParam);	return 0;
+		case WM_MOUSEMOVE:		OnMouseMove(senderWindow, wParam, lParam);		return 0;
+		case WM_MOUSEWHEEL:		OnMouseScroll(senderWindow, wParam, lParam);	return 0;
 
 		// Window events.
-		case WM_SIZE:			OnResize(senderWindow, lParam);				return 0;
+		case WM_SIZE:			OnResize(senderWindow, lParam);			return 0;
 		}
 
 		return DefWindowProc(hwnd, uMsg, wParam, lParam);

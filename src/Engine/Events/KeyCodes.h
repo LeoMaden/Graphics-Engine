@@ -33,4 +33,13 @@ namespace Engine {
 
 	};
 
+	struct ModifierKeys
+	{
+		bool Ctrl = false;
+		bool Shift = false;
+		bool Mouse1 = false;
+		bool Mouse2 = false;
+		bool Mouse3 = false;
+	};
+
 }
