@@ -2,6 +2,7 @@
 #include "Log.h"
 
 #include "Events/MouseEvents.h"
+#include "Events/WindowEvents.h"
 
 #include <windowsx.h>
 
@@ -114,14 +115,14 @@ namespace Engine {
 		KeyCode code = GetEngineKeyCode[wParam];
 		KeyFlags flags = GetKeyFlags(lParam);
 		KeyDownEvent e(code, flags);
-		sender->OnEvent(e);
+		sender->Callback(e);
 	}
 
 	static void OnKeyUp(Window* sender, WPARAM wParam, LPARAM lParam)
 	{
 		KeyCode code = GetEngineKeyCode[wParam];
 		KeyUpEvent e(code);
-		sender->OnEvent(e);
+		sender->Callback(e);
 	}
 
 	static void OnMouseMove(Window* sender, WPARAM wParam, LPARAM lParam)
@@ -130,10 +131,10 @@ namespace Engine {
 		int yPos = GET_Y_LPARAM(lParam);
 
 		MouseMoveEvent e(xPos, yPos);
-		sender->OnEvent(e);
+		sender->Callback(e);
 	}
 
-	static void OnResize(LPARAM lParam)
+	static void OnResize(Window* sender, LPARAM lParam)
 	{
 		int width = LOWORD(lParam);
 		int height = HIWORD(lParam);
@@ -144,6 +145,9 @@ namespace Engine {
 		}
 
 		glViewport(0, 0, width, height);
+
+		WindowResizeEvent e(width, height);
+		sender->Callback(e);
 	}
 
 	/*static*/ LRESULT CALLBACK Window::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -173,7 +177,7 @@ namespace Engine {
 		case WM_MOUSEMOVE:		OnMouseMove(senderWindow, wParam, lParam);	return 0;
 
 		// Window events.
-		case WM_SIZE:			OnResize(lParam);							return 0;
+		case WM_SIZE:			OnResize(senderWindow, lParam);				return 0;
 		}
 
 		return DefWindowProc(hwnd, uMsg, wParam, lParam);

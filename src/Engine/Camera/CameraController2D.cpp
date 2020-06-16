@@ -26,4 +26,27 @@ namespace Engine {
 		m_Camera.Move(glm::vec3(moveDir, 0.0f));
 	}
 
+	void CameraController2D::SetCamera(const Camera2D& camera)
+	{
+		m_Camera = camera;
+
+		glm::vec2 size = { m_Zoom * m_Aspect, m_Zoom };
+		glm::vec2 centre = size / 2.0f;
+
+		m_Camera.SetProjection(size, centre);
+	}
+
+	void CameraController2D::OnWindowResize(WindowResizeEvent& e)
+	{
+		int w = e.GetWidth();
+		int h = e.GetHeight();
+
+		m_Aspect = (float)w / (float)h;
+
+		glm::vec2 size = { m_Zoom * m_Aspect, m_Zoom };
+		glm::vec2 centre = size / 2.0f;
+
+		m_Camera.SetProjection(size, centre);
+	}
+
 }

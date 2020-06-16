@@ -2,6 +2,7 @@
 #include "Window.h"
 #include "Events/Event.h"
 #include "Events/MouseEvents.h"
+#include "Events/WindowEvents.h"
 
 #include <chrono>
 
@@ -21,7 +22,8 @@ namespace Engine {
 		virtual void OnUpdate(float timestep) {}
 
 	protected:
-		void OnKeyDown(KeyDownEvent& e);
+		virtual void OnKeyDown(KeyDownEvent& e);
+		virtual void OnWindowResize(WindowResizeEvent& e);
 
 		Window*		m_Window;
 		TimePoint	m_LastFrameTime;

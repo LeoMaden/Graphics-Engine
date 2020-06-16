@@ -16,11 +16,11 @@ public:
 		LOG_DEBUG("App startup");
 		Engine::Renderer2D::Init();
 
-		Engine::Camera2D cam;
-		cam.SetProjection({ 16, 9 }, { 8, 4.5f });
+		//Engine::Camera2D cam;
+		//cam.SetProjection({ 16, 9 }, { 8, 4.5f });
 
 		m_CameraController = Engine::CameraController2D();
-		m_CameraController.SetCamera(cam);
+		m_CameraController.SetCamera(Engine::Camera2D());
 		m_CameraController.SetKeyDownFunc([&](Engine::KeyCode k) { return m_Window->IsKeyDown(k); });
 
 		Engine::RenderCommand::EnableBlending(true);
@@ -77,6 +77,11 @@ public:
 			}
 		}
 		Engine::Renderer2D::EndScene();
+	}
+
+	virtual void OnWindowResize(Engine::WindowResizeEvent& e) override
+	{
+		m_CameraController.OnWindowResize(e);
 	}
 
 private:

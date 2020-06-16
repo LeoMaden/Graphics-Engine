@@ -14,20 +14,21 @@ namespace Engine {
 	private:
 		static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-		using Callback = std::function<void(Event&)>;
+		using CallbackFunc = std::function<void(Event&)>;
 
 	public:
 		bool Create();
 		bool CreateContext();
 
-		void SetCallback(Callback callback)		{ m_Callback = callback; }
+		void SetCallback(CallbackFunc callback)	{ m_Callback = callback; }
 		bool ShouldClose() const				{ return m_ShouldClose; }
 		void Close()							{ OnClose(); }
 
 		void PollEvents();
 		void SwapBuffers();
 
-		void OnEvent(Event& e)		{ m_Callback(e); }
+		void OnEvent(Event& e)	{}
+		void Callback(Event& e) { m_Callback(e); }
 
 		bool IsKeyDown(KeyCode key);
 
@@ -35,13 +36,12 @@ namespace Engine {
 
 	protected:
 		void OnClose();
-		//void OnResize()
 
 
 	private:
-		bool		m_ShouldClose		= false;
-		HWND		m_HWnd				= nullptr;
-		Callback	m_Callback			= nullptr;
+		bool			m_ShouldClose		= false;
+		HWND			m_HWnd				= nullptr;
+		CallbackFunc	m_Callback			= nullptr;
 	};
 
 }

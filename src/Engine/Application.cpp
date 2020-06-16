@@ -31,6 +31,7 @@ namespace Engine {
 	void Application::OnEvent(Event& e)
 	{
 		DispatchEvent<KeyDownEvent>(e, BIND_EVENT_FUNC(OnKeyDown, KeyDownEvent));
+		DispatchEvent<WindowResizeEvent>(e, BIND_EVENT_FUNC(OnWindowResize, WindowResizeEvent));
 	}
 
 	void Application::Run()
@@ -66,6 +67,10 @@ namespace Engine {
 			m_Window->Close();
 			break;
 		}
+	}
+
+	void Application::OnWindowResize(WindowResizeEvent& e)
+	{
 	}
 
 }
