@@ -29,9 +29,9 @@ namespace Engine {
 
 		Camera2D			m_Camera;
 		IsKeyDownFunc		m_KeyDownFunc;
-		float				m_Speed = 5.0f;
+		float				m_Speed = 8.0f;
 
-		float m_Zoom	= 5.0f;
+		float m_Zoom	= 10.0f;
 		float m_Aspect	= 16.0f / 9.0f;
 		float m_ScrollSpeed = 2.0f;
 	};

@@ -44,6 +44,10 @@ namespace Engine {
 	void CameraController2D::OnMouseScroll(MouseScrollEvent& e)
 	{
 		m_Zoom -= e.GetDistance() * m_ScrollSpeed;
+
+		if (m_Zoom < 2) m_Zoom = 2;
+		if (m_Zoom > 10) m_Zoom = 10;
+
 		UpdateProjection();
 	}
 
