@@ -90,8 +90,8 @@
 #include "zutil.h"
 #include "inftrees.h"
 #include "infblock.h"
-#include "infcodes.h"
 #include "infutil.h"
+#include "infcodes.h"
 #undef  NO_INFLATE_MASK
 
   /* infutil.c must be included before infcodes.c */

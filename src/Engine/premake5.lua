@@ -13,7 +13,8 @@ project "Engine"
         "../../Dependencies/OpenGL",
         "../../Dependencies/glm",
         "../../Dependencies/spdlog",
-        "../../Dependencies/stb_image"
+        "../../Dependencies/stb_image",
+        "../../Dependencies/freetype/include"
     }
 
     links {

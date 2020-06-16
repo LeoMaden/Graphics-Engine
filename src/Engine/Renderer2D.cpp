@@ -4,6 +4,9 @@
 #include <glad/glad.h>
 #include <iostream>
 
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
 namespace Engine {
 
 	struct QuadVertex
@@ -101,7 +104,9 @@ namespace Engine {
 		Batch<TexturedQuadVertex, IndexType>	TextureBatch;
 
 		int CurrentTexSlot = 0;
-		int BoundTextureIds[0];
+		int BoundTextureIds[32];
+
+		FT_Library FontLibrary;
 	};
 
 	static Renderer2DData s_Data;
@@ -179,6 +184,9 @@ namespace Engine {
 			texIds[i] = i;
 		}
 		s_Data.TextureBatch.Shader->SetIntArray("u_Textures", texIds, 32);
+
+		int err = FT_Init_FreeType(&s_Data.FontLibrary);
+		ASSERT(!err, "Failed to initialise freetype");
 	}
 
 	/*static*/ void Renderer2D::DrawSquare()
