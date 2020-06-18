@@ -31,8 +31,12 @@ namespace Engine {
 	void Application::OnEvent(Event& e)
 	{
 		DispatchEvent<KeyDownEvent>(e, BIND_EVENT_FUNC(OnKeyDown, KeyDownEvent));
-		DispatchEvent<WindowResizeEvent>(e, BIND_EVENT_FUNC(OnWindowResize, WindowResizeEvent));
+		DispatchEvent<KeyUpEvent>(e, BIND_EVENT_FUNC(OnKeyUp, KeyUpEvent));
+
+		DispatchEvent<MouseMoveEvent>(e, BIND_EVENT_FUNC(OnMouseMove, MouseMoveEvent));
 		DispatchEvent<MouseScrollEvent>(e, BIND_EVENT_FUNC(OnMouseScroll, MouseScrollEvent));
+
+		DispatchEvent<WindowResizeEvent>(e, BIND_EVENT_FUNC(OnWindowResize, WindowResizeEvent));
 	}
 
 	void Application::Run()
@@ -60,6 +64,7 @@ namespace Engine {
 		}
 	}
 
+
 	void Application::OnKeyDown(KeyDownEvent& e)
 	{
 		switch (e.GetKeyCode())
@@ -70,11 +75,19 @@ namespace Engine {
 		}
 	}
 
-	void Application::OnWindowResize(WindowResizeEvent& e)
+	void Application::OnKeyUp(KeyUpEvent& e)
+	{
+	}
+
+	void Application::OnMouseMove(MouseMoveEvent& e)
 	{
 	}
 
 	void Application::OnMouseScroll(MouseScrollEvent& e)
+	{
+	}
+
+	void Application::OnWindowResize(WindowResizeEvent& e)
 	{
 	}
 

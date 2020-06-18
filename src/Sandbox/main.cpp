@@ -79,14 +79,14 @@ public:
 		Engine::Renderer2D::EndScene();
 	}
 
-	virtual void OnWindowResize(Engine::WindowResizeEvent& e) override
-	{
-		m_CameraController.OnWindowResize(e);
-	}
-
 	virtual void OnMouseScroll(Engine::MouseScrollEvent& e) override
 	{
 		m_CameraController.OnMouseScroll(e);
+	}
+
+	virtual void OnWindowResize(Engine::WindowResizeEvent& e) override
+	{
+		m_CameraController.OnWindowResize(e);
 	}
 
 private:
