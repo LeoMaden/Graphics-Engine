@@ -1,7 +1,7 @@
 #include "Application.h"
 #include "Log.h"
-#include "Renderer2D.h"
-#include "RenderCommand.h"
+#include "Rendering/Renderer2D.h"
+#include "Rendering/RenderCommand.h"
 
 #include "Camera/CameraController2D.h"
 #include "OpenGL/SubTexture2D.h"
