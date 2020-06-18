@@ -27,7 +27,7 @@ namespace Engine {
 		RecalcViewProj();
 	}
 
-	void Camera3D::SetProjection(float fov, float aspect)
+	void Camera3D::SetProjection(Radians fov, float aspect)
 	{
 		m_ProjMatrix = glm::perspective(fov, aspect, 0.1f, 100.0f);
 		RecalcViewProj();

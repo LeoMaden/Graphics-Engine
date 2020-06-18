@@ -4,6 +4,7 @@
 #include "Rendering/RenderCommand.h"
 
 #include "Camera/CameraController2D.h"
+#include "Camera/CameraControllerFPS.h"
 #include "OpenGL/SubTexture2D.h"
 
 #include <iostream>
@@ -19,8 +20,8 @@ public:
 		//Engine::Camera2D cam;
 		//cam.SetProjection({ 16, 9 }, { 8, 4.5f });
 
-		m_CameraController = Engine::CameraController2D();
-		m_CameraController.SetCamera(Engine::Camera2D());
+		m_CameraController = Engine::CameraControllerFPS();
+		m_CameraController.SetCamera(Engine::Camera3D());
 		m_CameraController.SetKeyDownFunc([&](Engine::KeyCode k) { return m_Window->IsKeyDown(k); });
 
 		Engine::RenderCommand::EnableBlending(true);
@@ -90,7 +91,7 @@ public:
 	}
 
 private:
-	Engine::CameraController2D	m_CameraController;
+	Engine::CameraControllerFPS	m_CameraController;
 	Engine::Texture2D*			m_SpriteSheet;
 	Engine::SubTexture2D*		m_GrassTex;
 	Engine::SubTexture2D*		m_StoneTex;

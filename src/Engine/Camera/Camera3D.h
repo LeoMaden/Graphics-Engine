@@ -3,6 +3,9 @@
 
 namespace Engine {
 
+	using Degrees = float;
+	using Radians = float;
+
 	class Camera3D : public Camera
 	{
 	public:
@@ -13,7 +16,7 @@ namespace Engine {
 
 		virtual const glm::mat4& GetViewProjMat() const override { return m_ViewProjMat; }
 
-		void SetProjection(float fov, float aspect);
+		void SetProjection(Radians fov, float aspect);
 
 	private:
 		glm::vec3 m_Position;

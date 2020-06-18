@@ -1,8 +1,8 @@
 #include "Application.h"
 #include "Log.h"
-#include "RenderCommand.h"
+#include "Rendering/RenderCommand.h"
 
-#include "Renderer2D.h"
+#include "Rendering/Renderer2D.h"
 
 namespace Engine {
 
