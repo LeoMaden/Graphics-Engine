@@ -15,7 +15,7 @@ namespace Engine {
 		Application();
 		~Application();
 
-		virtual void OnEvent(Event& e) {}
+		void OnEvent(Event& e);
 		void Run();
 
 		virtual void OnStartup() {}

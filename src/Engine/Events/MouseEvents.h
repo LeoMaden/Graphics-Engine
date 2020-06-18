@@ -9,33 +9,35 @@ namespace Engine {
 	class MouseMoveEvent : public Event
 	{
 	public:
-		MouseMoveEvent(int x, int y)
-			: m_X(x), m_Y(y)
+		MouseMoveEvent(const glm::vec2& pos, ModifierKeys modifier)
+			: m_Position(pos), m_Modifier(modifier)
 		{
 		}
 
-		int GetX() const { return m_X; }
-		int GetY() const { return m_Y; }
+		glm::vec2		GetPosition()	const { return m_Position; }
+		ModifierKeys	GetModifier()	const { return m_Modifier; }
 
 	private:
-		int m_X;
-		int m_Y;
+		glm::vec2		m_Position;
+		ModifierKeys	m_Modifier;
 	};
 
 	class MouseDownEvent : public Event
 	{
 	public:
-		MouseDownEvent(KeyCode mouseCode, KeyCode modifier)
-			: m_MouseCode(mouseCode), m_Modifier(modifier)
+		MouseDownEvent(KeyCode mouseCode, const glm::vec2& pos, ModifierKeys modifier)
+			: m_MouseCode(mouseCode), m_Position(pos), m_Modifier(modifier)
 		{
 		}
 
-		KeyCode GetMouseCode()	const { return m_MouseCode; }
-		KeyCode GetModifier()	const { return m_Modifier; }
+		KeyCode			GetMouseCode()	const { return m_MouseCode; }
+		glm::vec2		GetPosition()	const { return m_Position; }
+		ModifierKeys	GetModifier()	const { return m_Modifier; }
 
 	private:
-		KeyCode m_MouseCode;
-		KeyCode m_Modifier;
+		KeyCode			m_MouseCode;
+		glm::vec2		m_Position;
+		ModifierKeys	m_Modifier;
 	};
 
 	class MouseScrollEvent : public Event

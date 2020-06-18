@@ -143,8 +143,19 @@ namespace Engine {
 	{
 		int xPos = GET_X_LPARAM(lParam);
 		int yPos = GET_Y_LPARAM(lParam);
+		ModifierKeys mods = GetModKeys(wParam);
 
-		MouseMoveEvent e(xPos, yPos);
+		MouseMoveEvent e({ xPos, yPos }, mods);
+		sender->Callback(e);
+	}
+
+	static void OnMouse1Down(Window* sender, WPARAM wParam, LPARAM lParam)
+	{
+		int xPos = GET_X_LPARAM(lParam);
+		int yPos = GET_Y_LPARAM(lParam);
+		ModifierKeys mods = GetModKeys(wParam);
+
+		MouseDownEvent e(KeyCode::Mouse1, { xPos, yPos }, mods);
 		sender->Callback(e);
 	}
 
@@ -193,15 +204,13 @@ namespace Engine {
 		{
 		case WM_CLOSE:			senderWindow->OnClose();		return 0;
 		case WM_DESTROY:		PostQuitMessage(0);				return 0;
-
 		// Key events.
 		case WM_KEYDOWN:		OnKeyDown(senderWindow, wParam, lParam);	return 0;
 		case WM_KEYUP:			OnKeyUp(senderWindow, wParam, lParam);		return 0;
-
 		// Mouse events.
 		case WM_MOUSEMOVE:		OnMouseMove(senderWindow, wParam, lParam);		return 0;
+		case WM_LBUTTONDOWN:	OnMouse1Down(senderWindow, wParam, lParam);		return 0;
 		case WM_MOUSEWHEEL:		OnMouseScroll(senderWindow, wParam, lParam);	return 0;
-
 		// Window events.
 		case WM_SIZE:			OnResize(senderWindow, lParam);			return 0;
 		}
