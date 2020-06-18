@@ -13,12 +13,12 @@ namespace Engine {
 
 		glm::vec3 moveDir(0.0f);
 
-		if (wDown)		moveDir += glm::vec3(0, 0, 1);
-		if (aDown)		moveDir += glm::vec3(1, 0, 0);
-		if (sDown)		moveDir += glm::vec3(0, 0, -1);
-		if (dDown)		moveDir += glm::vec3(-1, 0, 0);
-		if (spaceDown)	moveDir += glm::vec3(0, -1, 0);
-		if (shiftDown)	moveDir += glm::vec3(0, 1, 0);
+		if (wDown)		moveDir += m_Camera.GetLookDir();
+		if (sDown)		moveDir -= m_Camera.GetLookDir();
+		if (dDown)		moveDir += m_Camera.GetRightDir();
+		if (aDown)		moveDir -= m_Camera.GetRightDir();
+		if (spaceDown)	moveDir += m_Camera.GetUpDir();
+		if (shiftDown)	moveDir -= m_Camera.GetUpDir();
 
 		if (moveDir == glm::vec3(0.0f))
 		{
@@ -53,6 +53,22 @@ namespace Engine {
 		if (m_Fov > 100) m_Fov = 100;
 
 		UpdateProjection();
+	}
+
+	void CameraControllerFPS::OnMouseMove(MouseMoveEvent& e)
+	{
+		if (m_FirstLook)
+		{
+			m_LastMousePos = e.GetPosition();
+			m_FirstLook = false;
+		}
+
+		glm::vec2 mouseDelta = e.GetPosition() - m_LastMousePos;
+
+		Degrees dYaw = mouseDelta.x * m_LookSensitivity;
+		Degrees dPitch = -mouseDelta.y * m_LookSensitivity;
+
+		m_Camera.Rotate(glm::radians(dPitch), glm::radians(dYaw));
 	}
 
 	void CameraControllerFPS::UpdateProjection()

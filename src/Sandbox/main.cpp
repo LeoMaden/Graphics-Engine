@@ -80,6 +80,11 @@ public:
 		Engine::Renderer2D::EndScene();
 	}
 
+	virtual void OnMouseMove(Engine::MouseMoveEvent& e) override
+	{
+		m_CameraController.OnMouseMove(e);
+	}
+
 	virtual void OnMouseScroll(Engine::MouseScrollEvent& e) override
 	{
 		m_CameraController.OnMouseScroll(e);

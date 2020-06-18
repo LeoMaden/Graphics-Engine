@@ -24,6 +24,7 @@ namespace Engine {
 
 		void OnWindowResize(WindowResizeEvent& e);
 		void OnMouseScroll(MouseScrollEvent& e);
+		void OnMouseMove(MouseMoveEvent& e);
 
 	private:
 		void UpdateProjection();
@@ -35,6 +36,10 @@ namespace Engine {
 		Degrees		m_Fov = 60.0f;
 		float		m_Aspect = 16.0f / 9.0f;
 		float		m_ScrollSpeed = 2.0f;
+
+		glm::vec2	m_LastMousePos = { 0, 0 };
+		bool		m_FirstLook = true;
+		float		m_LookSensitivity = 0.5f;
 	};
 
 }
