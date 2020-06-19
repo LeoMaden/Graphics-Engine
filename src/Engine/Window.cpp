@@ -267,7 +267,7 @@ namespace Engine {
 		m_HWnd = hwnd;
 
 		ShowWindow(hwnd, SW_SHOW);
-		ShowCursor(0);
+		//ShowCursor(0);
 
 		return true;
 	}
