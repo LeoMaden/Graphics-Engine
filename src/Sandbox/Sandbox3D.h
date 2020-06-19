@@ -13,6 +13,7 @@ public:
 	virtual void OnStartup() override
 	{
 		LOG_DEBUG("App startup");
+		Engine::RenderCommand::InitRenderer();
 		Engine::Renderer2D::Init();
 
 		m_CameraController = Engine::CameraControllerFPS();

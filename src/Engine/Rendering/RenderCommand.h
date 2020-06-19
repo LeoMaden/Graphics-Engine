@@ -9,6 +9,8 @@ namespace Engine {
 	class RenderCommand
 	{
 	public:
+		static void InitRenderer();
+
 		static void DrawIndexed(DrawMode mode, uint32_t count, DataType type = DataType::UInt32, uint32_t offset = 0);
 
 		static void Clear();
