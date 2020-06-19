@@ -3,6 +3,7 @@
 #include "Log.h"
 
 #include "Rendering/Renderer2D.h"
+#include "Rendering/Renderer3D.h"
 #include "Rendering/RenderCommand.h"
 
 #include "Camera/CameraControllerFPS.h"
@@ -15,30 +16,36 @@ public:
 		LOG_DEBUG("App startup");
 		Engine::RenderCommand::InitRenderer();
 		Engine::Renderer2D::Init();
+		Engine::Renderer3D::Init();
 
 		m_CameraController = Engine::CameraControllerFPS();
 		m_CameraController.SetCamera(Engine::Camera3D());
 		m_CameraController.SetKeyDownFunc([&](Engine::KeyCode k) { return m_Window->IsKeyDown(k); });
 
 		Engine::RenderCommand::EnableBlending(true);
+		Engine::RenderCommand::EnableDepth(true);
 		Engine::RenderCommand::SmoothLines(true);
 		Engine::RenderCommand::PointSize(5);
 	}
 
 	virtual void OnUpdate(float timestep) override
 	{
-		//Engine::RenderCommand::Clear({ 1, 1, 1, 1 });
+		using namespace Engine;
+
 		m_CameraController.OnUpdate(timestep);
 
-		Engine::Renderer2D::BeginScene(m_CameraController.GetCamera());
+		Renderer2D::BeginScene(m_CameraController.GetCamera());
+		Renderer2D::DrawCircle({ 0,0 }, 1.0f, { 1,0,0,1 }, 25);
+		Renderer2D::EndScene();
 
-		Engine::Renderer2D::DrawCircle({ 2,2 }, 1.0f, { 1,0,0,1 }, 25);
-		Engine::Renderer2D::DrawQuad({ -2,2 }, { 1, 1 }, { 0,0,1,1 });
-		Engine::Renderer2D::DrawLine({ 0,0 }, { 1,0 }, { 1, 0, 1, 1 });
-		Engine::Renderer2D::DrawLine({ 0,0.5 }, { 1,1 }, { 1, 0, 1, 1 });
-		Engine::Renderer2D::DrawPoint({ -1,0 }, { 1, 1, 0, 1 });
+		Renderer3D::BeginScene(m_CameraController.GetCamera());
+		Renderer3D::DrawCube({ 2, 2, 2 }, { 1, 1, 1 }, { 0, 1, 0, 1 });
+		Renderer3D::DrawCube({ -2, -2, -2 }, { 1, 1, 1 }, { 1, 0, 1, 1 }, { 0,0,0 });
+		Renderer3D::EndScene();
 
-		Engine::Renderer2D::EndScene();
+
+		//LOG_TRACE("FPS: {:.0f}, Draws: {}, Quads: {}, Circles: {}, Textures: {}", 1.0f / timestep, Renderer2D::Stats.Draws, Renderer2D::Stats.Quads, Renderer2D::Stats.Circles, Renderer2D::Stats.Textures);
+		//Renderer2D::Stats.Reset();
 
 		//Engine::Renderer2D::BeginScene(m_CameraController.GetCamera());
 		//for (int i = 0; i < 20; i++)
