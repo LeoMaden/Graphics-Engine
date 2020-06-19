@@ -12,6 +12,9 @@ namespace Engine {
 
 		static void EnableBlending(bool setting = true);
 		static void SetViewport(const glm::vec2& size);
+
+		static void SmoothLines(bool setting = true);
+		static void LineWidth(float thickness);
 	};
 
 }

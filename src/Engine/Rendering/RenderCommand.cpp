@@ -32,4 +32,20 @@ namespace Engine {
 		glViewport(0, 0, size.x, size.y);
 	}
 
+	void RenderCommand::SmoothLines(bool setting)
+	{
+		if (setting == false)
+		{
+			glDisable(GL_LINE_SMOOTH);
+			return;
+		}
+
+		glEnable(GL_LINE_SMOOTH);
+	}
+
+	void RenderCommand::LineWidth(float thickness)
+	{
+		glLineWidth(thickness);
+	}
+
 }

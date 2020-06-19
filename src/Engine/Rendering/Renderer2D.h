@@ -27,11 +27,15 @@ namespace Engine {
 
 		static void DrawCircle(const glm::vec2& centre, float radius, const glm::vec4& color, uint32_t nDivisions);
 
+		static void DrawLine(const glm::vec2& start, const glm::vec2& end, const glm::vec4& color);
+
+
 		struct Statistics
 		{
 			uint32_t Draws = 0;
 			uint32_t Quads = 0;
 			uint32_t Circles = 0;
+			uint32_t Lines = 0;
 			uint32_t Textures = 0;
 
 			void Reset()
@@ -39,6 +43,7 @@ namespace Engine {
 				Draws = 0;
 				Quads = 0;
 				Circles = 0;
+				Lines = 0;
 				Textures = 0;
 			}
 		};

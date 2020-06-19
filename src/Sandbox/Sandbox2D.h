@@ -24,6 +24,8 @@ public:
 		m_CameraController.SetKeyDownFunc([&](Engine::KeyCode k) { return m_Window->IsKeyDown(k); });
 
 		Engine::RenderCommand::EnableBlending(true);
+		Engine::RenderCommand::SmoothLines(true);
+		Engine::RenderCommand::LineWidth(5);
 
 		m_SpriteSheet = new Engine::Texture2D();
 		m_SpriteSheet->SetImage("res/images/spritesheet.png");
@@ -44,35 +46,37 @@ public:
 
 	virtual void OnUpdate(float timestep) override
 	{
+		//Engine::RenderCommand::Clear({ 1, 1, 1, 1 });
 		m_CameraController.OnUpdate(timestep);
 
-		//Engine::Renderer2D::BeginScene(m_CameraController.GetCamera());
-
-		//Engine::Renderer2D::DrawCircle({ 0, 0 }, 2.0f, { 1, 0, 0, 1 }, 25);
-		//Engine::Renderer2D::DrawCircle({ 2, 0 }, 1.5f, { 0, 1, 0, 1 }, 50);
-		//Engine::Renderer2D::DrawCircle({ 4, 4 }, 1.0f, { 0, 0, 1, 1 }, 50);
-
-		//Engine::Renderer2D::EndScene();
-
 		Engine::Renderer2D::BeginScene(m_CameraController.GetCamera());
-		for (int i = 0; i < 20; i++)
-		{
-			for (int j = 0; j < 20; j++)
-			{
-				Engine::Renderer2D::DrawCircle({ i, j }, 0.45f, { i / 20.0, j / 20.0, 0.5f, 1 }, 20);
-				//if ((i + j) % 2 == 0)
-				//{
-				//	//Engine::Renderer2D::DrawQuad({ i, j }, { 0.9f, 0.9f }, { i / 50.0f, j / 50.0f, 0.3f, 1.0f }, { 0.0f, 0.0f });
-				//	//Engine::Renderer2D::DrawQuad({ i, j }, { 0.9f, 0.9f }, *m_GrassTex, { 0.0f, 0.0f });
-				//}
-				//else
-				//{
-				//	//Engine::Renderer2D::DrawQuad({ i, j }, { 0.9f, 0.9f }, { i / 50.0f, j / 50.0f, 0.3f, 1.0f }, { 0.0f, 0.0f });
-				//	//Engine::Renderer2D::DrawQuad({ i, j }, { 0.9f, 0.9f }, *m_StoneTex, { 0.0f, 0.0f });
-				//}
-			}
-		}
+
+		Engine::Renderer2D::DrawCircle({ 2,2 }, 1.0f, { 1,0,0,1 }, 25);
+		Engine::Renderer2D::DrawQuad({ -2,2 }, { 1, 1 }, { 0,0,1,1 });
+		Engine::Renderer2D::DrawLine({ 0,0 }, { 1,0 }, { 1, 0, 1, 1 });
+		Engine::Renderer2D::DrawLine({ 0,0.5 }, { 1,1 }, { 1, 0, 1, 1 });
+
 		Engine::Renderer2D::EndScene();
+
+		//Engine::Renderer2D::BeginScene(m_CameraController.GetCamera());
+		//for (int i = 0; i < 20; i++)
+		//{
+		//	for (int j = 0; j < 20; j++)
+		//	{
+		//		Engine::Renderer2D::DrawCircle({ i, j }, 0.45f, { i / 20.0, j / 20.0, 0.5f, 1 }, 20);
+		//		//if ((i + j) % 2 == 0)
+		//		//{
+		//		//	//Engine::Renderer2D::DrawQuad({ i, j }, { 0.9f, 0.9f }, { i / 50.0f, j / 50.0f, 0.3f, 1.0f }, { 0.0f, 0.0f });
+		//		//	//Engine::Renderer2D::DrawQuad({ i, j }, { 0.9f, 0.9f }, *m_GrassTex, { 0.0f, 0.0f });
+		//		//}
+		//		//else
+		//		//{
+		//		//	//Engine::Renderer2D::DrawQuad({ i, j }, { 0.9f, 0.9f }, { i / 50.0f, j / 50.0f, 0.3f, 1.0f }, { 0.0f, 0.0f });
+		//		//	//Engine::Renderer2D::DrawQuad({ i, j }, { 0.9f, 0.9f }, *m_StoneTex, { 0.0f, 0.0f });
+		//		//}
+		//	}
+		//}
+		//Engine::Renderer2D::EndScene();
 	}
 
 	//virtual void OnMouseMove(Engine::MouseMoveEvent& e) override
