@@ -48,4 +48,9 @@ namespace Engine {
 		glLineWidth(thickness);
 	}
 
+	void RenderCommand::PointSize(float size)
+	{
+		glPointSize(size);
+	}
+
 }

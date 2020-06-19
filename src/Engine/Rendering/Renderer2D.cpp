@@ -134,6 +134,7 @@ namespace Engine {
 		Batch<ColorVertex, IndexType>*		FlatColBatch;
 		Batch<TextureVertex, IndexType>*	TextureBatch;
 		Batch<ColorVertex, IndexType>*		LineBatch;
+		Batch<ColorVertex, IndexType>*		PointBatch;
 
 		int CurrentTexSlot = 0;
 		int BoundTextureIds[32];
@@ -201,13 +202,21 @@ namespace Engine {
 		s_Data.TextureBatch->IBO = new IndexBuffer(s_Data.TextureBatch->IBOSize);
 		s_Data.TextureBatch->VAO = new VertexArray(*s_Data.TextureBatch->VBO, *s_Data.TextureBatch->IBO);
 
-		s_Data.LineBatch = new Batch<ColorVertex, IndexType>(q, q);
+		s_Data.LineBatch = new Batch<ColorVertex, IndexType>(100, 100);
 		s_Data.LineBatch->DrawMode = GL_LINES;
 		s_Data.LineBatch->VBO = new VertexBuffer(s_Data.LineBatch->VBOSize);
 		s_Data.LineBatch->VBO->AddLayout(0, GL_FLOAT, 3); // Position
 		s_Data.LineBatch->VBO->AddLayout(1, GL_FLOAT, 4); // Color
 		s_Data.LineBatch->IBO = new IndexBuffer(s_Data.LineBatch->IBOSize);
 		s_Data.LineBatch->VAO = new VertexArray(*s_Data.LineBatch->VBO, *s_Data.LineBatch->IBO);
+
+		s_Data.PointBatch = new Batch<ColorVertex, IndexType>(100, 100);
+		s_Data.PointBatch->DrawMode = GL_POINTS;
+		s_Data.PointBatch->VBO = new VertexBuffer(s_Data.PointBatch->VBOSize);
+		s_Data.PointBatch->VBO->AddLayout(0, GL_FLOAT, 3); // Position
+		s_Data.PointBatch->VBO->AddLayout(1, GL_FLOAT, 4); // Color
+		s_Data.PointBatch->IBO = new IndexBuffer(s_Data.PointBatch->IBOSize);
+		s_Data.PointBatch->VAO = new VertexArray(*s_Data.PointBatch->VBO, *s_Data.PointBatch->IBO);
 
 		s_Data.FlatColBatch->Shader = new Shader();
 		s_Data.FlatColBatch->Shader->AddVertexShader("res/shaders/FlatColor.vert");
@@ -218,8 +227,12 @@ namespace Engine {
 		s_Data.TextureBatch->Shader->AddVertexShader("res/shaders/Texture2D.vert");
 		s_Data.TextureBatch->Shader->AddFragmentShader("res/shaders/Texture2D.frag");
 		s_Data.TextureBatch->Shader->Link();
-		s_Data.TextureBatch->Shader->Bind();
 
+		s_Data.LineBatch->Shader = s_Data.FlatColBatch->Shader;
+
+		s_Data.PointBatch->Shader = s_Data.FlatColBatch->Shader;
+
+		s_Data.TextureBatch->Shader->Bind();
 		int texIds[32];
 		for (int i = 0; i < 32; i++)
 		{
@@ -227,7 +240,6 @@ namespace Engine {
 		}
 		s_Data.TextureBatch->Shader->SetIntArray("u_Textures", texIds, 32);
 
-		s_Data.LineBatch->Shader = s_Data.FlatColBatch->Shader;
 	}
 
 	/*static*/ void Renderer2D::DrawSquare()
@@ -246,12 +258,10 @@ namespace Engine {
 		s_Data.TextureBatch->Shader->Bind();
 		s_Data.TextureBatch->Shader->SetMat4("u_Transform", s_Data.SceneViewProjMat);
 
-		s_Data.LineBatch->Shader->Bind();
-		s_Data.LineBatch->Shader->SetMat4("u_Transform", s_Data.SceneViewProjMat);
-
 		s_Data.FlatColBatch->Reset();
 		s_Data.TextureBatch->Reset();
 		s_Data.LineBatch->Reset();
+		s_Data.PointBatch->Reset();
 		ResetTextures();
 	}
 
@@ -260,6 +270,7 @@ namespace Engine {
 		s_Data.FlatColBatch->FlushAndReset();
 		s_Data.TextureBatch->FlushAndReset();
 		s_Data.LineBatch->FlushAndReset();
+		s_Data.PointBatch->FlushAndReset();
 		ResetTextures();
 	}
 
@@ -438,6 +449,20 @@ namespace Engine {
 		s_Data.LineBatch->AddIndices(indices, sizeof(indices));
 
 		Stats.Lines++;
+	}
+
+	void Renderer2D::DrawPoint(const glm::vec2& position, const glm::vec4& color)
+	{
+		ColorVertex vertex;
+		vertex.Position = glm::vec3(position, 0.0f);
+		vertex.Color = color;
+
+		IndexType index = s_Data.PointBatch->VertexCount;
+
+		s_Data.PointBatch->AddData(&vertex, sizeof(ColorVertex));
+		s_Data.PointBatch->AddIndices(&index, sizeof(IndexType));
+
+		Stats.Points++;
 	}
 
 

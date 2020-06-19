@@ -25,7 +25,7 @@ public:
 
 		Engine::RenderCommand::EnableBlending(true);
 		Engine::RenderCommand::SmoothLines(true);
-		Engine::RenderCommand::LineWidth(5);
+		Engine::RenderCommand::PointSize(5);
 
 		m_SpriteSheet = new Engine::Texture2D();
 		m_SpriteSheet->SetImage("res/images/spritesheet.png");
@@ -55,6 +55,7 @@ public:
 		Engine::Renderer2D::DrawQuad({ -2,2 }, { 1, 1 }, { 0,0,1,1 });
 		Engine::Renderer2D::DrawLine({ 0,0 }, { 1,0 }, { 1, 0, 1, 1 });
 		Engine::Renderer2D::DrawLine({ 0,0.5 }, { 1,1 }, { 1, 0, 1, 1 });
+		Engine::Renderer2D::DrawPoint({ -1,0 }, { 1, 1, 0, 1 });
 
 		Engine::Renderer2D::EndScene();
 

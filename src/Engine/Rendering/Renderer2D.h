@@ -29,6 +29,7 @@ namespace Engine {
 
 		static void DrawLine(const glm::vec2& start, const glm::vec2& end, const glm::vec4& color);
 
+		static void DrawPoint(const glm::vec2& position, const glm::vec4& color);
 
 		struct Statistics
 		{
@@ -36,6 +37,7 @@ namespace Engine {
 			uint32_t Quads = 0;
 			uint32_t Circles = 0;
 			uint32_t Lines = 0;
+			uint32_t Points = 0;
 			uint32_t Textures = 0;
 
 			void Reset()
@@ -44,6 +46,7 @@ namespace Engine {
 				Quads = 0;
 				Circles = 0;
 				Lines = 0;
+				Points = 0;
 				Textures = 0;
 			}
 		};

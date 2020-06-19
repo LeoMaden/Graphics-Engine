@@ -15,6 +15,8 @@ namespace Engine {
 
 		static void SmoothLines(bool setting = true);
 		static void LineWidth(float thickness);
+
+		static void PointSize(float size);
 	};
 
 }
