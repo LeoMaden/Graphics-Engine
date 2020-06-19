@@ -7,9 +7,10 @@ namespace Engine {
 	{
 		switch (mode)
 		{
-		case Engine::DrawMode::Points:		return GL_POINTS;
-		case Engine::DrawMode::Lines:		return GL_LINES;
-		case Engine::DrawMode::Triangles:	return GL_TRIANGLES;
+		case DrawMode::Points:		return GL_POINTS;
+		case DrawMode::Lines:		return GL_LINES;
+		case DrawMode::Triangles:	return GL_TRIANGLES;
+		case DrawMode::LineLoops:			return GL_LINE_LOOP;
 		}
 		ASSERT(false, "Invalid draw mode");
 	}
@@ -18,12 +19,12 @@ namespace Engine {
 	{
 		switch (type)
 		{
-		case Engine::DataType::Int16:		return GL_SHORT;
-		case Engine::DataType::Int32:		return GL_INT;
-		case Engine::DataType::UInt16:		return GL_UNSIGNED_SHORT;
-		case Engine::DataType::UInt32:		return GL_UNSIGNED_INT;
-		case Engine::DataType::Float32:		return GL_FLOAT;
-		case Engine::DataType::Double64:	return GL_DOUBLE;
+		case DataType::Int16:		return GL_SHORT;
+		case DataType::Int32:		return GL_INT;
+		case DataType::UInt16:		return GL_UNSIGNED_SHORT;
+		case DataType::UInt32:		return GL_UNSIGNED_INT;
+		case DataType::Float32:		return GL_FLOAT;
+		case DataType::Double64:	return GL_DOUBLE;
 		}
 		ASSERT(false, "Invalid type");
 	}
