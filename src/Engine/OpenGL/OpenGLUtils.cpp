@@ -7,10 +7,11 @@ namespace Engine {
 	{
 		switch (mode)
 		{
-		case DrawMode::Points:		return GL_POINTS;
-		case DrawMode::Lines:		return GL_LINES;
-		case DrawMode::Triangles:	return GL_TRIANGLES;
-		case DrawMode::LineLoops:			return GL_LINE_LOOP;
+		case DrawMode::Points:			return GL_POINTS;
+		case DrawMode::Lines:			return GL_LINES;
+		case DrawMode::Triangles:		return GL_TRIANGLES;
+		case DrawMode::LineLoops:		return GL_LINE_LOOP;
+		case DrawMode::TriangleStrip:	return GL_TRIANGLE_STRIP;
 		}
 		ASSERT(false, "Invalid draw mode");
 	}

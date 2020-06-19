@@ -5,7 +5,8 @@ namespace Engine {
 	enum class DrawMode
 	{
 		None = 0,
-		Points, Lines, Triangles
+		Points, Lines, Triangles,
+		LineLoops, TriangleStrip
 	};
 
 	enum class DataType
