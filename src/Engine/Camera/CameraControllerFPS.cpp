@@ -64,6 +64,7 @@ namespace Engine {
 		}
 
 		glm::vec2 mouseDelta = e.GetPosition() - m_LastMousePos;
+		m_LastMousePos = e.GetPosition();
 
 		Degrees dYaw = mouseDelta.x * m_LookSensitivity;
 		Degrees dPitch = -mouseDelta.y * m_LookSensitivity;

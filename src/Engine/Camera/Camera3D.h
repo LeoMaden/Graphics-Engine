@@ -35,6 +35,8 @@ namespace Engine {
 		glm::vec3 m_LookDir;
 		glm::vec3 m_RightDir;
 		glm::vec3 m_UpDir;
+		float		m_Pitch = 0.0f;
+		float		m_Yaw = 0.0f;
 
 		glm::mat4 m_ProjMatrix;
 		glm::mat4 m_ViewMatrix;

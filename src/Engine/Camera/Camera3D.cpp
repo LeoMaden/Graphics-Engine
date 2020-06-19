@@ -31,13 +31,21 @@ namespace Engine {
 
 	void Camera3D::Rotate(Radians dPitch, Radians dYaw)
 	{
-		glm::vec3 dirDelta = {
-			glm::cos(dYaw) * glm::cos(dPitch),
-			glm::sin(dPitch),
-			glm::sin(dYaw) * glm::cos(dPitch)
+		static const float pitchLim = glm::half_pi<float>() - 0.05f;
+
+		m_Pitch += dPitch;
+		m_Yaw += dYaw;
+
+		// Prevent looking up/down too much
+		if (m_Pitch > pitchLim) m_Pitch = pitchLim;
+		if (m_Pitch < -pitchLim) m_Pitch = -pitchLim;
+
+		m_LookDir = {
+			glm::cos(m_Yaw) * glm::cos(m_Pitch),
+			glm::sin(m_Pitch),
+			glm::sin(m_Yaw) * glm::cos(m_Pitch)
 		};
 
-		m_LookDir += dirDelta;
 		m_LookDir = glm::normalize(m_LookDir);
 		m_RightDir = glm::cross(m_LookDir, m_UpDir);
 
@@ -47,10 +55,13 @@ namespace Engine {
 
 	void Camera3D::SetRotation(Radians pitch, Radians yaw)
 	{
+		m_Pitch = pitch;
+		m_Yaw = yaw;
+
 		m_LookDir = {
-			glm::cos(yaw) * glm::cos(pitch),
-			glm::sin(pitch),
-			glm::sin(yaw) * glm::cos(pitch)
+			glm::cos(m_Yaw) * glm::cos(m_Pitch),
+			glm::sin(m_Pitch),
+			glm::sin(m_Yaw) * glm::cos(m_Pitch)
 		};
 
 		m_LookDir = glm::normalize(m_LookDir);
