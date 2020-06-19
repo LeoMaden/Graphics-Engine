@@ -45,12 +45,12 @@ namespace Engine {
 
 	void RenderCommand::Clear()
 	{
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
 	void RenderCommand::Clear(const glm::vec4& color)
 	{
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(color.r, color.g, color.b, color.a);
 	}
 
@@ -64,6 +64,17 @@ namespace Engine {
 		
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	}
+
+	void RenderCommand::EnableDepth(bool setting)
+	{
+		if (setting == false)
+		{
+			glDisable(GL_DEPTH_TEST);
+			return;
+		}
+
+		glEnable(GL_DEPTH_TEST);
 	}
 
 	void RenderCommand::SetViewport(const glm::vec2& size)
