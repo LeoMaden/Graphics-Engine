@@ -4,6 +4,9 @@
 #include <glad/glad.h>
 #include <iostream>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/constants.hpp>
+
 namespace Engine {
 
 	struct ColorVertex
@@ -346,5 +349,55 @@ namespace Engine {
 		Stats.Quads++;
 
 	}
+
+	void Renderer2D::DrawCircle(const glm::vec2& centre, float radius, const glm::vec4& color, uint32_t nDivisions)
+	{
+		std::vector<ColorVertex> vertices;
+		std::vector<IndexType> indices;
+
+		uint32_t nVert = nDivisions;
+		uint32_t nTri = nDivisions - 2;
+		uint32_t nInd = 3 * nTri;
+
+		if (s_Data.FlatColBatch->EnoughSpace(nVert, nInd) == false)
+		{
+			s_Data.FlatColBatch->FlushAndReset();
+		}
+
+		vertices.resize(nVert);
+		indices.resize(nInd);
+
+		// Vertices
+		double theta = 0.0f;
+		double dTheta = glm::two_pi<double>() / (double)nDivisions;
+
+		for (int i = 0; i < nVert; i++)
+		{
+			vertices[i].Position = { 
+				centre.x + radius * glm::sin(theta), 
+				centre.y + radius * glm::cos(theta), 
+				0.0f };
+
+			vertices[i].Color = color;
+
+			theta += dTheta;
+		}
+
+		// Indices
+		for (uint64_t i = 0; i < nTri; i++)
+		{
+			uint64_t j = 3 * i;
+
+			indices[j]		= 0 + s_Data.FlatColBatch->VertexCount;
+			indices[j + 1]	= i + 1 + s_Data.FlatColBatch->VertexCount;
+			indices[j + 2]	= i + 2 + s_Data.FlatColBatch->VertexCount;
+		}
+
+		s_Data.FlatColBatch->AddData(vertices.data(), vertices.size() * sizeof(ColorVertex));
+		s_Data.FlatColBatch->AddIndices(indices.data(), indices.size() * sizeof(IndexType));
+
+		Stats.Circles++;
+	}
+
 
 }

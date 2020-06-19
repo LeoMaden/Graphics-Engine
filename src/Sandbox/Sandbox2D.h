@@ -48,32 +48,28 @@ public:
 
 		//Engine::Renderer2D::BeginScene(m_CameraController.GetCamera());
 
-		//Engine::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f, 1.0f });
-		//Engine::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 10.0f, 10.0f }, { 0.0f, 0.0f, 1.0f, 1.0f }, { 0.0f, 0.0f });
-		//Engine::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, { 1.0f, 0.5f, 0.2f, 0.5f }, { 0.2f, 0.2f });
-
-		//float aspect = (float)m_Tex.GetWidth() / (float)m_Tex.GetHeight();
-		//float height = 2;
-		//Engine::Renderer2D::DrawQuad({ -1.0f, 0.0f }, { height * aspect, height }, { 0.0f, 0.0f }, m_Tex);
-		////Engine::Renderer2D::DrawQuad({ -3.0f, 0.0f }, { 2.0f, 2.0f }, { 0.0f, 0.0f }, m_Tex);
+		//Engine::Renderer2D::DrawCircle({ 0, 0 }, 2.0f, { 1, 0, 0, 1 }, 25);
+		//Engine::Renderer2D::DrawCircle({ 2, 0 }, 1.5f, { 0, 1, 0, 1 }, 50);
+		//Engine::Renderer2D::DrawCircle({ 4, 4 }, 1.0f, { 0, 0, 1, 1 }, 50);
 
 		//Engine::Renderer2D::EndScene();
 
 		Engine::Renderer2D::BeginScene(m_CameraController.GetCamera());
-		for (int i = 0; i < 50; i++)
+		for (int i = 0; i < 20; i++)
 		{
-			for (int j = 0; j < 50; j++)
+			for (int j = 0; j < 20; j++)
 			{
-				if ((i + j) % 2 == 0)
-				{
-					//Engine::Renderer2D::DrawQuad({ i, j }, { 0.9f, 0.9f }, { i / 50.0f, j / 50.0f, 0.3f, 1.0f }, { 0.0f, 0.0f });
-					Engine::Renderer2D::DrawQuad({ i, j }, { 0.9f, 0.9f }, *m_GrassTex, { 0.0f, 0.0f });
-				}
-				else
-				{
-					//Engine::Renderer2D::DrawQuad({ i, j }, { 0.9f, 0.9f }, { i / 50.0f, j / 50.0f, 0.3f, 1.0f }, { 0.0f, 0.0f });
-					Engine::Renderer2D::DrawQuad({ i, j }, { 0.9f, 0.9f }, *m_StoneTex, { 0.0f, 0.0f });
-				}
+				Engine::Renderer2D::DrawCircle({ i, j }, 0.45f, { i / 20.0, j / 20.0, 0.5f, 1 }, 20);
+				//if ((i + j) % 2 == 0)
+				//{
+				//	//Engine::Renderer2D::DrawQuad({ i, j }, { 0.9f, 0.9f }, { i / 50.0f, j / 50.0f, 0.3f, 1.0f }, { 0.0f, 0.0f });
+				//	//Engine::Renderer2D::DrawQuad({ i, j }, { 0.9f, 0.9f }, *m_GrassTex, { 0.0f, 0.0f });
+				//}
+				//else
+				//{
+				//	//Engine::Renderer2D::DrawQuad({ i, j }, { 0.9f, 0.9f }, { i / 50.0f, j / 50.0f, 0.3f, 1.0f }, { 0.0f, 0.0f });
+				//	//Engine::Renderer2D::DrawQuad({ i, j }, { 0.9f, 0.9f }, *m_StoneTex, { 0.0f, 0.0f });
+				//}
 			}
 		}
 		Engine::Renderer2D::EndScene();

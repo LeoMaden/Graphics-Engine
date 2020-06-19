@@ -25,16 +25,20 @@ namespace Engine {
 		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Texture2DBase& texture);
 		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Texture2DBase& texture, const glm::vec2& centre);
 
+		static void DrawCircle(const glm::vec2& centre, float radius, const glm::vec4& color, uint32_t nDivisions);
+
 		struct Statistics
 		{
 			uint32_t Draws = 0;
 			uint32_t Quads = 0;
+			uint32_t Circles = 0;
 			uint32_t Textures = 0;
 
 			void Reset()
 			{
 				Draws = 0;
 				Quads = 0;
+				Circles = 0;
 				Textures = 0;
 			}
 		};
