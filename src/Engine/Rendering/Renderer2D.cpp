@@ -192,32 +192,32 @@ namespace Engine {
 
 		s_Data.FlatColBatch = new Batch<ColorVertex, IndexType>(4 * q, 6 * q);
 		s_Data.FlatColBatch->VBO = new VertexBuffer(s_Data.FlatColBatch->VBOSize);
-		s_Data.FlatColBatch->VBO->AddLayout(0, GL_FLOAT, 3); // Position
-		s_Data.FlatColBatch->VBO->AddLayout(1, GL_FLOAT, 4); // Color
+		s_Data.FlatColBatch->VBO->AddLayout(0, DataType::Float32, 3); // Position
+		s_Data.FlatColBatch->VBO->AddLayout(1, DataType::Float32, 4); // Color
 		s_Data.FlatColBatch->IBO = new IndexBuffer(s_Data.FlatColBatch->IBOSize);
 		s_Data.FlatColBatch->VAO = new VertexArray(*s_Data.FlatColBatch->VBO, *s_Data.FlatColBatch->IBO);
 
 		s_Data.TextureBatch = new Batch<TextureVertex, IndexType>(4 * q, 6 * q);
 		s_Data.TextureBatch->VBO = new VertexBuffer(s_Data.TextureBatch->VBOSize);
-		s_Data.TextureBatch->VBO->AddLayout(0, GL_FLOAT, 3); // Position
-		s_Data.TextureBatch->VBO->AddLayout(1, GL_FLOAT, 2); // Tex coord
-		s_Data.TextureBatch->VBO->AddLayout(2, GL_FLOAT, 1); // Tex id
+		s_Data.TextureBatch->VBO->AddLayout(0, DataType::Float32, 3); // Position
+		s_Data.TextureBatch->VBO->AddLayout(1, DataType::Float32, 2); // Tex coord
+		s_Data.TextureBatch->VBO->AddLayout(2, DataType::Float32, 1); // Tex id
 		s_Data.TextureBatch->IBO = new IndexBuffer(s_Data.TextureBatch->IBOSize);
 		s_Data.TextureBatch->VAO = new VertexArray(*s_Data.TextureBatch->VBO, *s_Data.TextureBatch->IBO);
 
 		s_Data.LineBatch = new Batch<ColorVertex, IndexType>(100, 100);
 		s_Data.LineBatch->DrawMode = DrawMode::Lines;
 		s_Data.LineBatch->VBO = new VertexBuffer(s_Data.LineBatch->VBOSize);
-		s_Data.LineBatch->VBO->AddLayout(0, GL_FLOAT, 3); // Position
-		s_Data.LineBatch->VBO->AddLayout(1, GL_FLOAT, 4); // Color
+		s_Data.LineBatch->VBO->AddLayout(0, DataType::Float32, 3); // Position
+		s_Data.LineBatch->VBO->AddLayout(1, DataType::Float32, 4); // Color
 		s_Data.LineBatch->IBO = new IndexBuffer(s_Data.LineBatch->IBOSize);
 		s_Data.LineBatch->VAO = new VertexArray(*s_Data.LineBatch->VBO, *s_Data.LineBatch->IBO);
 
 		s_Data.PointBatch = new Batch<ColorVertex, IndexType>(100, 100);
 		s_Data.PointBatch->DrawMode = DrawMode::Points;
 		s_Data.PointBatch->VBO = new VertexBuffer(s_Data.PointBatch->VBOSize);
-		s_Data.PointBatch->VBO->AddLayout(0, GL_FLOAT, 3); // Position
-		s_Data.PointBatch->VBO->AddLayout(1, GL_FLOAT, 4); // Color
+		s_Data.PointBatch->VBO->AddLayout(0, DataType::Float32, 3); // Position
+		s_Data.PointBatch->VBO->AddLayout(1, DataType::Float32, 4); // Color
 		s_Data.PointBatch->IBO = new IndexBuffer(s_Data.PointBatch->IBOSize);
 		s_Data.PointBatch->VAO = new VertexArray(*s_Data.PointBatch->VBO, *s_Data.PointBatch->IBO);
 

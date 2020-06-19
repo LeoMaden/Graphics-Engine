@@ -2,6 +2,8 @@
 #include <vector>
 #include <glad/glad.h>
 
+#include "Rendering/RenderUtils.h"
+
 namespace Engine {
 
 	class VertexBuffer
@@ -19,7 +21,7 @@ namespace Engine {
 		~VertexBuffer();
 
 		void Bind() const;
-		void AddLayout(uint32_t location, GLenum type, uint32_t count);
+		void AddLayout(uint32_t location, DataType type, uint32_t count);
 		void SetData(void* data, uint32_t size);
 
 		uint32_t					GetId()		const { return m_Id; }

@@ -1,4 +1,5 @@
 #include "VertexBuffer.h"
+#include "OpenGL/OpenGLUtils.h"
 
 #include "Log.h"
 
@@ -22,9 +23,11 @@ namespace Engine {
 		glBindBuffer(GL_ARRAY_BUFFER, m_Id);
 	}
 
-	void VertexBuffer::AddLayout(uint32_t location, GLenum type, uint32_t count)
+	void VertexBuffer::AddLayout(uint32_t location, DataType type, uint32_t count)
 	{
-		m_Layout.push_back({ location, type, count });
+		GLenum glType = GetGLType(type);
+
+		m_Layout.push_back({ location, glType, count });
 	}
 
 	void VertexBuffer::SetData(void* data, uint32_t size)
