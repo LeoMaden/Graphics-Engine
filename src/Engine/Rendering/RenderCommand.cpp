@@ -1,8 +1,18 @@
 #include "RenderCommand.h"
+#include "Log.h"
+#include "OpenGL/OpenGLUtils.h"
 
 #include <glad/glad.h>
 
 namespace Engine {
+
+	void RenderCommand::DrawIndexed(DrawMode mode, uint32_t count, DataType type, uint32_t offset)
+	{
+		GLenum glType = GetGLType(type);
+		GLenum glMode = GetGLDrawMode(mode);
+
+		glDrawElements(glMode, count, glType, (const void*)offset);
+	}
 
 	void RenderCommand::Clear()
 	{

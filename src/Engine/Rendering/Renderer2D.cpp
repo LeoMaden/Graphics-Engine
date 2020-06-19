@@ -1,5 +1,7 @@
 #include "Renderer2D.h"
 #include "Log.h"
+#include "RenderUtils.h"
+#include "RenderCommand.h"
 
 #include <glad/glad.h>
 #include <iostream>
@@ -46,7 +48,8 @@ namespace Engine {
 		}
 
 		Shader* Shader = nullptr;
-		GLenum DrawMode = GL_TRIANGLES;
+		DrawMode DrawMode = DrawMode::Triangles;
+		DataType IBOType = DataType::UInt16;
 
 		VertexBuffer* VBO	= nullptr;
 		IndexBuffer* IBO	= nullptr;
@@ -102,7 +105,7 @@ namespace Engine {
 			IBO->Bind();
 			IBO->SetIndices(BatchIndices, IndexCount * sizeof(IBO_T));
 
-			glDrawElements(DrawMode, IndexCount, GL_UNSIGNED_SHORT, 0);
+			RenderCommand::DrawIndexed(DrawMode, IndexCount, IBOType);
 			Renderer2D::Stats.Draws++;
 		}
 
@@ -203,7 +206,7 @@ namespace Engine {
 		s_Data.TextureBatch->VAO = new VertexArray(*s_Data.TextureBatch->VBO, *s_Data.TextureBatch->IBO);
 
 		s_Data.LineBatch = new Batch<ColorVertex, IndexType>(100, 100);
-		s_Data.LineBatch->DrawMode = GL_LINES;
+		s_Data.LineBatch->DrawMode = DrawMode::Lines;
 		s_Data.LineBatch->VBO = new VertexBuffer(s_Data.LineBatch->VBOSize);
 		s_Data.LineBatch->VBO->AddLayout(0, GL_FLOAT, 3); // Position
 		s_Data.LineBatch->VBO->AddLayout(1, GL_FLOAT, 4); // Color
@@ -211,7 +214,7 @@ namespace Engine {
 		s_Data.LineBatch->VAO = new VertexArray(*s_Data.LineBatch->VBO, *s_Data.LineBatch->IBO);
 
 		s_Data.PointBatch = new Batch<ColorVertex, IndexType>(100, 100);
-		s_Data.PointBatch->DrawMode = GL_POINTS;
+		s_Data.PointBatch->DrawMode = DrawMode::Points;
 		s_Data.PointBatch->VBO = new VertexBuffer(s_Data.PointBatch->VBOSize);
 		s_Data.PointBatch->VBO->AddLayout(0, GL_FLOAT, 3); // Position
 		s_Data.PointBatch->VBO->AddLayout(1, GL_FLOAT, 4); // Color

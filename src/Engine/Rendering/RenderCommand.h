@@ -2,11 +2,15 @@
 
 #include <glm/glm.hpp>
 
+#include "RenderUtils.h"
+
 namespace Engine {
 
 	class RenderCommand
 	{
 	public:
+		static void DrawIndexed(DrawMode mode, uint32_t count, DataType type = DataType::UInt32, uint32_t offset = 0);
+
 		static void Clear();
 		static void Clear(const glm::vec4& color);
 
