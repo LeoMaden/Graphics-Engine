@@ -25,10 +25,7 @@ namespace Engine {
 		std::vector<glm::vec3>		UnitCubeNormals;
 		std::vector<IndexType>		UnitCubeIndices;
 
-		VertexBuffer*	VBO		= nullptr;
-		IndexBuffer*	IBO		= nullptr;
-		VertexArray*	VAO		= nullptr;
-		Shader*			Shader	= nullptr;
+		Batch<ColorVertex3D, IndexType>* ColorBatch;
 
 		glm::mat4		SceneViewProjMat;
 	};
@@ -87,31 +84,31 @@ namespace Engine {
 			20, 21, 22, 20, 22, 23
 		};
 
-		s_Data3D.VBO = new VertexBuffer(100000);
-		s_Data3D.VBO->AddLayout(0, DataType::Float32, 3);
-		s_Data3D.VBO->AddLayout(1, DataType::Float32, 4);
-		s_Data3D.VBO->AddLayout(2, DataType::Float32, 3);
+		s_Data3D.ColorBatch = new Batch<ColorVertex3D, IndexType>(10000, 60000);
+		s_Data3D.ColorBatch->VBO = new VertexBuffer(s_Data3D.ColorBatch->VBOSize);
+		s_Data3D.ColorBatch->VBO->AddLayout(0, DataType::Float32, 3); // Position
+		s_Data3D.ColorBatch->VBO->AddLayout(1, DataType::Float32, 4); // Color
+		s_Data3D.ColorBatch->VBO->AddLayout(2, DataType::Float32, 3); // Normal
+		s_Data3D.ColorBatch->IBO = new IndexBuffer(s_Data3D.ColorBatch->IBOSize);
+		s_Data3D.ColorBatch->VAO = new VertexArray(*s_Data3D.ColorBatch->VBO, *s_Data3D.ColorBatch->IBO);
 
-		s_Data3D.IBO = new IndexBuffer(17430);
-
-		s_Data3D.VAO = new VertexArray(*s_Data3D.VBO, *s_Data3D.IBO);
-
-		s_Data3D.Shader = new Shader();
-		s_Data3D.Shader->AddVertexShader("res/shaders/FlatColor3D.vert");
-		s_Data3D.Shader->AddFragmentShader("res/shaders/FlatColor3D.frag");
-		s_Data3D.Shader->Link(); 
+		s_Data3D.ColorBatch->Shader = new Shader();
+		s_Data3D.ColorBatch->Shader->AddVertexShader("res/shaders/FlatColor3D.vert");
+		s_Data3D.ColorBatch->Shader->AddFragmentShader("res/shaders/FlatColor3D.frag");
+		s_Data3D.ColorBatch->Shader->Link();
 	}
 
 	void Renderer3D::BeginScene(const Camera& camera)
 	{
 		s_Data3D.SceneViewProjMat = camera.GetViewProjMat();
 
-		s_Data3D.Shader->Bind();
-		s_Data3D.Shader->SetMat4("u_Transform", s_Data3D.SceneViewProjMat);
+		s_Data3D.ColorBatch->Shader->Bind();
+		s_Data3D.ColorBatch->Shader->SetMat4("u_Transform", s_Data3D.SceneViewProjMat);
 	}
 
 	void Renderer3D::EndScene()
 	{
+		s_Data3D.ColorBatch->FlushAndReset();
 	}
 
 	void Renderer3D::DrawCube(const glm::vec3& position, const glm::vec3& size, const glm::vec4& color)
@@ -133,20 +130,11 @@ namespace Engine {
 
 		for (uint64_t i = 0; i < 36; i++)
 		{
-			indices[i] = s_Data3D.UnitCubeIndices[i];
+			indices[i] = s_Data3D.ColorBatch->VertexCount + s_Data3D.UnitCubeIndices[i];
 		}
 
-		s_Data3D.Shader->Bind();
-
-		s_Data3D.VAO->Bind();
-
-		s_Data3D.VBO->Bind();
-		s_Data3D.VBO->SetData(vertices, sizeof(vertices));
-
-		s_Data3D.IBO->Bind();
-		s_Data3D.IBO->SetIndices(indices, sizeof(indices));
-
-		RenderCommand::DrawIndexed(DrawMode::Triangles, 36, DataType::UInt16);
+		s_Data3D.ColorBatch->AddData(vertices, sizeof(vertices));
+		s_Data3D.ColorBatch->AddIndices(indices, sizeof(indices));
 	}
 
 	void Renderer3D::DrawSphere(const glm::vec3& centre, float radius, const glm::vec4& color, uint32_t nDivisions)
@@ -186,9 +174,9 @@ namespace Engine {
 		{
 			for (uint32_t i = 0; i < nSegments; i++)
 			{
-				uint32_t i0 = i + (nSegments * j);
+				uint32_t i0 = s_Data3D.ColorBatch->VertexCount + i + (nSegments * j);
 				uint32_t i1 = i0 + nSegments;
-				uint32_t i3 = ((i + 1) % nSegments) + (nSegments * j);
+				uint32_t i3 = s_Data3D.ColorBatch->VertexCount + ((i + 1) % nSegments) + (nSegments * j);
 				uint32_t i2 = i3 + nSegments;
 
 				// Two triangles per sector except first and last stacks
@@ -213,19 +201,8 @@ namespace Engine {
 		//	indices.push_back(i);
 		//}
 
-
-		s_Data3D.Shader->Bind();
-
-		s_Data3D.VAO->Bind();
-
-		s_Data3D.VBO->Bind();
-		s_Data3D.VBO->SetData(vertices.data(), vertices.size() * sizeof(ColorVertex3D));
-
-		s_Data3D.IBO->Bind();
-		s_Data3D.IBO->SetIndices(indices.data(), indices.size() * sizeof(IndexType));
-
-		RenderCommand::DrawIndexed(DrawMode::Triangles, indices.size(), DataType::UInt16);
-
+		s_Data3D.ColorBatch->AddData(vertices.data(), vertices.size() * sizeof(ColorVertex3D));
+		s_Data3D.ColorBatch->AddIndices(indices.data(), indices.size() * sizeof(IndexType));
 	}
 
 }

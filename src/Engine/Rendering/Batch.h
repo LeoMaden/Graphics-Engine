@@ -1,4 +1,10 @@
 #pragma once
+#include <cstdint>
+
+#include "OpenGL/Shader.h"
+#include "OpenGL/VertexArray.h"
+
+typedef unsigned char byte;
 
 namespace Engine {
 
@@ -83,7 +89,7 @@ namespace Engine {
 			IBO->SetIndices(BatchIndices, IndexCount * sizeof(IBO_T));
 
 			RenderCommand::DrawIndexed(DrawMode, IndexCount, IBOType);
-			Renderer2D::Stats.Draws++;
+			// TODO: Stats for both renderers Renderer2D::Stats.Draws++;
 		}
 
 		void Reset()
