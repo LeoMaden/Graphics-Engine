@@ -1,5 +1,6 @@
 #include "Renderer3D.h"
 #include "RenderCommand.h"
+#include "Batch.h"
 
 #include "OpenGL/VertexArray.h"
 #include "OpenGL/Shader.h"

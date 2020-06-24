@@ -2,6 +2,7 @@
 #include "Log.h"
 #include "RenderUtils.h"
 #include "RenderCommand.h"
+#include "Batch.h"
 
 #include <glad/glad.h>
 #include <iostream>
@@ -11,118 +12,18 @@
 
 namespace Engine {
 
-	struct ColorVertex
+	struct ColorVertex2D
 	{
 		glm::vec3 Position;
 		glm::vec4 Color;
 	};
 
-	struct TextureVertex
+	struct TextureVertex2D
 	{
 		glm::vec3	Position;
 		glm::vec2	TexCoord;
 		float		TexSlot;
 		//float		TilingFactor;
-	};
-
-	template<typename VBO_T, typename IBO_T>
-	struct Batch
-	{
-		Batch(uint32_t maxVertexCount, uint32_t maxIndexCount)
-			: MaxVertexCount(maxVertexCount), MaxIndexCount(maxIndexCount)
-		{
-			VBOSize = MaxVertexCount * sizeof(VBO_T);
-			IBOSize = MaxIndexCount * sizeof(IBO_T);
-
-			BatchData = new byte[VBOSize];
-			BatchIndices = new byte[IBOSize];
-
-			BatchDataInsPtr = BatchData;
-			BatchIndicesInsPtr = BatchIndices;
-		}
-
-		~Batch()
-		{
-			delete[] BatchData;
-			delete[] BatchIndices;
-		}
-
-		Shader* Shader = nullptr;
-		DrawMode DrawMode = DrawMode::Triangles;
-		DataType IBOType = DataType::UInt16;
-
-		VertexBuffer* VBO	= nullptr;
-		IndexBuffer* IBO	= nullptr;
-		VertexArray* VAO	= nullptr;
-
-		uint32_t VertexCount	= 0;
-		uint32_t MaxVertexCount;
-		uint32_t VBOSize;
-		byte* BatchData			= nullptr;
-		byte* BatchDataInsPtr	= nullptr;
-
-		uint32_t IndexCount			= 0;
-		uint32_t MaxIndexCount;
-		uint32_t IBOSize;
-		byte* BatchIndices			= nullptr;
-		byte* BatchIndicesInsPtr	= nullptr;
-
-		void AddData(VBO_T* data, uint32_t size)
-		{
-			VertexCount += size / sizeof(VBO_T);
-
-			memcpy(BatchDataInsPtr, data, size);
-			BatchDataInsPtr += size;
-		}
-
-		void AddIndices(IBO_T* indices, uint32_t size)
-		{
-			IndexCount += size / sizeof(IBO_T);
-
-			memcpy(BatchIndicesInsPtr, indices, size);
-			BatchIndicesInsPtr += size;
-		}
-
-		bool EnoughSpace(uint32_t numVertex, uint32_t numIndex)
-		{
-			bool v = VertexCount + numVertex <= MaxVertexCount;
-			bool i = IndexCount + numIndex <= MaxIndexCount;
-
-			return v && i;
-		}
-
-		void Flush()
-		{
-			if (VertexCount == 0) return;
-
-			Shader->Bind();
-
-			VAO->Bind();
-
-			VBO->Bind();
-			VBO->SetData(BatchData, VertexCount * sizeof(VBO_T));
-
-			IBO->Bind();
-			IBO->SetIndices(BatchIndices, IndexCount * sizeof(IBO_T));
-
-			RenderCommand::DrawIndexed(DrawMode, IndexCount, IBOType);
-			Renderer2D::Stats.Draws++;
-		}
-
-		void Reset()
-		{
-			VertexCount = 0;
-			IndexCount = 0;
-
-			BatchDataInsPtr = BatchData;
-			BatchIndicesInsPtr = BatchIndices;
-		}
-
-		void FlushAndReset()
-		{
-			Flush();
-			Reset();
-		}
 	};
 
 	using IndexType = uint16_t;
@@ -134,10 +35,10 @@ namespace Engine {
 
 		uint32_t MaxQuadsPerBatch = 10000;
 
-		Batch<ColorVertex, IndexType>*		FlatColBatch;
-		Batch<TextureVertex, IndexType>*	TextureBatch;
-		Batch<ColorVertex, IndexType>*		LineBatch;
-		Batch<ColorVertex, IndexType>*		PointBatch;
+		Batch<ColorVertex2D, IndexType>*		FlatColBatch;
+		Batch<TextureVertex2D, IndexType>*	TextureBatch;
+		Batch<ColorVertex2D, IndexType>*		LineBatch;
+		Batch<ColorVertex2D, IndexType>*		PointBatch;
 
 		int CurrentTexSlot = 0;
 		int BoundTextureIds[32];
@@ -164,14 +65,14 @@ namespace Engine {
 
 		uint32_t& q = s_Data2D.MaxQuadsPerBatch;
 
-		s_Data2D.FlatColBatch = new Batch<ColorVertex, IndexType>(4 * q, 6 * q);
+		s_Data2D.FlatColBatch = new Batch<ColorVertex2D, IndexType>(4 * q, 6 * q);
 		s_Data2D.FlatColBatch->VBO = new VertexBuffer(s_Data2D.FlatColBatch->VBOSize);
 		s_Data2D.FlatColBatch->VBO->AddLayout(0, DataType::Float32, 3); // Position
 		s_Data2D.FlatColBatch->VBO->AddLayout(1, DataType::Float32, 4); // Color
 		s_Data2D.FlatColBatch->IBO = new IndexBuffer(s_Data2D.FlatColBatch->IBOSize);
 		s_Data2D.FlatColBatch->VAO = new VertexArray(*s_Data2D.FlatColBatch->VBO, *s_Data2D.FlatColBatch->IBO);
 
-		s_Data2D.TextureBatch = new Batch<TextureVertex, IndexType>(4 * q, 6 * q);
+		s_Data2D.TextureBatch = new Batch<TextureVertex2D, IndexType>(4 * q, 6 * q);
 		s_Data2D.TextureBatch->VBO = new VertexBuffer(s_Data2D.TextureBatch->VBOSize);
 		s_Data2D.TextureBatch->VBO->AddLayout(0, DataType::Float32, 3); // Position
 		s_Data2D.TextureBatch->VBO->AddLayout(1, DataType::Float32, 2); // Tex coord
@@ -179,7 +80,7 @@ namespace Engine {
 		s_Data2D.TextureBatch->IBO = new IndexBuffer(s_Data2D.TextureBatch->IBOSize);
 		s_Data2D.TextureBatch->VAO = new VertexArray(*s_Data2D.TextureBatch->VBO, *s_Data2D.TextureBatch->IBO);
 
-		s_Data2D.LineBatch = new Batch<ColorVertex, IndexType>(100, 100);
+		s_Data2D.LineBatch = new Batch<ColorVertex2D, IndexType>(100, 100);
 		s_Data2D.LineBatch->DrawMode = DrawMode::Lines;
 		s_Data2D.LineBatch->VBO = new VertexBuffer(s_Data2D.LineBatch->VBOSize);
 		s_Data2D.LineBatch->VBO->AddLayout(0, DataType::Float32, 3); // Position
@@ -187,7 +88,7 @@ namespace Engine {
 		s_Data2D.LineBatch->IBO = new IndexBuffer(s_Data2D.LineBatch->IBOSize);
 		s_Data2D.LineBatch->VAO = new VertexArray(*s_Data2D.LineBatch->VBO, *s_Data2D.LineBatch->IBO);
 
-		s_Data2D.PointBatch = new Batch<ColorVertex, IndexType>(100, 100);
+		s_Data2D.PointBatch = new Batch<ColorVertex2D, IndexType>(100, 100);
 		s_Data2D.PointBatch->DrawMode = DrawMode::Points;
 		s_Data2D.PointBatch->VBO = new VertexBuffer(s_Data2D.PointBatch->VBOSize);
 		s_Data2D.PointBatch->VBO->AddLayout(0, DataType::Float32, 3); // Position
@@ -264,7 +165,7 @@ namespace Engine {
 			s_Data2D.FlatColBatch->FlushAndReset();
 		}
 
-		ColorVertex vertices[4];
+		ColorVertex2D vertices[4];
 		IndexType indices[6];
 
 		indices[0] = 0 + s_Data2D.FlatColBatch->VertexCount;
@@ -323,7 +224,7 @@ namespace Engine {
 			Stats.Textures = s_Data2D.CurrentTexSlot;
 		}
 
-		TextureVertex vertices[4];
+		TextureVertex2D vertices[4];
 		IndexType indices[6];
 
 		indices[0] = 0 + s_Data2D.TextureBatch->VertexCount;
@@ -357,7 +258,7 @@ namespace Engine {
 
 	void Renderer2D::DrawCircle(const glm::vec2& centre, float radius, const glm::vec4& color, uint32_t nDivisions)
 	{
-		std::vector<ColorVertex> vertices;
+		std::vector<ColorVertex2D> vertices;
 		std::vector<IndexType> indices;
 
 		uint32_t nVert = nDivisions;
@@ -398,7 +299,7 @@ namespace Engine {
 			indices[j + 2]	= i + 2 + s_Data2D.FlatColBatch->VertexCount;
 		}
 
-		s_Data2D.FlatColBatch->AddData(vertices.data(), vertices.size() * sizeof(ColorVertex));
+		s_Data2D.FlatColBatch->AddData(vertices.data(), vertices.size() * sizeof(ColorVertex2D));
 		s_Data2D.FlatColBatch->AddIndices(indices.data(), indices.size() * sizeof(IndexType));
 
 		Stats.Circles++;
@@ -411,7 +312,7 @@ namespace Engine {
 			s_Data2D.LineBatch->FlushAndReset();
 		}
 
-		ColorVertex vertices[2];
+		ColorVertex2D vertices[2];
 		vertices[0].Position = glm::vec3(start, 0.0f);
 		vertices[1].Position = glm::vec3(end, 0.0f);
 
@@ -430,13 +331,13 @@ namespace Engine {
 
 	void Renderer2D::DrawPoint(const glm::vec2& position, const glm::vec4& color)
 	{
-		ColorVertex vertex;
+		ColorVertex2D vertex;
 		vertex.Position = glm::vec3(position, 0.0f);
 		vertex.Color = color;
 
 		IndexType index = s_Data2D.PointBatch->VertexCount;
 
-		s_Data2D.PointBatch->AddData(&vertex, sizeof(ColorVertex));
+		s_Data2D.PointBatch->AddData(&vertex, sizeof(ColorVertex2D));
 		s_Data2D.PointBatch->AddIndices(&index, sizeof(IndexType));
 
 		Stats.Points++;
