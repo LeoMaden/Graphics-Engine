@@ -161,9 +161,9 @@ namespace Engine {
 		double dTheta = glm::two_pi<double>() / (double)(nSegments);
 		double dPhi = glm::pi<double>() / (double)(nStacks);
 
-		for (uint64_t j = 0; j < (nStacks + 1); j++)
+		for (uint32_t j = 0; j < (nStacks + 1); j++)
 		{
-			for (uint64_t i = 0; i < nSegments; i++)
+			for (uint32_t i = 0; i < nSegments; i++)
 			{
 				glm::vec3 norm = {
 					glm::sin(phi)* glm::cos(theta),
@@ -185,16 +185,10 @@ namespace Engine {
 		{
 			for (uint32_t i = 0; i < nSegments; i++)
 			{
-				uint32_t segi = i;
-				uint32_t nextSegi = (i + 1) % nSegments;
-
-				uint32_t stacki = j;
-				uint32_t nextStacki = j + 1;
-
-				uint32_t i0 = segi +		(nSegments * stacki);
-				uint32_t i1 = segi +		(nSegments * nextStacki);
-				uint32_t i2 = nextSegi +	(nSegments * nextStacki);
-				uint32_t i3 = nextSegi +	(nSegments * stacki);
+				uint32_t i0 = i + (nSegments * j);
+				uint32_t i1 = i0 + nSegments;
+				uint32_t i3 = ((i + 1) % nSegments) + (nSegments * j);
+				uint32_t i2 = i3 + nSegments;
 
 				// Two triangles per sector except first and last stacks
 				if (j != 0)
