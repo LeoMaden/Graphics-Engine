@@ -171,7 +171,7 @@ namespace Engine {
 					glm::cos(phi)
 				};
 
-				glm::vec3 pos = centre * radius + norm;
+				glm::vec3 pos = centre + (radius * norm);
 
 				vertices.push_back({ pos, color, norm });
 

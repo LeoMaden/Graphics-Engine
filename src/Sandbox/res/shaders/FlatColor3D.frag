@@ -6,6 +6,6 @@ in vec3 v_Normal;
 
 void main() 
 {
-	//o_Color = v_Color;
-	o_Color = vec4(v_Normal / 2.0 + 0.5, 1.0);
+	o_Color = v_Color;
+	//o_Color = vec4(v_Normal / 2.0 + 0.5, 1.0);
 }
