@@ -34,13 +34,10 @@ public:
 
 		m_CameraController.OnUpdate(timestep);
 
-		Renderer2D::BeginScene(m_CameraController.GetCamera());
-		Renderer2D::DrawCircle({ 0,0 }, 1.0f, { 1,0,0,1 }, 25);
-		Renderer2D::EndScene();
-
 		Renderer3D::BeginScene(m_CameraController.GetCamera());
-		Renderer3D::DrawCube({ 2, 2, 2 }, { 1, 1, 1 }, { 0, 1, 0, 1 });
-		Renderer3D::DrawCube({ -2, -2, -2 }, { 1, 1, 1 }, { 1, 0, 1, 1 }, { 0,0,0 });
+		Renderer3D::DrawSphere({ 0,0,0 }, 1.0f, { 1, 0, 1, 1 }, 10);
+		//Renderer3D::DrawCube({ 0,0,0}, { 1, 1, 1 }, { 0, 1, 0, 1 });
+		//Renderer3D::DrawCube({ 0,0,0 }, { 2, 2, 1 }, { 1, 0, 1, 1 }, { 0,0,0 });
 		Renderer3D::EndScene();
 
 

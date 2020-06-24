@@ -15,6 +15,8 @@ namespace Engine {
 
 		static void DrawCube(const glm::vec3& position, const glm::vec3& size, const glm::vec4& color);
 		static void DrawCube(const glm::vec3& position, const glm::vec3& size, const glm::vec4& color, const glm::vec3& centre);
+
+		static void DrawSphere(const glm::vec3& centre, float radius, const glm::vec4& color, uint32_t nDivisions);
 	};
 
 }
