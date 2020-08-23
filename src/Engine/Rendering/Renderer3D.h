@@ -1,5 +1,6 @@
 #pragma once
 #include "Camera/Camera.h"
+#include "Lights/Lighting.h"
 
 #include <glm/glm.hpp>
 
@@ -11,6 +12,8 @@ namespace Engine {
 		static void Init();
 
 		static void BeginScene(const Camera& camera);
+		static void BeginScene(const Camera& camera, const Lighting& lights);
+
 		static void EndScene();
 
 		static void DrawCube(const glm::vec3& position, const glm::vec3& size, const glm::vec4& color);
