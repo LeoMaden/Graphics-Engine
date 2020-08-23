@@ -105,13 +105,22 @@ namespace Engine {
 		s_Data3D.ColorBatch->Shader->SetVec3("u_Material.Specular", { 0.5f, 0.3f, 0.1f });
 		s_Data3D.ColorBatch->Shader->SetFloat("u_Material.Shininess", 32.0f);
 
-		// DirectionalLight struct
-		s_Data3D.ColorBatch->Shader->SetVec3("u_DirLight.Direction", glm::normalize(glm::vec3(1.0f, -1.0f, 0.0f)));
-		s_Data3D.ColorBatch->Shader->SetVec3("u_DirLight.Ambient", glm::normalize(glm::vec3(0.2f, 0.2f, 0.2f)));
-		s_Data3D.ColorBatch->Shader->SetVec3("u_DirLight.Diffuse", glm::normalize(glm::vec3(0.5f, 0.5f, 0.5f)));
-		s_Data3D.ColorBatch->Shader->SetVec3("u_DirLight.Specular", glm::normalize(glm::vec3(1.0f, 1.0f, 1.0f)));
+		//// DirectionalLight struct
+		//s_Data3D.ColorBatch->Shader->SetVec3("u_DirLight.Direction", glm::normalize(glm::vec3(1.0f, -1.0f, 0.0f)));
+		//s_Data3D.ColorBatch->Shader->SetVec3("u_DirLight.Ambient", glm::normalize(glm::vec3(0.2f, 0.2f, 0.2f)));
+		//s_Data3D.ColorBatch->Shader->SetVec3("u_DirLight.Diffuse", glm::normalize(glm::vec3(0.5f, 0.5f, 0.5f)));
+		//s_Data3D.ColorBatch->Shader->SetVec3("u_DirLight.Specular", glm::normalize(glm::vec3(1.0f, 1.0f, 1.0f)));
 
-	}
+		// PointLight struct
+		s_Data3D.ColorBatch->Shader->SetVec3("u_PointLight.Position", glm::vec3(0.0f, 5.0f, 0.0f));
+		s_Data3D.ColorBatch->Shader->SetVec3("u_PointLight.Ambient", glm::normalize(glm::vec3(0.2f, 0.2f, 0.2f)));
+		s_Data3D.ColorBatch->Shader->SetVec3("u_PointLight.Diffuse", glm::normalize(glm::vec3(0.5f, 0.5f, 0.5f)));
+		s_Data3D.ColorBatch->Shader->SetVec3("u_PointLight.Specular", glm::normalize(glm::vec3(1.0f, 1.0f, 1.0f)));
+		s_Data3D.ColorBatch->Shader->SetFloat("u_PointLight.Constant", 1.0f);
+		s_Data3D.ColorBatch->Shader->SetFloat("u_PointLight.Linear", 0.045f);
+		s_Data3D.ColorBatch->Shader->SetFloat("u_PointLight.Quadratic", 0.0075f);
+
+	} 
 
 	void Renderer3D::BeginScene(const Camera& camera)
 	{

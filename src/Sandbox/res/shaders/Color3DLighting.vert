@@ -13,9 +13,8 @@ void main()
 {
 	v_Color = a_Color;
 	v_Normal = a_Normal;
+	v_Position = a_Position.xyz;
 
 	vec4 pos = u_Transform * vec4(a_Position, 1.0);
-
-	v_Position = a_Position.xyz;
 	gl_Position = pos;
 }
