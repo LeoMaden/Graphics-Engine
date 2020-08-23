@@ -12,6 +12,7 @@ namespace Engine {
 		void SetPos(const glm::vec3& position);
 
 		virtual const glm::mat4& GetViewProjMat() const override { return m_ViewProjMat; }
+		virtual const glm::vec3& GetPos() const override{ return m_Position; }
 
 		void SetProjection(const glm::vec2& size, const glm::vec2& centre);
 

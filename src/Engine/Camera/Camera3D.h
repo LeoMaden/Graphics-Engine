@@ -22,6 +22,7 @@ namespace Engine {
 		//void Roll(Degrees roll);
 
 		virtual const glm::mat4& GetViewProjMat() const override { return m_ViewProjMat; }
+		virtual const glm::vec3& GetPos() const override { return m_Position; }
 
 		const glm::vec3& GetLookDir()	const { return m_LookDir; }
 		const glm::vec3& GetRightDir()	const { return m_RightDir; }
