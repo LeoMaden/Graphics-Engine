@@ -40,6 +40,12 @@ namespace Engine {
 	}
 
 
+	void Shader::SetFloat(const std::string& name, float val)
+	{
+		GLint loc = GetLocation(name);
+		glUniform1f(loc, val);
+	}
+
 	void Shader::SetVec3(const std::string& name, const glm::vec3& vec)
 	{
 		GLint loc = GetLocation(name);

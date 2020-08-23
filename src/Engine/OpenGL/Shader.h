@@ -19,6 +19,7 @@ namespace Engine {
 		void Link() const;
 		void Bind() const;
 
+		void SetFloat(const std::string& name, float val);
 		void SetVec3(const std::string& name, const glm::vec3& vec);
 		void SetVec4(const std::string& name, const glm::vec4& vec);
 		void SetMat4(const std::string& name, const glm::mat4& mat);
