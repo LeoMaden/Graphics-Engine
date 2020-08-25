@@ -34,7 +34,16 @@ public:
 
 		m_CameraController.OnUpdate(timestep);
 
-		Renderer3D::BeginScene(m_CameraController.GetCamera());
+		Lighting lights;
+		DirectionalLight dirLight;
+		dirLight.Direction = glm::normalize(glm::vec3(1, -1, 0));
+		dirLight.Ambient = glm::vec3(0.05f);
+		dirLight.Diffuse = glm::vec3(0.5f);
+		dirLight.Specular = glm::vec3(0.8f);
+
+		lights.DirectionalLights.push_back(dirLight);
+
+		Renderer3D::BeginScene(m_CameraController.GetCamera(), lights);
 		Renderer3D::DrawSphere({ 0,0,0 }, 1.0f, { 1, 0, 1, 1 }, 20);
 		Renderer3D::DrawCube({ 3,3,3}, { 1, 1, 1 }, { 0, 1, 0, 1 });
 		Renderer3D::DrawCube({ 0,5,0}, { 0.1, 0.1, 0.1 }, { 1, 0, 0, 1 });

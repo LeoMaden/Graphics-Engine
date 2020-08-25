@@ -26,6 +26,8 @@ namespace Engine {
 		std::vector<IndexType>		UnitCubeIndices;
 
 		Batch<ColorVertex3D, IndexType>* ColorBatch;
+		Shader* UnlitColorShader;
+		Shader* LitColorShader;
 
 		glm::mat4		SceneViewProjMat;
 	};
@@ -92,33 +94,22 @@ namespace Engine {
 		s_Data3D.ColorBatch->IBO = new IndexBuffer(s_Data3D.ColorBatch->IBOSize);
 		s_Data3D.ColorBatch->VAO = new VertexArray(*s_Data3D.ColorBatch->VBO, *s_Data3D.ColorBatch->IBO);
 
-		s_Data3D.ColorBatch->Shader = new Shader();
-		//s_Data3D.ColorBatch->Shader->AddVertexShader("res/shaders/FlatColor3D.vert");
-		//s_Data3D.ColorBatch->Shader->AddFragmentShader("res/shaders/FlatColor3D.frag");
-		s_Data3D.ColorBatch->Shader->AddVertexShader("res/shaders/Color3DLighting.vert");
-		s_Data3D.ColorBatch->Shader->AddFragmentShader("res/shaders/Color3DLighting.frag");
-		s_Data3D.ColorBatch->Shader->Link();
-		s_Data3D.ColorBatch->Shader->Bind();
+		s_Data3D.LitColorShader = new Shader();
+		s_Data3D.LitColorShader->AddVertexShader("res/shaders/Color3DLighting.vert");
+		s_Data3D.LitColorShader->AddFragmentShader("res/shaders/Color3DLighting.frag");
+		s_Data3D.LitColorShader->Link();
+		s_Data3D.LitColorShader->Bind();
 
 		// Material struct
-		s_Data3D.ColorBatch->Shader->SetVec3("u_Material.Color", { 0.5f, 0.3f, 0.1f });
-		s_Data3D.ColorBatch->Shader->SetVec3("u_Material.Specular", { 0.5f, 0.3f, 0.1f });
-		s_Data3D.ColorBatch->Shader->SetFloat("u_Material.Shininess", 32.0f);
+		s_Data3D.LitColorShader->SetVec3("u_Material.Color", { 0.5f, 0.3f, 0.1f });
+		s_Data3D.LitColorShader->SetVec3("u_Material.Specular", { 0.5f, 0.3f, 0.1f });
+		s_Data3D.LitColorShader->SetFloat("u_Material.Shininess", 32.0f);
 
-		// DirectionalLight struct
-		s_Data3D.ColorBatch->Shader->SetVec3("u_DirLight.Direction", glm::normalize(glm::vec3(1.0f, -1.0f, 0.0f)));
-		s_Data3D.ColorBatch->Shader->SetVec3("u_DirLight.Ambient", glm::vec3(0.1f, 0.1f, 0.1f));
-		s_Data3D.ColorBatch->Shader->SetVec3("u_DirLight.Diffuse", glm::vec3(0.4f, 0.4f, 0.4f));
-		s_Data3D.ColorBatch->Shader->SetVec3("u_DirLight.Specular", glm::vec3(0.8f, 0.8f, 0.8f));
-
-		// PointLight struct
-		s_Data3D.ColorBatch->Shader->SetVec3("u_PointLight.Position", glm::vec3(0.0f, 5.0f, 0.0f));
-		s_Data3D.ColorBatch->Shader->SetVec3("u_PointLight.Ambient", glm::vec3(0.0f, 0.0f, 0.0f));
-		s_Data3D.ColorBatch->Shader->SetVec3("u_PointLight.Diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
-		s_Data3D.ColorBatch->Shader->SetVec3("u_PointLight.Specular", glm::vec3(1.0f, 1.0f, 1.0f));
-		s_Data3D.ColorBatch->Shader->SetFloat("u_PointLight.Constant", 1.0f);
-		s_Data3D.ColorBatch->Shader->SetFloat("u_PointLight.Linear", 0.045f);
-		s_Data3D.ColorBatch->Shader->SetFloat("u_PointLight.Quadratic", 0.0075f);
+		s_Data3D.UnlitColorShader = new Shader();
+		s_Data3D.UnlitColorShader->AddVertexShader("res/shaders/FlatColor3D.vert");
+		s_Data3D.UnlitColorShader->AddFragmentShader("res/shaders/FlatColor3D.frag");
+		s_Data3D.UnlitColorShader->Link();
+		s_Data3D.UnlitColorShader->Bind();
 
 	} 
 
@@ -126,13 +117,40 @@ namespace Engine {
 	{
 		s_Data3D.SceneViewProjMat = camera.GetViewProjMat();
 
+		s_Data3D.ColorBatch->Shader = s_Data3D.UnlitColorShader;
 		s_Data3D.ColorBatch->Shader->Bind();
 		s_Data3D.ColorBatch->Shader->SetMat4("u_Transform", s_Data3D.SceneViewProjMat);
-		s_Data3D.ColorBatch->Shader->SetVec3("u_ViewPos", camera.GetPos());
 	}
 
 	void Renderer3D::BeginScene(const Camera& camera, const Lighting& lights)
 	{
+		s_Data3D.SceneViewProjMat = camera.GetViewProjMat();
+
+		s_Data3D.ColorBatch->Shader = s_Data3D.LitColorShader;
+		s_Data3D.ColorBatch->Shader->Bind();
+		s_Data3D.ColorBatch->Shader->SetMat4("u_Transform", s_Data3D.SceneViewProjMat);
+		s_Data3D.ColorBatch->Shader->SetVec3("u_ViewPos", camera.GetPos());
+
+		// DirectionalLight struct
+		if (lights.DirectionalLights.size() != 0)
+		{
+			s_Data3D.ColorBatch->Shader->SetVec3("u_DirLight.Direction", lights.DirectionalLights[0].Direction);
+			s_Data3D.ColorBatch->Shader->SetVec3("u_DirLight.Ambient", lights.DirectionalLights[0].Ambient);
+			s_Data3D.ColorBatch->Shader->SetVec3("u_DirLight.Diffuse", lights.DirectionalLights[0].Diffuse);
+			s_Data3D.ColorBatch->Shader->SetVec3("u_DirLight.Specular", lights.DirectionalLights[0].Specular);
+		}
+
+		// PointLight struct
+		if (lights.PointLights.size() != 0)
+		{
+			s_Data3D.ColorBatch->Shader->SetVec3("u_PointLight.Position", lights.PointLights[0].Position);
+			s_Data3D.ColorBatch->Shader->SetVec3("u_PointLight.Ambient", lights.PointLights[0].Ambient);
+			s_Data3D.ColorBatch->Shader->SetVec3("u_PointLight.Diffuse", lights.PointLights[0].Diffuse);
+			s_Data3D.ColorBatch->Shader->SetVec3("u_PointLight.Specular", lights.PointLights[0].Specular);
+			s_Data3D.ColorBatch->Shader->SetFloat("u_PointLight.Constant", lights.PointLights[0].Constant);
+			s_Data3D.ColorBatch->Shader->SetFloat("u_PointLight.Linear", lights.PointLights[0].Linear);
+			s_Data3D.ColorBatch->Shader->SetFloat("u_PointLight.Quadratic", lights.PointLights[0].Quadratic);
+		}
 	}
 
 	void Renderer3D::EndScene()

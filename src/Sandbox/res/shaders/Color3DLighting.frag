@@ -93,6 +93,6 @@ void main()
 {
 	//o_Color = v_Color;
 	o_Color += CalcLighting(u_DirLight);
-	o_Color += CalcLighting(u_PointLight);
+	//o_Color += CalcLighting(u_PointLight);
 	//o_Color = vec4(fract(v_Normal), 1.0);
 }
