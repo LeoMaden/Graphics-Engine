@@ -41,7 +41,7 @@ uniform Material u_Material;
 uniform DirectionalLight u_DirLight;
 uniform PointLight u_PointLight;
 
-vec4 CalcLighting(DirectionalLight light)
+vec3 CalcLighting(DirectionalLight light)
 {
 	vec3 reflectDir = reflect(light.Direction, v_Normal);
 	vec3 viewDir = normalize(u_ViewPos - v_Position);
@@ -58,10 +58,10 @@ vec4 CalcLighting(DirectionalLight light)
 	//vec3 specular = light.Specular * spec * u_Material.Specular;
 
 	vec3 total = ambient + diffuse + specular;
-	return vec4(total, 1.0);
+	return total;
 }
 
-vec4 CalcLighting(PointLight light)
+vec3 CalcLighting(PointLight light)
 {
 	float dist = length(light.Position - v_Position);
 	float attenuation = 1.0 / (light.Constant + light.Linear * dist + light.Quadratic * dist * dist);
@@ -86,13 +86,15 @@ vec4 CalcLighting(PointLight light)
 	specular *= attenuation;
 
 	vec3 total = ambient + diffuse + specular;
-	return vec4(total, 1.0);
+	return total;
 }
 
 void main() 
 {
-	//o_Color = v_Color;
-	o_Color += CalcLighting(u_DirLight);
-	//o_Color += CalcLighting(u_PointLight);
-	//o_Color = vec4(fract(v_Normal), 1.0);
+	vec3 c = vec3(0);
+
+	c += CalcLighting(u_DirLight);
+	//c += CalcLighting(u_PointLight);
+
+	o_Color = vec4(c, 1.0);
 }
