@@ -7,6 +7,7 @@
 #include "Rendering/RenderCommand.h"
 
 #include "Camera/CameraControllerFPS.h"
+#include "Camera/CameraController3rdPerson.h"
 
 class Sandbox3D : public Engine::Application
 {
@@ -18,9 +19,11 @@ public:
 		Engine::Renderer2D::Init();
 		Engine::Renderer3D::Init();
 
-		m_CameraController = Engine::CameraControllerFPS();
+
+		m_CameraController = Engine::CameraController3rdPerson();
 		m_CameraController.SetCamera(Engine::Camera3D());
-		m_CameraController.SetKeyDownFunc([&](Engine::KeyCode k) { return m_Window->IsKeyDown(k); });
+		m_CameraController.SetTarget(glm::vec3(0));
+		//m_CameraController.SetKeyDownFunc([&](Engine::KeyCode k) { return m_Window->IsKeyDown(k); });
 
 		Engine::RenderCommand::EnableBlending(true);
 		Engine::RenderCommand::EnableDepth(true);
@@ -91,5 +94,6 @@ public:
 	}
 
 private:
-	Engine::CameraControllerFPS	m_CameraController;
+	//Engine::CameraControllerFPS	m_CameraController;
+	Engine::CameraController3rdPerson	m_CameraController;
 };

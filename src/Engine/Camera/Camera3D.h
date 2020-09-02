@@ -16,6 +16,7 @@ namespace Engine {
 
 		void Rotate(Radians dPitch, Radians dYaw);
 		void SetRotation(Radians pitch, Radians yaw);
+		void LookAt(const glm::vec3& target, const glm::vec3& upDir);
 
 		//void SetTarget(const glm::vec3& target);
 

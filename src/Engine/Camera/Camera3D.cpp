@@ -71,6 +71,15 @@ namespace Engine {
 		RecalcViewProj();
 	}
 
+	void Camera3D::LookAt(const glm::vec3& target, const glm::vec3& upDir)
+	{
+		m_UpDir = upDir;
+		m_LookDir = target - m_Position;
+
+		m_ViewMatrix = glm::lookAt(m_Position, target, m_UpDir);
+		RecalcViewProj();
+	}
+
 	void Camera3D::SetProjection(Radians fov, float aspect)
 	{
 		m_ProjMatrix = glm::perspective(fov, aspect, 0.1f, 100.0f);
