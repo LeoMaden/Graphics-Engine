@@ -9,6 +9,11 @@
 #include "Camera/CameraControllerFPS.h"
 #include "Camera/CameraController3rdPerson.h"
 
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
+
 class Sandbox3D : public Engine::Application
 {
 public:
@@ -29,6 +34,10 @@ public:
 		Engine::RenderCommand::EnableDepth(true);
 		Engine::RenderCommand::SmoothLines(true);
 		Engine::RenderCommand::PointSize(5);
+
+		Assimp::Importer importer;
+		const aiScene* scene = importer.ReadFile("C:/Users/leocm/Downloads/apollo-lander.blend", aiProcess_Triangulate | aiProcess_FlipUVs);
+
 	}
 
 	virtual void OnUpdate(float timestep) override
@@ -52,30 +61,6 @@ public:
 		Renderer3D::DrawCube({ 0,5,0}, { 0.1, 0.1, 0.1 }, { 1, 0, 0, 1 });
 		//Renderer3D::DrawCube({ 0,0,0 }, { 2, 2, 1 }, { 1, 0, 1, 1 }, { 0,0,0 });
 		Renderer3D::EndScene();
-
-
-		//LOG_TRACE("FPS: {:.0f}, Draws: {}, Quads: {}, Circles: {}, Textures: {}", 1.0f / timestep, Renderer2D::Stats.Draws, Renderer2D::Stats.Quads, Renderer2D::Stats.Circles, Renderer2D::Stats.Textures);
-		//Renderer2D::Stats.Reset();
-
-		//Engine::Renderer2D::BeginScene(m_CameraController.GetCamera());
-		//for (int i = 0; i < 20; i++)
-		//{
-		//	for (int j = 0; j < 20; j++)
-		//	{
-		//		Engine::Renderer2D::DrawCircle({ i, j }, 0.45f, { i / 20.0, j / 20.0, 0.5f, 1 }, 20);
-		//		//if ((i + j) % 2 == 0)
-		//		//{
-		//		//	//Engine::Renderer2D::DrawQuad({ i, j }, { 0.9f, 0.9f }, { i / 50.0f, j / 50.0f, 0.3f, 1.0f }, { 0.0f, 0.0f });
-		//		//	//Engine::Renderer2D::DrawQuad({ i, j }, { 0.9f, 0.9f }, *m_GrassTex, { 0.0f, 0.0f });
-		//		//}
-		//		//else
-		//		//{
-		//		//	//Engine::Renderer2D::DrawQuad({ i, j }, { 0.9f, 0.9f }, { i / 50.0f, j / 50.0f, 0.3f, 1.0f }, { 0.0f, 0.0f });
-		//		//	//Engine::Renderer2D::DrawQuad({ i, j }, { 0.9f, 0.9f }, *m_StoneTex, { 0.0f, 0.0f });
-		//		//}
-		//	}
-		//}
-		//Engine::Renderer2D::EndScene();
 	}
 
 	virtual void OnMouseMove(Engine::MouseMoveEvent& e) override

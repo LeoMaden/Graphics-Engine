@@ -30,4 +30,6 @@ include "src/Engine/premake5.lua"
 
 group "Dependencies"
     include "Dependencies/glad/premake5.lua"
+    include "Dependencies/assimp/premake5.lua"
+    include "Dependencies/assimp/contrib/zlib/premake5.lua"
 group ""

@@ -6,25 +6,24 @@ project "Engine"
         "**.cpp",
         "**.h"
     }
-    
+
     includedirs {
         ".",
         "../../Dependencies/glad/include",
         "../../Dependencies/OpenGL",
         "../../Dependencies/glm",
         "../../Dependencies/spdlog",
-        "../../Dependencies/stb_image"
+        "../../Dependencies/stb_image",
+        "../../Dependencies/assimp/include"
     }
 
     links {
-        "glad"
+        "glad",
+        "assimp"
     }
 
     defines {
     }
-
-    --pchheader "PulsePCH.h"
-    --pchsource "Source/PulsePCH.cpp"
 
     targetdir ("../../Bin/" .. outputdir .. "Engine")
     objdir ("../../Build/" .. outputdir .. "Engine")

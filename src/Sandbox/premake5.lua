@@ -12,12 +12,14 @@ project "Sandbox"
         "../Engine",
         "../../Dependencies/spdlog",
         "../../Dependencies/glad/include",
-        "../../Dependencies/glm"
+        "../../Dependencies/glm",
+        "../../Dependencies/assimp/include"
     }
 
     links {
         "Engine",
-        "opengl32"
+        "opengl32",
+        "assimp"
     }
 
     --defines {
