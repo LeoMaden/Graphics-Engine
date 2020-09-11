@@ -8,6 +8,10 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
 namespace Engine {
 
 	std::string Utils::LoadFile(const std::string& path)
@@ -44,5 +48,188 @@ namespace Engine {
 	{
 		stbi_image_free(data);
 	}
+
+
+	// Helper functions for loading from assimp.
+
+	static glm::vec3 ConvertColor(aiColor3D col)
+	{
+		return glm::vec3(col.r, col.g, col.b);
+	}
+
+	static glm::vec3 ConvertVec3(aiVector3D vec)
+	{
+		return glm::vec3(vec.x, vec.y, vec.z);
+	}
+
+	static glm::vec2 ConvertVec2(aiVector3D vec)
+	{
+		return glm::vec2(vec.x, vec.y);
+	}
+
+	static Material* ConvertMaterial(aiMaterial* aiMaterial)
+	{
+		Material* material = new Material;
+		material->Name = std::string(aiMaterial->GetName().C_Str());
+
+		aiColor3D aiAmbient;
+		aiColor3D aiDiffuse;
+		aiColor3D aiSpecular;
+		float shininess;
+
+		if (AI_SUCCESS != aiMaterial->Get(AI_MATKEY_COLOR_AMBIENT, aiAmbient))
+		{
+			LOG_WARN("Could not load ambient color for {}", material->Name);
+		}
+
+		if (AI_SUCCESS != aiMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, aiDiffuse))
+		{
+			LOG_WARN("Could not load diffuse color for {}", material->Name);
+		}
+
+		if (AI_SUCCESS != aiMaterial->Get(AI_MATKEY_COLOR_SPECULAR, aiSpecular))
+		{
+			LOG_WARN("Could not load specular color for {}", material->Name);
+		}
+
+		if (AI_SUCCESS != aiMaterial->Get(AI_MATKEY_SHININESS, shininess))
+		{
+			LOG_WARN("Could not load shininess for {}", material->Name);
+		}
+
+		material->AmbientColor = ConvertColor(aiAmbient);
+		material->DiffuseColor = ConvertColor(aiDiffuse);
+		material->SpecularColor = ConvertColor(aiSpecular);
+		material->Shininess = shininess;
+
+		return material;
+	}
+
+	static Mesh* ConvertMesh(aiMesh* aiMesh, const std::vector<Material*>& materials)
+	{
+		Mesh* mesh = new Mesh;
+		mesh->Name = std::string(aiMesh->mName.C_Str());
+
+		// Add vertices to mesh.
+		uint32_t nVertices = aiMesh->mNumVertices;
+
+		bool texCoords = aiMesh->mTextureCoords[0] != nullptr;
+
+		for (uint32_t i = 0; i < nVertices; i++)
+		{
+			Vertex v;
+			v.Position = ConvertVec3(aiMesh->mVertices[i]);
+			v.Normal = ConvertVec3(aiMesh->mNormals[i]);
+
+			if (texCoords == true)
+			{
+				v.TexCoord = ConvertVec2(aiMesh->mTextureCoords[0][i]); // Only using first UV for each vertex, could be more?
+			}
+			else
+			{
+				v.TexCoord = glm::vec3(0.0f);
+			}
+
+			mesh->Vertices.push_back(v);
+		}
+
+		// Add indices to mesh.
+		uint32_t nFaces = aiMesh->mNumFaces;
+
+		for (uint32_t i = 0; i < nFaces; i++)
+		{
+			ASSERT(aiMesh->mFaces[i].mNumIndices == 3, "Mesh not triangulated");
+
+			mesh->Indices.push_back(aiMesh->mFaces[i].mIndices[0]);
+			mesh->Indices.push_back(aiMesh->mFaces[i].mIndices[1]);
+			mesh->Indices.push_back(aiMesh->mFaces[i].mIndices[2]);
+		}
+
+		// Add material to mesh.
+		uint32_t materialIndex = aiMesh->mMaterialIndex;
+		mesh->Material = materials[materialIndex];
+
+
+		return mesh;
+	}
+
+	static Node* ConvertNode(aiNode* aiNode, Node* parent, const std::vector<Mesh*>& meshes)
+	{
+		Node* node = new Node;
+		node->Name = aiNode->mName.C_Str();
+
+		// Set parent to what is provided.
+		node->Parent = parent;
+
+		// Recursively convert children to Node using node above as parent.
+		uint32_t nChildren = aiNode->mNumChildren;
+		node->Children.resize(nChildren);
+
+		for (uint32_t i = 0; i < nChildren; i++)
+		{
+			Node* child = new Node;
+
+			child = ConvertNode(aiNode->mChildren[i], node, meshes);
+
+			node->Children[i] = child;
+		}
+
+		// Add meshes to node.
+		uint32_t nMeshes = aiNode->mNumMeshes;
+		node->Meshes.resize(nMeshes);
+
+		for (uint32_t i = 0; i < nMeshes; i++)
+		{
+			uint32_t meshIndex = aiNode->mMeshes[i];
+
+			node->Meshes[i] = meshes[meshIndex];
+		}
+
+
+		return node;
+	}
+
+
+
+	Scene* Utils::LoadScene(const std::string& path)
+	{
+		// TODO: Loading options.
+		Assimp::Importer importer;
+		const aiScene* aiScene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+
+		Scene* scene = new Scene;
+
+		// Populate Materials. Must be done before meshes as Mesh references Material.
+		uint32_t nMaterials = aiScene->mNumMaterials;
+		scene->Materials.resize(nMaterials);
+
+		for (uint32_t i = 0; i < nMaterials; i++)
+		{
+			aiMaterial* aiMaterial = aiScene->mMaterials[i];
+			Material* material = ConvertMaterial(aiMaterial);
+
+			scene->Materials[i] = material;
+		}
+
+		// Populate Meshes.
+		uint32_t nMeshes = aiScene->mNumMeshes;
+		scene->Meshes.resize(nMeshes);
+
+		for (uint32_t i = 0; i < nMeshes; i++)
+		{
+			aiMesh* aiMesh = aiScene->mMeshes[i];
+			Mesh* mesh = ConvertMesh(aiMesh, scene->Materials);
+
+			scene->Meshes[i] = mesh;
+		}
+
+		// Populate Nodes recursively.
+		scene->RootNode = ConvertNode(aiScene->mRootNode, nullptr, scene->Meshes);
+
+
+		return scene;
+	}
+
+
 
 }

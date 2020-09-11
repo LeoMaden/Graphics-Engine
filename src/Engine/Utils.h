@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 
+#include "Scene/Scene.h"
+
 namespace Engine {
 
 	/*static*/ class Utils
@@ -17,6 +19,8 @@ namespace Engine {
 
 		static uint8_t* LoadImage(const std::string& path, ImageProps* props);
 		static void FreeImage(uint8_t* data);
+
+		static Scene* LoadScene(const std::string& path);
 	};
 
 }

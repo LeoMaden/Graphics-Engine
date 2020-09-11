@@ -12,7 +12,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
-
+#include "Utils.h"
 
 class Sandbox3D : public Engine::Application
 {
@@ -35,9 +35,11 @@ public:
 		Engine::RenderCommand::SmoothLines(true);
 		Engine::RenderCommand::PointSize(5);
 
-		Assimp::Importer importer;
-		const aiScene* scene = importer.ReadFile("C:/Users/leocm/Downloads/apollo-lander.blend", aiProcess_Triangulate | aiProcess_FlipUVs);
+		Assimp::Importer aiImporter;
+		const aiScene* aiScene = aiImporter.ReadFile("C:/Users/leocm/Downloads/tkf28u03u0ow-3dbuch/3dbuch/book.obj", aiProcess_Triangulate | aiProcess_FlipUVs);
 
+		Engine::Scene* scene = Engine::Utils::LoadScene("C:/Users/leocm/Downloads/tkf28u03u0ow-3dbuch/3dbuch/book.obj");
+		scene->Name = "Book";
 	}
 
 	virtual void OnUpdate(float timestep) override
