@@ -3,6 +3,7 @@
 #include <glad/glad.h>
 
 #include "Rendering/RenderUtils.h"
+#include "BufferType.h"
 
 namespace Engine {
 
@@ -17,20 +18,39 @@ namespace Engine {
 		};
 
 	public:
+		// ----- Static VertexBuffers -----
+
+		// Create a VertexBuffer with fixed data.
+		// Size in bytes.
+		VertexBuffer(const void* data, uint32_t size);
+
+
+		// ----- Dynamic VertexBuffers -----
+
+		// Create a VertexBuffer with a given capacity (in bytes)
+		// which can have data written to it at will.
 		VertexBuffer(uint32_t capacity);
+
+		// Set the data in a dynamic VertexBuffer.
+		// Size is given in bytes.
+		void SetData(const void* data, uint32_t size);
+
+
+		// ----- All VertexBuffers -----
 		~VertexBuffer();
 
-		void Bind() const;
 		void AddLayout(uint32_t location, DataType type, uint32_t count);
-		void SetData(void* data, uint32_t size);
 
 		uint32_t					GetId()		const { return m_Id; }
 		const std::vector<Layout>&	GetLayout()	const { return m_Layout; }
+		BufferType					GetType()	const { return m_Type; }
 
 	private:
 		GLuint					m_Id;
 		uint32_t				m_Capacity;
 		std::vector<Layout>		m_Layout;
+		BufferType				m_Type;
+
 	};
 
 }

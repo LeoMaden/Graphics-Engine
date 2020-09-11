@@ -15,16 +15,16 @@ namespace Engine {
 		return 0;
 	}
 
-	VertexArray::VertexArray(VertexBuffer& vbo, IndexBuffer& ibo)
+	VertexArray::VertexArray(VertexBuffer* vbo, IndexBuffer* ibo)
 		: m_Vbo(vbo), m_Ibo(ibo)
 	{
 		glCreateVertexArrays(1, &m_Id);
 		glBindVertexArray(m_Id);
 
-		vbo.Bind();
-		ibo.Bind();
+		glBindBuffer(GL_ARRAY_BUFFER, vbo->GetId());
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo->GetId());
 
-		const std::vector<VertexBuffer::Layout>& layout = vbo.GetLayout();
+		const std::vector<VertexBuffer::Layout>& layout = vbo->GetLayout();
 
 		int stride = 0;
 		int offset = 0;
