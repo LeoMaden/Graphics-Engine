@@ -4,6 +4,9 @@
 
 #include <glm/glm.hpp>
 
+#include "Scene/Mesh.h"
+#include "OpenGL/Shader.h"
+
 namespace Engine {
 
 	class Renderer3D
@@ -15,6 +18,10 @@ namespace Engine {
 		static void BeginScene(const Camera& camera, const Lighting& lights);
 
 		static void EndScene();
+
+		static void DrawMesh(const Mesh& mesh);
+
+
 
 		static void DrawCube(const glm::vec3& position, const glm::vec3& size, const glm::vec4& color);
 		static void DrawCube(const glm::vec3& position, const glm::vec3& size, const glm::vec4& color, const glm::vec3& centre);

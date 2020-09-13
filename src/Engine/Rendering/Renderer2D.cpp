@@ -70,7 +70,7 @@ namespace Engine {
 		s_Data2D.FlatColBatch->VBO->AddLayout(0, DataType::Float32, 3); // Position
 		s_Data2D.FlatColBatch->VBO->AddLayout(1, DataType::Float32, 4); // Color
 		s_Data2D.FlatColBatch->IBO = new IndexBuffer(s_Data2D.FlatColBatch->IBOSize);
-		s_Data2D.FlatColBatch->VAO = new VertexArray(*s_Data2D.FlatColBatch->VBO, *s_Data2D.FlatColBatch->IBO);
+		s_Data2D.FlatColBatch->VAO = new VertexArray(s_Data2D.FlatColBatch->VBO, s_Data2D.FlatColBatch->IBO);
 
 		s_Data2D.TextureBatch = new Batch<TextureVertex2D, IndexType>(4 * q, 6 * q);
 		s_Data2D.TextureBatch->VBO = new VertexBuffer(s_Data2D.TextureBatch->VBOSize);
@@ -78,7 +78,7 @@ namespace Engine {
 		s_Data2D.TextureBatch->VBO->AddLayout(1, DataType::Float32, 2); // Tex coord
 		s_Data2D.TextureBatch->VBO->AddLayout(2, DataType::Float32, 1); // Tex id
 		s_Data2D.TextureBatch->IBO = new IndexBuffer(s_Data2D.TextureBatch->IBOSize);
-		s_Data2D.TextureBatch->VAO = new VertexArray(*s_Data2D.TextureBatch->VBO, *s_Data2D.TextureBatch->IBO);
+		s_Data2D.TextureBatch->VAO = new VertexArray(s_Data2D.TextureBatch->VBO, s_Data2D.TextureBatch->IBO);
 
 		s_Data2D.LineBatch = new Batch<ColorVertex2D, IndexType>(100, 100);
 		s_Data2D.LineBatch->DrawMode = DrawMode::Lines;
@@ -86,7 +86,7 @@ namespace Engine {
 		s_Data2D.LineBatch->VBO->AddLayout(0, DataType::Float32, 3); // Position
 		s_Data2D.LineBatch->VBO->AddLayout(1, DataType::Float32, 4); // Color
 		s_Data2D.LineBatch->IBO = new IndexBuffer(s_Data2D.LineBatch->IBOSize);
-		s_Data2D.LineBatch->VAO = new VertexArray(*s_Data2D.LineBatch->VBO, *s_Data2D.LineBatch->IBO);
+		s_Data2D.LineBatch->VAO = new VertexArray(s_Data2D.LineBatch->VBO, s_Data2D.LineBatch->IBO);
 
 		s_Data2D.PointBatch = new Batch<ColorVertex2D, IndexType>(100, 100);
 		s_Data2D.PointBatch->DrawMode = DrawMode::Points;
@@ -94,7 +94,7 @@ namespace Engine {
 		s_Data2D.PointBatch->VBO->AddLayout(0, DataType::Float32, 3); // Position
 		s_Data2D.PointBatch->VBO->AddLayout(1, DataType::Float32, 4); // Color
 		s_Data2D.PointBatch->IBO = new IndexBuffer(s_Data2D.PointBatch->IBOSize);
-		s_Data2D.PointBatch->VAO = new VertexArray(*s_Data2D.PointBatch->VBO, *s_Data2D.PointBatch->IBO);
+		s_Data2D.PointBatch->VAO = new VertexArray(s_Data2D.PointBatch->VBO, s_Data2D.PointBatch->IBO);
 
 		s_Data2D.FlatColBatch->Shader = new Shader();
 		s_Data2D.FlatColBatch->Shader->AddVertexShader("res/shaders/FlatColor.vert");

@@ -82,10 +82,10 @@ namespace Engine {
 
 			VAO->Bind();
 
-			VBO->Bind();
+			//VBO->Bind();
 			VBO->SetData(BatchData, VertexCount * sizeof(VBO_T));
 
-			IBO->Bind();
+			//IBO->Bind();
 			IBO->SetIndices(BatchIndices, IndexCount * sizeof(IBO_T));
 
 			RenderCommand::DrawIndexed(DrawMode, IndexCount, IBOType);

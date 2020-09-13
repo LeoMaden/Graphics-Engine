@@ -197,6 +197,12 @@ namespace Engine {
 		Assimp::Importer importer;
 		const aiScene* aiScene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
 
+		if (aiScene == nullptr)
+		{
+			LOG_ERROR("Error loading model {}: {}", path, importer.GetErrorString()); 
+			return nullptr;
+		}
+
 		Scene* scene = new Scene;
 
 		// Populate Materials. Must be done before meshes as Mesh references Material.
