@@ -1,6 +1,8 @@
 #include "VertexArray.h"
 #include "Log.h"
 
+#include "OpenGLUtils.h"
+
 namespace Engine {
 
 	static uint32_t GetTypeSize(GLenum type)
@@ -22,7 +24,7 @@ namespace Engine {
 		glBindVertexArray(m_Id);
 
 		glBindBuffer(GL_ARRAY_BUFFER, vbo->GetId());
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo->GetId());
+		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo->GetId());
 
 		const std::vector<VertexBuffer::Layout>& layout = vbo->GetLayout();
 
@@ -51,7 +53,19 @@ namespace Engine {
 
 	void VertexArray::Bind() const
 	{
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Ibo->GetId());
 		glBindVertexArray(m_Id);
+	}
+
+	void VertexArray::Draw(DrawMode mode, uint32_t indexCount) const
+	{
+		GLenum glMode = GetGLDrawMode(mode);
+
+		// Bind IndexBuffer and VertexArray.
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Ibo->GetId());
+		glBindVertexArray(m_Id);
+
+		glDrawElements(glMode, indexCount, GL_UNSIGNED_INT, 0);
 	}
 
 }

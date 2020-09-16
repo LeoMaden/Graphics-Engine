@@ -4,7 +4,7 @@
 
 #include <glm/glm.hpp>
 
-#include "Scene/Mesh.h"
+#include "Scene/Scene.h"
 #include "OpenGL/Shader.h"
 
 namespace Engine {
@@ -19,7 +19,9 @@ namespace Engine {
 
 		static void EndScene();
 
-		static void DrawMesh(const Mesh& mesh);
+		static void DrawScene(const Scene& scene, const glm::mat4& transform);
+		static void DrawNode(const Node& node, const glm::mat4& parentTransform);
+		static void DrawMesh(const Mesh& mesh, const glm::mat4& transform);
 
 
 

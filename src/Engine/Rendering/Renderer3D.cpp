@@ -8,6 +8,8 @@
 #include <vector>
 #include <glm/gtc/constants.hpp>
 
+#include "Log.h"
+
 namespace Engine {
 
 	struct ColorVertex3D {
@@ -202,10 +204,34 @@ namespace Engine {
 
 		VertexArray* vao = new VertexArray(vbo, ibo);
 
+		LOG_DEBUG("Create GL buffers: VBO {} w/ {} vertices IBO {} w/ {} indices", vbo->GetId(), mesh.Vertices.size(), ibo->GetId(), mesh.Indices.size());
+
 		return vao;
 	}
 
-	void Renderer3D::DrawMesh(const Mesh& mesh)
+	void Renderer3D::DrawScene(const Scene& scene, const glm::mat4& transform)
+	{
+		DrawNode(*scene.RootNode, transform);
+	}
+
+	void Renderer3D::DrawNode(const Node& node, const glm::mat4& parentTransform)
+	{
+		glm::mat4 transform = node.Transform * parentTransform;
+
+		// Draw meshes for this node.
+		for (auto& mesh : node.Meshes)
+		{
+			DrawMesh(*mesh, transform);
+		}
+
+		// Draw node's children recursively.
+		for (auto& child : node.Children)
+		{
+			DrawNode(*child, transform);
+		}
+	}
+
+	void Renderer3D::DrawMesh(const Mesh& mesh, const glm::mat4& transform)
 	{
 		VertexArray* vao;
 
@@ -216,7 +242,9 @@ namespace Engine {
 		}
 
 		vao = s_Data3D.MeshVertexArrays[mesh.Name];
-		vao->Bind();
+
+		// Set material properties.
+		s_Data3D.CurrentShader->Bind();
 
 		Material& mat = *mesh.Material;
 		s_Data3D.CurrentShader->SetVec3("u_Material.AmbientColor", mat.AmbientColor);
@@ -224,7 +252,12 @@ namespace Engine {
 		s_Data3D.CurrentShader->SetVec3("u_Material.SpecularColor", mat.SpecularColor);
 		s_Data3D.CurrentShader->SetFloat("u_Material.Shininess", mat.Shininess);
 
-		RenderCommand::DrawIndexed(DrawMode::Triangles, mesh.Indices.size());
+		// Set transform.
+		s_Data3D.CurrentShader->SetMat4("u_Transform", transform);
+
+		vao->Draw(DrawMode::Lines, mesh.Indices.size());
+		//vao->Bind();
+		//RenderCommand::DrawIndexed(DrawMode::Triangles, mesh.Indices.size());
 	}
 
 

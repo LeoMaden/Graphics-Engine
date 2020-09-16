@@ -10,6 +10,9 @@
 #include "Camera/CameraController3rdPerson.h"
 #include "Utils.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+
+
 class Sandbox3D : public Engine::Application
 {
 public:
@@ -31,7 +34,8 @@ public:
 		Engine::RenderCommand::SmoothLines(true);
 		Engine::RenderCommand::PointSize(5);
 
-		m_TestScene = Engine::Utils::LoadScene("C:/Users/leocm/Downloads/test-model/cube.obj");
+		//m_TestScene = Engine::Utils::LoadScene("C:/Users/leocm/Downloads/test-model/cube.obj");
+		m_TestScene = Engine::Utils::LoadScene("C:/Users/leocm/Downloads/49-sting-sword-lowpoly.obj/Sting-Sword-lowpoly.obj");
 		m_TestScene->Name = "Test";
 	}
 
@@ -42,23 +46,36 @@ public:
 		m_CameraController.OnUpdate(timestep);
 
 		PointLight pl;
-		pl.Position = glm::vec3(2, 2.5, 3);
+		pl.Position = glm::vec3(0, 4, 0);
 
 		pl.Ambient = glm::vec3(0.2);
 		pl.Diffuse = glm::vec3(1.0);
 		pl.Specular = glm::vec3(1.0);
 
 		pl.Constant = 1;
-		pl.Linear = 0.09;
-		pl.Quadratic = 0.032;
+		pl.Linear = 0.0;
+		pl.Quadratic = 0.0;
 
 		Lighting l;
 		l.PointLights.push_back(pl);
 
-
 		Renderer3D::BeginScene(m_CameraController.GetCamera(), l);
 
-		Renderer3D::DrawMesh(*m_TestScene->Meshes[0]);
+		//Renderer3D::DrawMesh(*m_TestScene->Meshes[0], glm::mat4(1.0));
+
+		Renderer3D::DrawNode(*m_TestScene->RootNode->Children[0], glm::mat4(1.0));
+		Renderer3D::DrawNode(*m_TestScene->RootNode->Children[1], glm::mat4(1.0));
+
+		// Problem: first draw of each mesh seems to be broken.
+		//Renderer3D::DrawNode(*m_TestScene->RootNode->Children[1], glm::translate(glm::mat4(1.0), glm::vec3(0, 3, 0)));
+		//Renderer3D::DrawNode(*m_TestScene->RootNode->Children[1], glm::mat4(1.0));
+
+		//Renderer3D::DrawNode(*m_TestScene->RootNode->Children[0], glm::translate(glm::mat4(1.0), glm::vec3(0, 3, 0)));
+		//Renderer3D::DrawNode(*m_TestScene->RootNode->Children[0], glm::mat4(1.0));
+		
+
+		//Renderer3D::DrawScene(*m_TestScene, glm::mat4(1.0));
+		//Renderer3D::DrawScene(*m_TestScene, glm::translate(glm::mat4(1.0), glm::vec3(0, 2, 0)));
 
 		Renderer3D::EndScene();
 	}

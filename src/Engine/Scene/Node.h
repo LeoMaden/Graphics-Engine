@@ -11,6 +11,7 @@ namespace Engine {
 		std::string Name;
 
 		Node* Parent;
+		glm::mat4 Transform;
 		std::vector<Node*> Children;
 
 		std::vector<Mesh*> Meshes;

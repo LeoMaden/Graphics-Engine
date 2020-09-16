@@ -67,15 +67,26 @@ namespace Engine {
 		return glm::vec2(vec.x, vec.y);
 	}
 
+	static glm::mat4 ConvertMat4(aiMatrix4x4 mat)
+	{
+		return glm::mat4(
+			glm::vec4(mat.a1, mat.a2, mat.a3, mat.a4),
+			glm::vec4(mat.b1, mat.b2, mat.b3, mat.b4),
+			glm::vec4(mat.c1, mat.c2, mat.c3, mat.c4),
+			glm::vec4(mat.d1, mat.d2, mat.d3, mat.d4)
+		);
+	}
+
 	static Material* ConvertMaterial(aiMaterial* aiMaterial)
 	{
 		Material* material = new Material;
 		material->Name = std::string(aiMaterial->GetName().C_Str());
 
-		aiColor3D aiAmbient;
-		aiColor3D aiDiffuse;
-		aiColor3D aiSpecular;
-		float shininess;
+		// Default material values.
+		aiColor3D aiAmbient(1, 0, 1);
+		aiColor3D aiDiffuse(1, 0, 1);
+		aiColor3D aiSpecular(1, 0, 1);
+		float shininess = 0;
 
 		if (AI_SUCCESS != aiMaterial->Get(AI_MATKEY_COLOR_AMBIENT, aiAmbient))
 		{
@@ -160,6 +171,9 @@ namespace Engine {
 
 		// Set parent to what is provided.
 		node->Parent = parent;
+		
+		// Set Node transform.
+		node->Transform = ConvertMat4(aiNode->mTransformation);
 
 		// Recursively convert children to Node using node above as parent.
 		uint32_t nChildren = aiNode->mNumChildren;
