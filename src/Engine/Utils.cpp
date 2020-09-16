@@ -149,7 +149,11 @@ namespace Engine {
 
 		for (uint32_t i = 0; i < nFaces; i++)
 		{
-			ASSERT(aiMesh->mFaces[i].mNumIndices == 3, "Mesh not triangulated");
+			if (aiMesh->mFaces[i].mNumIndices != 3)
+			{
+				LOG_WARN("Mesh {}: Face {} not triangulated, skipped", mesh->Name, i);
+				continue;
+			}
 
 			mesh->Indices.push_back(aiMesh->mFaces[i].mIndices[0]);
 			mesh->Indices.push_back(aiMesh->mFaces[i].mIndices[1]);

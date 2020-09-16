@@ -34,8 +34,8 @@ public:
 		Engine::RenderCommand::SmoothLines(true);
 		Engine::RenderCommand::PointSize(5);
 
-		//m_TestScene = Engine::Utils::LoadScene("C:/Users/leocm/Downloads/test-model/cube.obj");
 		m_TestScene = Engine::Utils::LoadScene("C:/Users/leocm/Downloads/49-sting-sword-lowpoly.obj/Sting-Sword-lowpoly.obj");
+		//m_TestScene = Engine::Utils::LoadScene("C:/Users/leocm/Downloads/f35.obj");
 		m_TestScene->Name = "Test";
 	}
 
@@ -48,20 +48,20 @@ public:
 		PointLight pl;
 		pl.Position = glm::vec3(0, 4, 0);
 
-		pl.Ambient = glm::vec3(0.2);
-		pl.Diffuse = glm::vec3(1.0);
+		pl.Ambient = glm::vec3(0.1);
+		pl.Diffuse = glm::vec3(1.5);
 		pl.Specular = glm::vec3(1.0);
 
 		pl.Constant = 1;
-		pl.Linear = 0.0;
-		pl.Quadratic = 0.0;
+		pl.Linear = 0.045;
+		pl.Quadratic = 0.0075;
 
 		Lighting l;
 		l.PointLights.push_back(pl);
 
 		Renderer3D::BeginScene(m_CameraController.GetCamera(), l);
 
-		Renderer3D::DrawScene(*m_TestScene, glm::mat4(1.0));
+		Renderer3D::DrawScene(*m_TestScene, glm::scale(glm::mat4(1.0), glm::vec3(0.3)));
 
 		Renderer3D::EndScene();
 	}

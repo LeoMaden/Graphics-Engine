@@ -36,24 +36,25 @@ uniform vec3 u_ViewPos;
 
 void main()
 {
+	vec3 lightDir = normalize(u_PointLight.Position - v_FragPos);
+	vec3 viewDir = normalize(u_ViewPos - v_FragPos);
+	vec3 halfDir = normalize(lightDir + viewDir);
+
+	vec3 normal = normalize(v_InterpNormal);
+	vec3 reflectDir = reflect(-lightDir, normal);
+
 	// Ambient lighting.
-	vec3 ambientColor = u_Material.AmbientColor * u_PointLight.Ambient;
+	vec3 ambient = u_PointLight.Ambient * u_Material.AmbientColor;
 
 	// Diffuse lighting.
-	vec3 lightDir = normalize(v_FragPos - u_PointLight.Position); // Light -> frag
-
-	float diffuseFactor = max(dot(v_InterpNormal, -lightDir), 0.0);
-	vec3 diffuseColor = diffuseFactor * u_Material.DiffuseColor * u_PointLight.Diffuse;
+	float diff = max(dot(normal, lightDir), 0.0);
+	vec3 diffuse = u_PointLight.Diffuse * diff * u_Material.DiffuseColor;
 
 	// Specular lighting.
-	vec3 viewDir = normalize(v_FragPos - u_ViewPos); // View pos -> frag
-	vec3 reflectDir = reflect(lightDir, v_InterpNormal);
+	float spec = pow(max(dot(normal, halfDir), 0.0), u_Material.Shininess);
+	vec3 specular = u_PointLight.Specular * spec * u_Material.SpecularColor;
 
-	float specularFactor = pow(max(dot(reflectDir, -viewDir), 0.0), u_Material.Shininess);
-	vec3 specularColor = specularFactor * u_Material.SpecularColor * u_PointLight.Specular;
-
-
-	vec3 col = ambientColor + diffuseColor + specularColor;
+	vec3 col = ambient + diffuse + specular;
 
 	// Attenuate lighting.
 	float d = length(u_PointLight.Position - v_FragPos);
