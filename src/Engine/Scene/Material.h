@@ -13,6 +13,10 @@ namespace Engine {
 		glm::vec3 SpecularColor;
 
 		float Shininess; // Specular exponent.
+
+		std::string DiffuseMapPath;
+		std::string SpecularMapPath;
+		std::string ShininessMapPath;
 	};
 
 }

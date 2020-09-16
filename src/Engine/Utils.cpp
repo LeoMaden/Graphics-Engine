@@ -77,6 +77,11 @@ namespace Engine {
 		);
 	}
 
+	static std::string ConvertString(aiString str)
+	{
+		return std::string(str.C_Str());
+	}
+
 	static Material* ConvertMaterial(aiMaterial* aiMaterial)
 	{
 		Material* material = new Material;
@@ -87,6 +92,9 @@ namespace Engine {
 		aiColor3D aiDiffuse(1, 0, 1);
 		aiColor3D aiSpecular(1, 0, 1);
 		float shininess = 0;
+		aiString diffuseTexPath("");
+		aiString specularMapPath("");
+		aiString shininessMapPath("");
 
 		if (AI_SUCCESS != aiMaterial->Get(AI_MATKEY_COLOR_AMBIENT, aiAmbient))
 		{
@@ -108,10 +116,28 @@ namespace Engine {
 			LOG_WARN("Could not load shininess for {}", material->Name);
 		}
 
+		if (aiMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0)
+		{
+			aiMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &diffuseTexPath);
+		}
+
+		if (aiMaterial->GetTextureCount(aiTextureType_SPECULAR) > 0)
+		{
+			aiMaterial->GetTexture(aiTextureType_SPECULAR, 0, &specularMapPath);
+		}
+
+		if (aiMaterial->GetTextureCount(aiTextureType_SHININESS) > 0)
+		{
+			aiMaterial->GetTexture(aiTextureType_SHININESS, 0, &shininessMapPath);
+		}
+
 		material->AmbientColor = ConvertColor(aiAmbient);
 		material->DiffuseColor = ConvertColor(aiDiffuse);
 		material->SpecularColor = ConvertColor(aiSpecular);
 		material->Shininess = shininess;
+		material->DiffuseMapPath = ConvertString(diffuseTexPath);
+		material->SpecularMapPath = ConvertString(specularMapPath);
+		material->ShininessMapPath = ConvertString(shininessMapPath);
 
 		return material;
 	}

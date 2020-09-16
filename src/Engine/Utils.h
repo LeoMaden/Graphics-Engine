@@ -3,6 +3,8 @@
 
 #include "Scene/Scene.h"
 
+#undef LoadImage
+
 namespace Engine {
 
 	/*static*/ class Utils

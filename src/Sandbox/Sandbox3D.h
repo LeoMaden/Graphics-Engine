@@ -34,7 +34,8 @@ public:
 		Engine::RenderCommand::SmoothLines(true);
 		Engine::RenderCommand::PointSize(5);
 
-		m_TestScene = Engine::Utils::LoadScene("C:/Users/leocm/Downloads/49-sting-sword-lowpoly.obj/Sting-Sword-lowpoly.obj");
+		//m_TestScene = Engine::Utils::LoadScene("C:/Users/leocm/Downloads/49-sting-sword-lowpoly.obj/Sting-Sword-lowpoly.obj");
+		m_TestScene = Engine::Utils::LoadScene("C:/Users/leocm/Downloads/test-model/cube.obj");
 		//m_TestScene = Engine::Utils::LoadScene("C:/Users/leocm/Downloads/f35.obj");
 		m_TestScene->Name = "Test";
 	}
