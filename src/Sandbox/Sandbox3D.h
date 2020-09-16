@@ -20,7 +20,7 @@ public:
 	{
 		LOG_DEBUG("App startup");
 		Engine::RenderCommand::InitRenderer();
-		Engine::Renderer2D::Init();
+		//Engine::Renderer2D::Init();
 		Engine::Renderer3D::Init();
 
 		//m_CameraController = Engine::CameraController3rdPerson();
@@ -61,21 +61,7 @@ public:
 
 		Renderer3D::BeginScene(m_CameraController.GetCamera(), l);
 
-		//Renderer3D::DrawMesh(*m_TestScene->Meshes[0], glm::mat4(1.0));
-
-		Renderer3D::DrawNode(*m_TestScene->RootNode->Children[0], glm::mat4(1.0));
-		Renderer3D::DrawNode(*m_TestScene->RootNode->Children[1], glm::mat4(1.0));
-
-		// Problem: first draw of each mesh seems to be broken.
-		//Renderer3D::DrawNode(*m_TestScene->RootNode->Children[1], glm::translate(glm::mat4(1.0), glm::vec3(0, 3, 0)));
-		//Renderer3D::DrawNode(*m_TestScene->RootNode->Children[1], glm::mat4(1.0));
-
-		//Renderer3D::DrawNode(*m_TestScene->RootNode->Children[0], glm::translate(glm::mat4(1.0), glm::vec3(0, 3, 0)));
-		//Renderer3D::DrawNode(*m_TestScene->RootNode->Children[0], glm::mat4(1.0));
-		
-
-		//Renderer3D::DrawScene(*m_TestScene, glm::mat4(1.0));
-		//Renderer3D::DrawScene(*m_TestScene, glm::translate(glm::mat4(1.0), glm::vec3(0, 2, 0)));
+		Renderer3D::DrawScene(*m_TestScene, glm::mat4(1.0));
 
 		Renderer3D::EndScene();
 	}

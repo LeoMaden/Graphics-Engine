@@ -36,30 +36,28 @@ uniform vec3 u_ViewPos;
 
 void main()
 {
-//	// Ambient lighting.
-//	vec3 ambientColor = u_Material.AmbientColor * u_PointLight.Ambient;
-//
-//	// Diffuse lighting.
-//	vec3 lightDir = normalize(v_FragPos - u_PointLight.Position); // Light -> frag
-//
-//	float diffuseFactor = max(dot(v_InterpNormal, -lightDir), 0.0);
-//	vec3 diffuseColor = diffuseFactor * u_Material.DiffuseColor * u_PointLight.Diffuse;
-//
-//	// Specular lighting.
-//	vec3 viewDir = normalize(v_FragPos - u_ViewPos); // View pos -> frag
-//	vec3 reflectDir = reflect(lightDir, v_InterpNormal);
-//
-//	float specularFactor = pow(max(dot(reflectDir, -viewDir), 0.0), u_Material.Shininess);
-//	vec3 specularColor = specularFactor * u_Material.SpecularColor * u_PointLight.Specular;
-//
-//
-//	vec3 col = ambientColor + diffuseColor + specularColor;
-//
-//	// Attenuate lighting.
-//	float d = length(u_PointLight.Position - v_FragPos);
-//	col /= (u_PointLight.Constant + (d * u_PointLight.Linear) + (d * d * u_PointLight.Quadratic));
-//
-//	o_Color = vec4(col, 1.0);
+	// Ambient lighting.
+	vec3 ambientColor = u_Material.AmbientColor * u_PointLight.Ambient;
 
-    o_Color = vec4(1,0,1, 1);
+	// Diffuse lighting.
+	vec3 lightDir = normalize(v_FragPos - u_PointLight.Position); // Light -> frag
+
+	float diffuseFactor = max(dot(v_InterpNormal, -lightDir), 0.0);
+	vec3 diffuseColor = diffuseFactor * u_Material.DiffuseColor * u_PointLight.Diffuse;
+
+	// Specular lighting.
+	vec3 viewDir = normalize(v_FragPos - u_ViewPos); // View pos -> frag
+	vec3 reflectDir = reflect(lightDir, v_InterpNormal);
+
+	float specularFactor = pow(max(dot(reflectDir, -viewDir), 0.0), u_Material.Shininess);
+	vec3 specularColor = specularFactor * u_Material.SpecularColor * u_PointLight.Specular;
+
+
+	vec3 col = ambientColor + diffuseColor + specularColor;
+
+	// Attenuate lighting.
+	float d = length(u_PointLight.Position - v_FragPos);
+	col /= (u_PointLight.Constant + (d * u_PointLight.Linear) + (d * d * u_PointLight.Quadratic));
+
+	o_Color = vec4(col, 1.0);
 }

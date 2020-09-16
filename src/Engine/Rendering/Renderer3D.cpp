@@ -255,9 +255,7 @@ namespace Engine {
 		// Set transform.
 		s_Data3D.CurrentShader->SetMat4("u_Transform", transform);
 
-		vao->Draw(DrawMode::Lines, mesh.Indices.size());
-		//vao->Bind();
-		//RenderCommand::DrawIndexed(DrawMode::Triangles, mesh.Indices.size());
+		vao->Draw(DrawMode::Triangles, mesh.Indices.size());
 	}
 
 

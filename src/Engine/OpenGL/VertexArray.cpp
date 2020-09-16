@@ -62,8 +62,8 @@ namespace Engine {
 		GLenum glMode = GetGLDrawMode(mode);
 
 		// Bind IndexBuffer and VertexArray.
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Ibo->GetId());
 		glBindVertexArray(m_Id);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Ibo->GetId());
 
 		glDrawElements(glMode, indexCount, GL_UNSIGNED_INT, 0);
 	}
