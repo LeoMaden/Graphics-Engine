@@ -1,5 +1,6 @@
 #include "Shader.h"
 #include "Utils.h"
+#include "Log.h"
 
 #include <glm/gtc/type_ptr.hpp>
 
@@ -96,6 +97,13 @@ namespace Engine {
 		{
 			// Not found.
 			GLint loc = glGetUniformLocation(m_ProgId, name.c_str());
+
+			// Invalid location
+			if (loc == -1)
+			{
+				LOG_WARN("Uniform {} not found", name);
+			}
+
 			m_UniformCache[name] = loc;
 			return loc;
 		}

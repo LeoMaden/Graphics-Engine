@@ -6,9 +6,11 @@
 #include "OpenGL/Shader.h"
 
 #include <vector>
+#include <sstream>
 #include <glm/gtc/constants.hpp>
 
 #include "Log.h"
+#include "OpenGL\Texture2D.h"
 
 namespace Engine {
 
@@ -26,6 +28,7 @@ namespace Engine {
 		glm::mat4		SceneViewProjMat;
 
 		std::unordered_map<std::string, VertexArray*> MeshVertexArrays;
+		std::unordered_map<std::string, Texture2D*> MeshTextures;
 		Shader* CurrentShader;
 
 
@@ -133,11 +136,8 @@ namespace Engine {
 	{
 		s_Data3D.SceneViewProjMat = camera.GetViewProjMat();
 
+		s_Data3D.CurrentShader->Bind();
 		s_Data3D.CurrentShader->SetMat4("u_ViewProjMatrix", s_Data3D.SceneViewProjMat);
-
-		//s_Data3D.ColorBatch->Shader = s_Data3D.UnlitColorShader;
-		//s_Data3D.ColorBatch->Shader->Bind();
-		//s_Data3D.ColorBatch->Shader->SetMat4("u_Transform", s_Data3D.SceneViewProjMat);
 	}
 
 	void Renderer3D::BeginScene(const Camera& camera, const Lighting& lights)
@@ -146,52 +146,37 @@ namespace Engine {
 
 		s_Data3D.CurrentShader->SetVec3("u_ViewPos", camera.GetPos());
 
-		// Setup lights.
-		PointLight l = lights.PointLights[0];
+		// Setup point lights.
+		for (uint32_t i = 0; i < lights.PointLights.size(); i++)
+		{
+			const PointLight& l = lights.PointLights[i];
+			char buff[100];
 
-		s_Data3D.CurrentShader->SetVec3("u_PointLight.Position", l.Position);
-				 
-		s_Data3D.CurrentShader->SetVec3("u_PointLight.Ambient", l.Ambient);
-		s_Data3D.CurrentShader->SetVec3("u_PointLight.Diffuse", l.Diffuse);
-		s_Data3D.CurrentShader->SetVec3("u_PointLight.Specular", l.Specular);
-				 
-		s_Data3D.CurrentShader->SetFloat("u_PointLight.Constant", l.Constant);
-		s_Data3D.CurrentShader->SetFloat("u_PointLight.Linear", l.Linear);
-		s_Data3D.CurrentShader->SetFloat("u_PointLight.Quadratic", l.Quadratic);
+			snprintf(buff, 100, "u_PointLights[%i].Position", i);
+			s_Data3D.CurrentShader->SetVec3(buff, l.Position);
 
-		//s_Data3D.SceneViewProjMat = camera.GetViewProjMat();
+			snprintf(buff, 100, "u_PointLights[%i].Ambient", i);
+			s_Data3D.CurrentShader->SetVec3(buff, l.Ambient);
+			snprintf(buff, 100, "u_PointLights[%i].Diffuse", i);
+			s_Data3D.CurrentShader->SetVec3(buff, l.Diffuse);
+			snprintf(buff, 100, "u_PointLights[%i].Specular", i);
+			s_Data3D.CurrentShader->SetVec3(buff, l.Specular);
 
-		//s_Data3D.ColorBatch->Shader = s_Data3D.LitColorShader;
-		//s_Data3D.ColorBatch->Shader->Bind();
-		//s_Data3D.ColorBatch->Shader->SetMat4("u_Transform", s_Data3D.SceneViewProjMat);
-		//s_Data3D.ColorBatch->Shader->SetVec3("u_ViewPos", camera.GetPos());
+			snprintf(buff, 100, "u_PointLights[%i].Constant", i);
+			s_Data3D.CurrentShader->SetFloat(buff, l.Constant);
+			snprintf(buff, 100, "u_PointLights[%i].Linear", i);
+			s_Data3D.CurrentShader->SetFloat(buff, l.Linear);
+			snprintf(buff, 100, "u_PointLights[%i].Quadratic", i);
+			s_Data3D.CurrentShader->SetFloat(buff, l.Quadratic);
+		}
 
-		//// DirectionalLight struct
-		//if (lights.DirectionalLights.size() != 0)
-		//{
-		//	s_Data3D.ColorBatch->Shader->SetVec3("u_DirLight.Direction", lights.DirectionalLights[0].Direction);
-		//	s_Data3D.ColorBatch->Shader->SetVec3("u_DirLight.Ambient", lights.DirectionalLights[0].Ambient);
-		//	s_Data3D.ColorBatch->Shader->SetVec3("u_DirLight.Diffuse", lights.DirectionalLights[0].Diffuse);
-		//	s_Data3D.ColorBatch->Shader->SetVec3("u_DirLight.Specular", lights.DirectionalLights[0].Specular);
-		//}
-
-		//// PointLight struct
-		//if (lights.PointLights.size() != 0)
-		//{
-		//	s_Data3D.ColorBatch->Shader->SetVec3("u_PointLight.Position", lights.PointLights[0].Position);
-		//	s_Data3D.ColorBatch->Shader->SetVec3("u_PointLight.Ambient", lights.PointLights[0].Ambient);
-		//	s_Data3D.ColorBatch->Shader->SetVec3("u_PointLight.Diffuse", lights.PointLights[0].Diffuse);
-		//	s_Data3D.ColorBatch->Shader->SetVec3("u_PointLight.Specular", lights.PointLights[0].Specular);
-		//	s_Data3D.ColorBatch->Shader->SetFloat("u_PointLight.Constant", lights.PointLights[0].Constant);
-		//	s_Data3D.ColorBatch->Shader->SetFloat("u_PointLight.Linear", lights.PointLights[0].Linear);
-		//	s_Data3D.ColorBatch->Shader->SetFloat("u_PointLight.Quadratic", lights.PointLights[0].Quadratic);
-		//}
 	}
 
 	void Renderer3D::EndScene()
 	{
 		//s_Data3D.ColorBatch->FlushAndReset();
 	}
+
 
 	static VertexArray* GenerateGLBuffers(const Mesh& mesh)
 	{
@@ -208,6 +193,19 @@ namespace Engine {
 
 		return vao;
 	}
+
+	static VertexArray* GetMeshVAO(const Mesh& mesh)
+	{
+		if (s_Data3D.MeshVertexArrays.find(mesh.Name) == s_Data3D.MeshVertexArrays.end())
+		{
+			// Mesh has not had buffers generated yet. Generate them.
+			s_Data3D.MeshVertexArrays[mesh.Name] = GenerateGLBuffers(mesh);
+		}
+
+		return s_Data3D.MeshVertexArrays[mesh.Name];
+	}
+
+
 
 	void Renderer3D::DrawScene(const Scene& scene, const glm::mat4& transform)
 	{
@@ -233,19 +231,9 @@ namespace Engine {
 
 	void Renderer3D::DrawMesh(const Mesh& mesh, const glm::mat4& transform)
 	{
-		VertexArray* vao;
-
-		if (s_Data3D.MeshVertexArrays.find(mesh.Name) == s_Data3D.MeshVertexArrays.end())
-		{
-			// Mesh has not had buffers generated yet. Generate them.
-			s_Data3D.MeshVertexArrays[mesh.Name] = GenerateGLBuffers(mesh);
-		}
-
-		vao = s_Data3D.MeshVertexArrays[mesh.Name];
+		VertexArray* vao = GetMeshVAO(mesh);
 
 		// Set material properties.
-		s_Data3D.CurrentShader->Bind();
-
 		Material& mat = *mesh.Material;
 		s_Data3D.CurrentShader->SetVec3("u_Material.AmbientColor", mat.AmbientColor);
 		s_Data3D.CurrentShader->SetVec3("u_Material.DiffuseColor", mat.DiffuseColor);

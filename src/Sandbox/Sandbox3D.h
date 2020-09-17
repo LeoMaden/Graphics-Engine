@@ -34,8 +34,8 @@ public:
 		Engine::RenderCommand::SmoothLines(true);
 		Engine::RenderCommand::PointSize(5);
 
-		//m_TestScene = Engine::Utils::LoadScene("C:/Users/leocm/Downloads/49-sting-sword-lowpoly.obj/Sting-Sword-lowpoly.obj");
-		m_TestScene = Engine::Utils::LoadScene("C:/Users/leocm/Downloads/test-model/cube.obj");
+		m_TestScene = Engine::Utils::LoadScene("C:/Users/leocm/Downloads/49-sting-sword-lowpoly.obj/Sting-Sword-lowpoly.obj");
+		m_CubeModel = Engine::Utils::LoadScene("C:/Users/leocm/Downloads/test-model/cube.obj");
 		//m_TestScene = Engine::Utils::LoadScene("C:/Users/leocm/Downloads/f35.obj");
 		m_TestScene->Name = "Test";
 	}
@@ -46,23 +46,29 @@ public:
 
 		m_CameraController.OnUpdate(timestep);
 
+		Lighting l;
 		PointLight pl;
-		pl.Position = glm::vec3(0, 4, 0);
+
+		pl.Position = glm::vec3(0, 3, 0);
 
 		pl.Ambient = glm::vec3(0.1);
-		pl.Diffuse = glm::vec3(1.5);
+		pl.Diffuse = glm::vec3(0.8);
 		pl.Specular = glm::vec3(1.0);
 
 		pl.Constant = 1;
-		pl.Linear = 0.045;
-		pl.Quadratic = 0.0075;
+		pl.Linear = 0.14;
+		pl.Quadratic = 0.07;
 
-		Lighting l;
+		l.PointLights.push_back(pl);
+
+		pl.Position = glm::vec3(0, -4, 0);
 		l.PointLights.push_back(pl);
 
 		Renderer3D::BeginScene(m_CameraController.GetCamera(), l);
 
-		Renderer3D::DrawScene(*m_TestScene, glm::scale(glm::mat4(1.0), glm::vec3(0.3)));
+		Renderer3D::DrawScene(*m_TestScene, glm::scale(glm::mat4(1.0), glm::vec3(0.1)));
+		Renderer3D::DrawScene(*m_CubeModel, glm::scale(glm::translate(glm::mat4(1.0), glm::vec3(0, 3, 0)), glm::vec3(0.1)));
+		Renderer3D::DrawScene(*m_CubeModel, glm::scale(glm::translate(glm::mat4(1.0), glm::vec3(0, -4, 0)), glm::vec3(0.1)));
 
 		Renderer3D::EndScene();
 	}
@@ -86,4 +92,5 @@ private:
 	Engine::CameraControllerFPS	m_CameraController;
 	//Engine::CameraController3rdPerson	m_CameraController;
 	Engine::Scene* m_TestScene;
+	Engine::Scene* m_CubeModel;
 };

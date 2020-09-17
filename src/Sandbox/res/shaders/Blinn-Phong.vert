@@ -12,7 +12,7 @@ uniform mat4 u_Transform;
 
 void main()
 {
-	v_FragPos = a_Position;
+	v_FragPos = vec3(u_Transform * vec4(a_Position, 1.0));
 	v_InterpNormal = a_Normal;
 
 	gl_Position = u_ViewProjMatrix * u_Transform * vec4(a_Position, 1.0);
