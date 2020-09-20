@@ -82,6 +82,7 @@ namespace Engine {
 		return std::string(str.C_Str());
 	}
 
+
 	static Material* ConvertMaterial(aiMaterial* aiMaterial)
 	{
 		Material* material = new Material;
@@ -239,7 +240,7 @@ namespace Engine {
 	{
 		// TODO: Loading options.
 		Assimp::Importer importer;
-		const aiScene* aiScene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+		const aiScene* aiScene = importer.ReadFile(path, aiProcess_Triangulate);
 
 		if (aiScene == nullptr)
 		{
@@ -257,6 +258,16 @@ namespace Engine {
 		{
 			aiMaterial* aiMaterial = aiScene->mMaterials[i];
 			Material* material = ConvertMaterial(aiMaterial);
+
+			// Convert relative texture path to absolute one.
+			if ((material->DiffuseMapPath != "") && (material->DiffuseMapPath[0] != 'C'))
+			{
+				material->DiffuseMapPath = path + "/../" + material->DiffuseMapPath;
+			}
+			if ((material->SpecularMapPath != "") && (material->SpecularMapPath[0] != 'C'))
+			{
+				material->SpecularMapPath = path + "/../" + material->SpecularMapPath;
+			}
 
 			scene->Materials[i] = material;
 		}

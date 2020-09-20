@@ -28,7 +28,7 @@ namespace Engine {
 		glm::mat4		SceneViewProjMat;
 
 		std::unordered_map<std::string, VertexArray*> MeshVertexArrays;
-		std::unordered_map<std::string, Texture2D*> MeshTextures;
+		std::unordered_map<std::string, Texture2D*> MaterialTextures;
 		Shader* CurrentShader;
 
 
@@ -194,6 +194,14 @@ namespace Engine {
 		return vao;
 	}
 
+	static Texture2D* GenerateGLTexture(const std::string& path)
+	{
+		Texture2D* tex = new Texture2D();
+		tex->SetImage(path);
+
+		return tex;
+	}
+
 	static VertexArray* GetMeshVAO(const Mesh& mesh)
 	{
 		if (s_Data3D.MeshVertexArrays.find(mesh.Name) == s_Data3D.MeshVertexArrays.end())
@@ -203,6 +211,17 @@ namespace Engine {
 		}
 
 		return s_Data3D.MeshVertexArrays[mesh.Name];
+	}
+
+	static Texture2D* GetMaterialTexture(const std::string& texPath)
+	{
+		if (s_Data3D.MaterialTextures.find(texPath) == s_Data3D.MaterialTextures.end())
+		{
+			// Texture has not been generated yet.
+			s_Data3D.MaterialTextures[texPath] = GenerateGLTexture(texPath);
+		}
+
+		return s_Data3D.MaterialTextures[texPath];
 	}
 
 
@@ -232,13 +251,17 @@ namespace Engine {
 	void Renderer3D::DrawMesh(const Mesh& mesh, const glm::mat4& transform)
 	{
 		VertexArray* vao = GetMeshVAO(mesh);
+		Texture2D* tex = GetMaterialTexture(mesh.Material->DiffuseMapPath);
+		tex->Bind(0);
 
 		// Set material properties.
 		Material& mat = *mesh.Material;
-		s_Data3D.CurrentShader->SetVec3("u_Material.AmbientColor", mat.AmbientColor);
-		s_Data3D.CurrentShader->SetVec3("u_Material.DiffuseColor", mat.DiffuseColor);
+		//s_Data3D.CurrentShader->SetVec3("u_Material.AmbientColor", mat.AmbientColor);
+		//s_Data3D.CurrentShader->SetVec3("u_Material.DiffuseColor", mat.DiffuseColor);
 		s_Data3D.CurrentShader->SetVec3("u_Material.SpecularColor", mat.SpecularColor);
 		s_Data3D.CurrentShader->SetFloat("u_Material.Shininess", mat.Shininess);
+
+		s_Data3D.CurrentShader->SetInt("u_Material.DiffuseMap", 0);
 
 		// Set transform.
 		s_Data3D.CurrentShader->SetMat4("u_Transform", transform);
