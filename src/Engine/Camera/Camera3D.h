@@ -18,9 +18,7 @@ namespace Engine {
 		void SetRotation(Radians pitch, Radians yaw);
 		void LookAt(const glm::vec3& target, const glm::vec3& upDir);
 
-		//void SetTarget(const glm::vec3& target);
-
-		//void Roll(Degrees roll);
+		void SetClipPlanes(float zNear, float zFar);
 
 		virtual const glm::mat4& GetViewProjMat() const override { return m_ViewProjMat; }
 		virtual const glm::vec3& GetPos() const override { return m_Position; }
@@ -43,6 +41,9 @@ namespace Engine {
 		glm::mat4 m_ProjMatrix;
 		glm::mat4 m_ViewMatrix;
 		glm::mat4 m_ViewProjMat;
+
+		float m_NearClip;
+		float m_FarClip;
 
 		void RecalcViewProj();
 	};

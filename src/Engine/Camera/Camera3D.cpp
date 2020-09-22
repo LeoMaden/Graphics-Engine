@@ -80,9 +80,15 @@ namespace Engine {
 		RecalcViewProj();
 	}
 
+	void Camera3D::SetClipPlanes(float zNear, float zFar)
+	{
+		m_NearClip = zNear;
+		m_FarClip = zFar;
+	}
+
 	void Camera3D::SetProjection(Radians fov, float aspect)
 	{
-		m_ProjMatrix = glm::perspective(fov, aspect, 0.1f, 100.0f);
+		m_ProjMatrix = glm::perspective(fov, aspect, m_NearClip, m_FarClip);
 		RecalcViewProj();
 	}
 
