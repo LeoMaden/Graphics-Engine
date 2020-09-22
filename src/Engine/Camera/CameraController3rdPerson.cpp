@@ -44,6 +44,12 @@ namespace Engine {
 		MoveAndLook();
 	}
 
+	void CameraController3rdPerson::SetTargetDistance(float dist)
+	{
+		m_TargetDistance = dist;
+		MoveAndLook();
+	}
+
 	void CameraController3rdPerson::OnWindowResize(WindowResizeEvent& e)
 	{
 		int w = e.GetWidth();

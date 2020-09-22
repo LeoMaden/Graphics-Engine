@@ -23,6 +23,7 @@ namespace Engine {
 		void SetCamera(const Camera3D& camera);
 
 		void SetTarget(const glm::vec3& target);
+		void SetTargetDistance(float dist);
 
 		void OnWindowResize(WindowResizeEvent& e);
 		void OnMouseScroll(MouseScrollEvent& e);
