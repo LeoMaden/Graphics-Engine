@@ -4,11 +4,15 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <functional>
 
 // std Streams.
 #include <iostream>
 #include <sstream>
 #include <fstream>
+
+// Engine common headers.
+#include "Log.h"
 
 
 
