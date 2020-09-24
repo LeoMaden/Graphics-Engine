@@ -1,9 +1,14 @@
 #pragma once
 #include "Core/Window.h"
 
+#include "Events/KeyEvents.h"
+#include "Events/MouseEvents.h"
+#include "Events/WindowEvents.h"
+
 #include "Platform/OpenGL/OpenGLContextProperties.h"
 
 #include <Windows.h>
+#include <windowsx.h>
 
 namespace Engine {
 
@@ -27,14 +32,35 @@ namespace Engine {
 		virtual Vector2 GetClientSize() const override;
 
 	// Window proc handler functions.
-	public:
+	private:
+		friend LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
 		void Close();
+		void OnResize(LPARAM lParam);
+
+		void OnKeyDown(WPARAM wParam, LPARAM lParam);
+		void OnKeyUp(WPARAM wParam, LPARAM lParam);
+
+		void OnMouse1Down(WPARAM wParam, LPARAM lParam);
+		void OnMouseMove(WPARAM wParam, LPARAM lParam);
+		void OnMouseScroll(WPARAM wParam, LPARAM lParam);
+
+	// Window proc helper functions & data.
+	private:
+		static List<Pair<KeyCode, WPARAM>> m_KeyCodeConversion;
+		static Map<KeyCode, WPARAM> m_WinKeyCodeMap;
+		static Map<WPARAM, KeyCode> m_EngineKeyCodeMap;
+
+		static WPARAM GetWinKeyCode(KeyCode code);
+		static KeyCode GetEngineKeyCode(WPARAM winCode);
+		static KeyFlags GetKeyFlags(LPARAM lParam);
+		static ModifierKeys GetModKeys(WPARAM wParam);
 
 	private:
 		HWND m_WindowHandle;	// Handle to this window.
 		HDC m_DeviceContextHandle;
 
-		CallbackFunc m_Callback;
+		CallbackFunc m_Callback = [](Event&) {};
 		bool m_IsOpen = true;
 	};
 

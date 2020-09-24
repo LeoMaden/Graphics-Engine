@@ -5,6 +5,10 @@
 
 #include <glad/glad.h>
 
+void EventHandler(Engine::Event& e)
+{
+	LOG_TRACE("Event!");
+}
 
 int main()
 {
@@ -13,6 +17,7 @@ int main()
 
 	Window* window = Window::Create(Window::Properties());
 	window->CreateOpenGLContext(OpenGLContextProperties());
+	window->SetCallback(&EventHandler);
 
 	Vector2 size = window->GetClientSize();
 	LOG_WARN("Size: {}, {}", size.x, size.y);

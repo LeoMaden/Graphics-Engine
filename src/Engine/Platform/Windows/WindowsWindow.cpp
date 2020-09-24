@@ -23,17 +23,17 @@ namespace Engine {
 
 		switch (uMsg)
 		{
-			case WM_CLOSE:			senderWindow->Close();			return 0;
-			case WM_DESTROY:		PostQuitMessage(0);				return 0;
-			//// Key events.
-			//case WM_KEYDOWN:		OnKeyDown(senderWindow, wParam, lParam);	return 0;
-			//case WM_KEYUP:			OnKeyUp(senderWindow, wParam, lParam);		return 0;
-			//// Mouse events.
-			//case WM_MOUSEMOVE:		OnMouseMove(senderWindow, wParam, lParam);		return 0;
-			//case WM_LBUTTONDOWN:	OnMouse1Down(senderWindow, wParam, lParam);		return 0;
-			//case WM_MOUSEWHEEL:		OnMouseScroll(senderWindow, wParam, lParam);	return 0;
-			//// Window events.
-			//case WM_SIZE:			OnResize(senderWindow, lParam);			return 0;
+			// Window events.
+			case WM_CLOSE:			senderWindow->Close();					return 0;
+			case WM_DESTROY:		PostQuitMessage(0);						return 0;
+			case WM_SIZE:			senderWindow->OnResize(lParam);			return 0;
+			// Key events.
+			case WM_KEYDOWN:		senderWindow->OnKeyDown(wParam, lParam);	return 0;
+			case WM_KEYUP:			senderWindow->OnKeyUp(wParam, lParam);		return 0;
+				// Mouse events.
+			case WM_MOUSEMOVE:		senderWindow->OnMouseMove(wParam, lParam);		return 0;
+			case WM_LBUTTONDOWN:	senderWindow->OnMouse1Down(wParam, lParam);		return 0;
+			case WM_MOUSEWHEEL:		senderWindow->OnMouseScroll(wParam, lParam);	return 0;
 		}
 
 		return DefWindowProc(hwnd, uMsg, wParam, lParam);
@@ -259,6 +259,188 @@ namespace Engine {
 	{
 		DestroyWindow(m_WindowHandle);
 		m_IsOpen = false;
+	}
+
+	void WindowsWindow::OnResize(LPARAM lParam)
+	{
+		int width = LOWORD(lParam);
+		int height = HIWORD(lParam);
+
+		if (!wglGetCurrentContext())
+		{
+			return;
+		}
+
+		glViewport(0, 0, width, height);
+
+		WindowResizeEvent e(width, height);
+		m_Callback(e);
+	}
+
+	void WindowsWindow::OnKeyDown(WPARAM wParam, LPARAM lParam)
+	{
+		KeyCode code = GetEngineKeyCode(wParam);
+		KeyFlags flags = GetKeyFlags(lParam);
+		KeyDownEvent e(code, flags);
+		m_Callback(e);
+	}
+
+	void WindowsWindow::OnKeyUp(WPARAM wParam, LPARAM lParam)
+	{
+		KeyCode code = GetEngineKeyCode(wParam);
+		KeyUpEvent e(code);
+		m_Callback(e);
+	}
+
+	void WindowsWindow::OnMouse1Down(WPARAM wParam, LPARAM lParam)
+	{
+		int xPos = GET_X_LPARAM(lParam);
+		int yPos = GET_Y_LPARAM(lParam);
+		ModifierKeys mods = GetModKeys(wParam);
+
+		MouseDownEvent e(KeyCode::Mouse1, { xPos, yPos }, mods);
+		m_Callback(e);
+	}
+
+	void WindowsWindow::OnMouseMove(WPARAM wParam, LPARAM lParam)
+	{
+		int xPos = GET_X_LPARAM(lParam);
+		int yPos = GET_Y_LPARAM(lParam);
+		ModifierKeys mods = GetModKeys(wParam);
+
+		MouseMoveEvent e({ xPos, yPos }, mods);
+		m_Callback(e);
+	}
+
+	void WindowsWindow::OnMouseScroll(WPARAM wParam, LPARAM lParam)
+	{
+		int dist = GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
+		ModifierKeys modKey = GetModKeys(wParam);
+		int xPos = GET_X_LPARAM(lParam);
+		int yPos = GET_Y_LPARAM(lParam);
+
+		MouseScrollEvent e(dist, modKey, { xPos, yPos });
+		m_Callback(e);
+	}
+
+	List<Pair<KeyCode, WPARAM>> WindowsWindow::m_KeyCodeConversion
+	{
+		{ KeyCode::A, 0x41 },
+		{ KeyCode::B, 0x42 },
+		{ KeyCode::C, 0x43 },
+		{ KeyCode::D, 0x44 },
+		{ KeyCode::E, 0x45 },
+		{ KeyCode::F, 0x46 },
+		{ KeyCode::G, 0x47 },
+		{ KeyCode::H, 0x48 },
+		{ KeyCode::I, 0x49 },
+		{ KeyCode::J, 0x4A },
+		{ KeyCode::K, 0x4B },
+		{ KeyCode::L, 0x4C },
+		{ KeyCode::M, 0x4D },
+		{ KeyCode::N, 0x4E },
+		{ KeyCode::O, 0x4F },
+		{ KeyCode::P, 0x50 },
+		{ KeyCode::Q, 0x51 },
+		{ KeyCode::R, 0x52 },
+		{ KeyCode::S, 0x53 },
+		{ KeyCode::T, 0x54 },
+		{ KeyCode::U, 0x55 },
+		{ KeyCode::V, 0x56 },
+		{ KeyCode::W, 0x57 },
+		{ KeyCode::X, 0x58 },
+		{ KeyCode::Y, 0x59 },
+		{ KeyCode::Z, 0x5A },
+
+		{ KeyCode::LShift,		VK_SHIFT },
+		{ KeyCode::LCtrl,		VK_CONTROL },
+		{ KeyCode::Enter,		VK_RETURN },
+		{ KeyCode::Backspace,	VK_BACK },
+		{ KeyCode::Escape,		VK_ESCAPE },
+		{ KeyCode::Spacebar,	VK_SPACE },
+
+		{ KeyCode::D0, 0x30 },
+		{ KeyCode::D1, 0x31 },
+		{ KeyCode::D2, 0x32 },
+		{ KeyCode::D3, 0x33 },
+		{ KeyCode::D4, 0x34 },
+		{ KeyCode::D5, 0x35 },
+		{ KeyCode::D6, 0x36 },
+		{ KeyCode::D7, 0x37 },
+		{ KeyCode::D8, 0x38 },
+		{ KeyCode::D9, 0x39 },
+
+		{ KeyCode::Mouse1, VK_LBUTTON },
+		{ KeyCode::Mouse2, VK_RBUTTON },
+		{ KeyCode::Mouse3, VK_MBUTTON },
+
+		{ KeyCode::Up,		VK_UP },
+		{ KeyCode::Down,	VK_DOWN },
+		{ KeyCode::Left,	VK_LEFT },
+		{ KeyCode::Right,	VK_RIGHT },
+
+		{ KeyCode::KP0, 0x60 },
+		{ KeyCode::KP1, 0x61 },
+		{ KeyCode::KP2, 0x62 },
+		{ KeyCode::KP3, 0x63 },
+		{ KeyCode::KP4, 0x64 },
+		{ KeyCode::KP5, 0x65 },
+		{ KeyCode::KP6, 0x66 },
+		{ KeyCode::KP7, 0x67 },
+		{ KeyCode::KP8, 0x68 },
+		{ KeyCode::KP9, 0x69 }
+	};
+
+	Map<KeyCode, WPARAM> WindowsWindow::m_WinKeyCodeMap = []()
+	{
+		std::unordered_map<KeyCode, WPARAM> codes;
+		for (auto pair : m_KeyCodeConversion)
+		{
+			codes[pair.first] = pair.second;
+		}
+		return codes;
+	}();
+
+	Map<WPARAM, KeyCode> WindowsWindow::m_EngineKeyCodeMap = []()
+	{
+		std::unordered_map<WPARAM, KeyCode> codes;
+		for (auto pair : m_KeyCodeConversion)
+		{
+			codes[pair.second] = pair.first;
+		}
+		return codes;
+	}();
+
+	WPARAM WindowsWindow::GetWinKeyCode(KeyCode code)
+	{
+		return m_WinKeyCodeMap[code];
+	}
+
+	KeyCode WindowsWindow::GetEngineKeyCode(WPARAM winCode)
+	{
+		return m_EngineKeyCodeMap[winCode];
+	}
+
+	KeyFlags WindowsWindow::GetKeyFlags(LPARAM lParam)
+	{
+		KeyFlags flags;
+		flags.Extended = lParam & (1 << 24);
+
+		return flags;
+	}
+
+	ModifierKeys WindowsWindow::GetModKeys(WPARAM wParam)
+	{
+		int fwKeys = GET_KEYSTATE_WPARAM(wParam);
+
+		ModifierKeys m;
+		m.Ctrl = fwKeys & MK_CONTROL;
+		m.Shift = fwKeys & MK_SHIFT;
+		m.Mouse1 = fwKeys & MK_LBUTTON;
+		m.Mouse2 = fwKeys & MK_RBUTTON;
+		m.Mouse3 = fwKeys & MK_MBUTTON;
+
+		return m;
 	}
 
 }

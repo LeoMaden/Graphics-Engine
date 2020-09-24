@@ -27,4 +27,7 @@ namespace Engine {
 	template<typename TKey, typename TValue>
 	using Map = std::unordered_map<TKey, TValue>;
 
+	template<typename T1, typename T2>
+	using Pair = std::pair<T1, T2>;
+
 }
