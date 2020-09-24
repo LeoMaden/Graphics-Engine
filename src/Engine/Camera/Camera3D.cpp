@@ -1,3 +1,4 @@
+#include "Pch.h"
 #include "Camera3D.h"
 
 #include "Log.h"

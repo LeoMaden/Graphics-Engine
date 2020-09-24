@@ -1,3 +1,4 @@
+#include "Pch.h"
 #include "VertexArray.h"
 #include "Log.h"
 

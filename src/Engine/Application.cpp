@@ -1,3 +1,4 @@
+#include "Pch.h"
 #include "Application.h"
 #include "Log.h"
 #include "Rendering/RenderCommand.h"

@@ -1,3 +1,4 @@
+#include "Pch.h"
 #include "IndexBuffer.h"
 
 #include "Log.h"

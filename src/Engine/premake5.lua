@@ -25,5 +25,8 @@ project "Engine"
     defines {
     }
 
+    pchheader "Pch.h"
+    pchsource "./Pch.cpp"
+
     targetdir ("../../Bin/" .. outputdir .. "Engine")
     objdir ("../../Build/" .. outputdir .. "Engine")

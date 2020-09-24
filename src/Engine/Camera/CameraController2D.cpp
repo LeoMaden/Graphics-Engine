@@ -1,3 +1,4 @@
+#include "Pch.h"
 #include "CameraController2D.h"
 
 namespace Engine {

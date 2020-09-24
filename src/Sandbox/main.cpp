@@ -8,14 +8,15 @@
 int main()
 {
 	//Sandbox2D* app = new Sandbox2D();
-	Sandbox3D* app = new Sandbox3D();
+	//Sandbox3D* app = new Sandbox3D();
+	//app->Run();
+	//delete app;
 
-	app->Run();
 
-	delete app;
 
-	LOG_DEBUG("Main end");
-	std::cin.get();
+
+
+
 	return 0;
 }
 
