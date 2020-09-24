@@ -3,7 +3,7 @@
 #include "Math/Math.h"
 #include "Events/Event.h"
 
-#include "Platform/OpenGL/OpenGLContextProperties.h"
+#include "Platform/OpenGL/OpenGLContext.h"
 
 namespace Engine {
 
@@ -32,7 +32,8 @@ namespace Engine {
 		using CallbackFunc = std::function<void(Event&)>;
 		virtual void SetCallback(CallbackFunc func) = 0;
 
-		virtual void CreateOpenGLContext(OpenGLContextProperties props) = 0;
+		virtual OpenGLContext CreateOpenGLContext(OpenGLContextProperties props) = 0;
+		virtual void DeleteOpenGLContext(OpenGLContext context) = 0;
 
 		virtual void SwapBuffers() const = 0;
 		virtual void PollEvents() const = 0;

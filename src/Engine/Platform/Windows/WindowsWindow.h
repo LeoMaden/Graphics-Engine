@@ -5,8 +5,6 @@
 #include "Events/MouseEvents.h"
 #include "Events/WindowEvents.h"
 
-#include "Platform/OpenGL/OpenGLContextProperties.h"
-
 #include <Windows.h>
 #include <windowsx.h>
 
@@ -18,7 +16,8 @@ namespace Engine {
 		WindowsWindow(Window::Properties props);
 		~WindowsWindow();
 
-		virtual void CreateOpenGLContext(OpenGLContextProperties props) override;
+		virtual OpenGLContext CreateOpenGLContext(OpenGLContextProperties props) override;
+		virtual void DeleteOpenGLContext(OpenGLContext context) override;
 
 		virtual void SetCallback(CallbackFunc func) override { m_Callback = func; }
 

@@ -89,7 +89,7 @@ namespace Engine {
 		Close();
 	}
 
-	void WindowsWindow::CreateOpenGLContext(OpenGLContextProperties props)
+	OpenGLContext WindowsWindow::CreateOpenGLContext(OpenGLContextProperties props)
 	{
 		// Fake WindowProc.
 		auto fakeWndProc = [](HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -220,6 +220,20 @@ namespace Engine {
 		LOG_INFO("\tRenderer {}", glGetString(GL_RENDERER));
 
 		glViewport(0, 0, props.ViewportSize.x, props.ViewportSize.y);
+
+		return OpenGLContext(realRC, props);
+	}
+
+	void WindowsWindow::DeleteOpenGLContext(OpenGLContext context)
+	{
+		HGLRC rc = (HGLRC)context.GetHandle();
+
+		if (wglGetCurrentContext() == rc)
+		{
+			wglMakeCurrent(m_DeviceContextHandle, NULL);
+		}
+
+		wglDeleteContext(rc);
 	}
 
 	void WindowsWindow::SwapBuffers() const

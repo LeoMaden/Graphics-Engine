@@ -16,7 +16,7 @@ int main()
 	Log::Init();
 
 	Window* window = Window::Create(Window::Properties());
-	window->CreateOpenGLContext(OpenGLContextProperties());
+	OpenGLContext glContext = window->CreateOpenGLContext(OpenGLContextProperties());
 	window->SetCallback(&EventHandler);
 
 	Vector2 size = window->GetClientSize();
@@ -30,6 +30,8 @@ int main()
 		window->PollEvents();
 		window->SwapBuffers();
 	}
+
+	window->DeleteOpenGLContext(glContext);
 
 	delete window;
 
