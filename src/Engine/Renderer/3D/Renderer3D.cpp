@@ -1,17 +1,17 @@
 #include "Pch.h"
 #include "Renderer3D.h"
-#include "RenderCommand.h"
-#include "Batch.h"
+#include "Renderer/RenderCommand.h"
+#include "Renderer/2D/Batch.h"
 
-#include "OpenGL/VertexArray.h"
-#include "OpenGL/Shader.h"
+#include "Platform/OpenGL/Buffer/VertexArray.h"
+#include "Platform/OpenGL/Shader.h"
 
 #include <vector>
 #include <sstream>
 #include <glm/gtc/constants.hpp>
 
 #include "Log.h"
-#include "OpenGL\Texture2D.h"
+#include "Platform/OpenGL/Texture/Texture2D.h"
 
 namespace Engine {
 

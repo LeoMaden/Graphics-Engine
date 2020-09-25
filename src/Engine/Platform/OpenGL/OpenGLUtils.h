@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-#include "Rendering/RenderUtils.h"
+#include "Renderer/RenderUtils.h"
 
 namespace Engine {
 

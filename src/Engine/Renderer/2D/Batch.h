@@ -1,8 +1,8 @@
 #pragma once
 #include <cstdint>
 
-#include "OpenGL/Shader.h"
-#include "OpenGL/VertexArray.h"
+#include "Platform/OpenGL/Shader.h"
+#include "Platform/OpenGL/Buffer/VertexArray.h"
 
 typedef unsigned char byte;
 

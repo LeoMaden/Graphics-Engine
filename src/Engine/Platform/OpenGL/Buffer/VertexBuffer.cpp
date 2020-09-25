@@ -1,6 +1,6 @@
 #include "Pch.h"
 #include "VertexBuffer.h"
-#include "OpenGL/OpenGLUtils.h"
+#include "Platform/OpenGL/OpenGLUtils.h"
 
 #include "Log.h"
 

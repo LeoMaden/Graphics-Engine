@@ -3,7 +3,7 @@
 #include "CameraController.h"
 
 #include "Events/WindowEvents.h"
-#include "Events/KeyCodes.h"
+#include "Core/KeyCodes.h"
 #include "Events/MouseEvents.h"
 
 #include <functional>

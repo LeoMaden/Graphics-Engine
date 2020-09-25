@@ -2,7 +2,7 @@
 #include "VertexArray.h"
 #include "Log.h"
 
-#include "OpenGLUtils.h"
+#include "Platform/OpenGL/OpenGLUtils.h"
 
 namespace Engine {
 

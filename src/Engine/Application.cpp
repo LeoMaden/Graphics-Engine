@@ -1,9 +1,9 @@
 #include "Pch.h"
 #include "Application.h"
 #include "Log.h"
-#include "Rendering/RenderCommand.h"
+#include "Renderer/RenderCommand.h"
 
-#include "Rendering/Renderer2D.h"
+#include "Renderer/2D/Renderer2D.h"
 
 namespace Engine {
 

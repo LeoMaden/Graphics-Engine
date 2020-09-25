@@ -5,7 +5,7 @@
 #include <glm/glm.hpp>
 
 #include "Scene/Scene.h"
-#include "OpenGL/Shader.h"
+#include "Platform/OpenGL/Shader.h"
 
 namespace Engine {
 

@@ -1,7 +1,7 @@
 #pragma once
-#include "OpenGL/Shader.h"
-#include "OpenGL/VertexArray.h"
-#include "OpenGL/Texture2DBase.h"
+#include "Platform/OpenGL/Shader.h"
+#include "Platform/OpenGL/Buffer/VertexArray.h"
+#include "Platform/OpenGL/Texture/Texture2DBase.h"
 
 #include "Camera/Camera.h"
 

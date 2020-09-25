@@ -1,8 +1,8 @@
 #include "Pch.h"
 #include "Renderer2D.h"
 #include "Log.h"
-#include "RenderUtils.h"
-#include "RenderCommand.h"
+#include "Renderer/RenderUtils.h"
+#include "Renderer/RenderCommand.h"
 #include "Batch.h"
 
 #include <glad/glad.h>
