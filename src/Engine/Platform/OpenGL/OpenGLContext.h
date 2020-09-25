@@ -7,14 +7,14 @@ namespace Engine {
 	class OpenGLContext : public RenderContext
 	{
 	public:
-		OpenGLContext(void* handle, const OpenGLContextProperties& props)
-			:m_Handle(handle), m_Properties(props)
-		{
-		}
+		OpenGLContext(void* handle, const OpenGLContextProperties& props);
 
 		virtual RenderingApi GetRenderingApi() const override { return RenderingApi::OpenGL; }
 		virtual void* GetHandle() const override { return m_Handle; }
 		virtual const OpenGLContextProperties& GetProperties() const override { return m_Properties; }
+
+	private:
+		void CreateDebugCallback() const;
 
 	private:
 		void* m_Handle;
