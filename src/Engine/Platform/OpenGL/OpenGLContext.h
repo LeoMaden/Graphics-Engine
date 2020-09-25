@@ -1,9 +1,10 @@
 #pragma once
 #include "OpenGLContextProperties.h"
+#include "Core/RenderContext.h"
 
 namespace Engine {
 
-	class OpenGLContext
+	class OpenGLContext : public RenderContext
 	{
 	public:
 		OpenGLContext(void* handle, const OpenGLContextProperties& props)
@@ -11,8 +12,9 @@ namespace Engine {
 		{
 		}
 
-		void* GetHandle() const { return m_Handle; }
-		const OpenGLContextProperties& GetProperties() const { return m_Properties; }
+		virtual RenderingApi GetRenderingApi() const override { return RenderingApi::OpenGL; }
+		virtual void* GetHandle() const override { return m_Handle; }
+		virtual const OpenGLContextProperties& GetProperties() const override { return m_Properties; }
 
 	private:
 		void* m_Handle;

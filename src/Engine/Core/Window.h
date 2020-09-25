@@ -4,6 +4,7 @@
 #include "Events/Event.h"
 
 #include "Platform/OpenGL/OpenGLContext.h"
+#include "RenderContext.h"
 
 namespace Engine {
 
@@ -32,8 +33,8 @@ namespace Engine {
 		using CallbackFunc = std::function<void(Event&)>;
 		virtual void SetCallback(CallbackFunc func) = 0;
 
-		virtual OpenGLContext CreateOpenGLContext(OpenGLContextProperties props) = 0;
-		virtual void DeleteOpenGLContext(OpenGLContext context) = 0;
+		virtual RenderContext* CreateRenderContext(const RenderContextProperties& props) = 0;
+		virtual void DeleteRenderContext(RenderContext* context) = 0;
 
 		virtual void SwapBuffers() const = 0;
 		virtual void PollEvents() const = 0;

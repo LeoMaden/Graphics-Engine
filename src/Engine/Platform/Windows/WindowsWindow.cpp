@@ -39,6 +39,7 @@ namespace Engine {
 		return DefWindowProc(hwnd, uMsg, wParam, lParam);
 	}
 
+
 	WindowsWindow::WindowsWindow(Window::Properties props)
 	{
 		// Register the window class.
@@ -86,155 +87,46 @@ namespace Engine {
 
 	WindowsWindow::~WindowsWindow()
 	{
-		Close();
 	}
 
-	OpenGLContext WindowsWindow::CreateOpenGLContext(OpenGLContextProperties props)
+
+	RenderContext* WindowsWindow::CreateRenderContext(const RenderContextProperties& props)
 	{
-		// Fake WindowProc.
-		auto fakeWndProc = [](HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-			switch (uMsg)
+		RenderingApi api = props.GetRenderingApi();
+		switch (api)
+		{
+			case RenderingApi::OpenGL:
 			{
-			case WM_CLOSE:			DestroyWindow(hwnd);		return (LRESULT)0;
+				const OpenGLContextProperties & glProps = *(OpenGLContextProperties*)&props;
+				return CreateOpenGLContext(glProps);
 			}
-			return DefWindowProc(hwnd, uMsg, wParam, lParam);
-		};
-
-		// Create fake window class.
-		WNDCLASS fakeWC = { };
-
-		fakeWC.lpfnWndProc = fakeWndProc;
-		fakeWC.hInstance = NULL;
-		fakeWC.lpszClassName = L"Fake Window";
-		fakeWC.style = CS_OWNDC;				// Unique context for each window in class
-
-		RegisterClass(&fakeWC);
-
-		// Create fake window.
-		HWND fakeWnd = CreateWindowEx(
-			0,					  // Optional window styles.
-			fakeWC.lpszClassName,	// Window class
-			L"Fake Window",		 // Window text
-			WS_OVERLAPPEDWINDOW,	// Window style
-			0, 0, 1, 1,	 // Size and position
-			NULL, NULL,	 // Parent window, Menu
-			NULL, NULL	  // Instance handle, Additional application data
-		);
-
-		// Get fake device context.
-		HDC fakeDC = GetDC(fakeWnd);
-
-		PIXELFORMATDESCRIPTOR fakePfd =
-		{
-			sizeof(PIXELFORMATDESCRIPTOR), 1,
-			PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,	//Flags
-			PFD_TYPE_RGBA,		// The kind of framebuffer. RGBA or palette.
-			32,					// Colordepth of the framebuffer.
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			24,					// Number of bits for the depthbuffer
-			8,					// Number of bits for the stencilbuffer
-			0,					// Number of Aux buffers in the framebuffer.
-			PFD_MAIN_PLANE, 0, 0, 0, 0
-		};
-
-		int fakeFormat = ChoosePixelFormat(fakeDC, &fakePfd);
-		ASSERT(fakeFormat, "Failed to choose pixel format");
-
-		BOOL ok = SetPixelFormat(fakeDC, fakeFormat, &fakePfd);
-		ASSERT(ok, "Failed to set pixel format");
-
-		// Create fake OpenGL context.
-		HGLRC fakeRC = wglCreateContext(fakeDC);
-		ASSERT(fakeRC, "Failed to initialise OpenGL");
-
-		ok = wglMakeCurrent(fakeDC, fakeRC);
-		ASSERT(ok, "Failed to initialise OpenGL");
-
-		gladLoadGL();
-
-		// Load create real OpenGL context.
-		PFNWGLCHOOSEPIXELFORMATARBPROC wglChoosePixelFormatARB = nullptr;
-		wglChoosePixelFormatARB = (PFNWGLCHOOSEPIXELFORMATARBPROC)wglGetProcAddress("wglChoosePixelFormatARB");
-		ASSERT(wglChoosePixelFormatARB, "Failed to get ARB Pixel Format extension");
-
-		PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB = nullptr;
-		wglCreateContextAttribsARB = (PFNWGLCREATECONTEXTATTRIBSARBPROC)wglGetProcAddress("wglCreateContextAttribsARB");
-		ASSERT(wglCreateContextAttribsARB, "Failed to get ARB Context Attribs extension");
-
-		HDC realDC = m_DeviceContextHandle;
-		const int pixelAttribs[] = {
-			WGL_DRAW_TO_WINDOW_ARB, GL_TRUE,
-			WGL_SUPPORT_OPENGL_ARB, GL_TRUE,
-			WGL_DOUBLE_BUFFER_ARB, GL_TRUE,
-			WGL_PIXEL_TYPE_ARB, WGL_TYPE_RGBA_ARB,
-			WGL_ACCELERATION_ARB, WGL_FULL_ACCELERATION_ARB,
-			WGL_COLOR_BITS_ARB, 32,
-			WGL_ALPHA_BITS_ARB, 8,
-			WGL_DEPTH_BITS_ARB, 24,
-			WGL_STENCIL_BITS_ARB, 8,
-			0
-		};
-
-		int pixelFormatID; UINT numFormats;
-		ok = wglChoosePixelFormatARB(realDC, pixelAttribs, NULL, 1, &pixelFormatID, &numFormats);
-		ASSERT(ok && numFormats, "Failed to choose ARB pixel format");
-
-		PIXELFORMATDESCRIPTOR pfd;
-		DescribePixelFormat(realDC, pixelFormatID, sizeof(pfd), &pfd);
-		SetPixelFormat(realDC, pixelFormatID, &pfd);
-
-		List<int> contextAttribs = {
-			WGL_CONTEXT_MAJOR_VERSION_ARB, props.VersionMajor,
-			WGL_CONTEXT_MINOR_VERSION_ARB, props.VersionMinor
-		};
-
-		if (props.CoreProfile == true)
-		{
-			contextAttribs.push_back(WGL_CONTEXT_PROFILE_MASK_ARB);
-			contextAttribs.push_back(WGL_CONTEXT_CORE_PROFILE_BIT_ARB);
+			default:
+			{
+				ASSERT(false, "Rendering API not supported");
+				return nullptr;
+			}
 		}
-
-		if (props.DebugContext == true)
-		{
-			contextAttribs.push_back(WGL_CONTEXT_FLAGS_ARB);
-			contextAttribs.push_back(WGL_CONTEXT_DEBUG_BIT_ARB);
-		}
-
-		contextAttribs.push_back(0);
-
-		HGLRC realRC = wglCreateContextAttribsARB(realDC, 0, contextAttribs.data());
-		ASSERT(realRC, "Failed to create ARB context attribs");
-
-		// Delete fake context and window.
-		wglMakeCurrent(NULL, NULL);
-		wglDeleteContext(fakeRC);
-		ReleaseDC(fakeWnd, fakeDC);
-		DestroyWindow(fakeWnd);
-
-		ASSERT(wglMakeCurrent(realDC, realRC), "Could not make OpenGL context current");
-
-		gladLoadGL();
-
-		LOG_INFO("Loaded Open GL version {}", glGetString(GL_VERSION));
-		LOG_INFO("\tVendor {}", glGetString(GL_VENDOR));
-		LOG_INFO("\tRenderer {}", glGetString(GL_RENDERER));
-
-		glViewport(0, 0, props.ViewportSize.x, props.ViewportSize.y);
-
-		return OpenGLContext(realRC, props);
 	}
 
-	void WindowsWindow::DeleteOpenGLContext(OpenGLContext context)
+	void WindowsWindow::DeleteRenderContext(RenderContext* context)
 	{
-		HGLRC rc = (HGLRC)context.GetHandle();
-
-		if (wglGetCurrentContext() == rc)
+		RenderingApi api = context->GetRenderingApi();
+		switch (api)
 		{
-			wglMakeCurrent(m_DeviceContextHandle, NULL);
+			case RenderingApi::OpenGL:
+			{
+				OpenGLContext* glContext = (OpenGLContext*)context;
+				DeleteOpenGLContext(glContext);
+				break;
+			}
+			default:
+			{
+				ASSERT(false, "Rendering API not supported");
+				break;
+			}
 		}
-
-		wglDeleteContext(rc);
 	}
+
 
 	void WindowsWindow::SwapBuffers() const
 	{
@@ -268,6 +160,7 @@ namespace Engine {
 
 		return Vector2(clientRect.right, clientRect.bottom);
 	}
+
 
 	void WindowsWindow::Close()
 	{
@@ -455,6 +348,154 @@ namespace Engine {
 		m.Mouse3 = fwKeys & MK_MBUTTON;
 
 		return m;
+	}
+
+
+	OpenGLContext* WindowsWindow::CreateOpenGLContext(const OpenGLContextProperties& props) const
+	{
+		// Fake WindowProc.
+		auto fakeWndProc = [](HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+			switch (uMsg)
+			{
+			case WM_CLOSE:			DestroyWindow(hwnd);		return (LRESULT)0;
+			}
+			return DefWindowProc(hwnd, uMsg, wParam, lParam);
+		};
+
+		// Create fake window class.
+		WNDCLASS fakeWC = { };
+
+		fakeWC.lpfnWndProc = fakeWndProc;
+		fakeWC.hInstance = NULL;
+		fakeWC.lpszClassName = L"Fake Window";
+		fakeWC.style = CS_OWNDC;				// Unique context for each window in class
+
+		RegisterClass(&fakeWC);
+
+		// Create fake window.
+		HWND fakeWnd = CreateWindowEx(
+			0,					  // Optional window styles.
+			fakeWC.lpszClassName,	// Window class
+			L"Fake Window",		 // Window text
+			WS_OVERLAPPEDWINDOW,	// Window style
+			0, 0, 1, 1,	 // Size and position
+			NULL, NULL,	 // Parent window, Menu
+			NULL, NULL	  // Instance handle, Additional application data
+		);
+
+		// Get fake device context.
+		HDC fakeDC = GetDC(fakeWnd);
+
+		PIXELFORMATDESCRIPTOR fakePfd =
+		{
+			sizeof(PIXELFORMATDESCRIPTOR), 1,
+			PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,	//Flags
+			PFD_TYPE_RGBA,		// The kind of framebuffer. RGBA or palette.
+			32,					// Colordepth of the framebuffer.
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			24,					// Number of bits for the depthbuffer
+			8,					// Number of bits for the stencilbuffer
+			0,					// Number of Aux buffers in the framebuffer.
+			PFD_MAIN_PLANE, 0, 0, 0, 0
+		};
+
+		int fakeFormat = ChoosePixelFormat(fakeDC, &fakePfd);
+		ASSERT(fakeFormat, "Failed to choose pixel format");
+
+		BOOL ok = SetPixelFormat(fakeDC, fakeFormat, &fakePfd);
+		ASSERT(ok, "Failed to set pixel format");
+
+		// Create fake OpenGL context.
+		HGLRC fakeRC = wglCreateContext(fakeDC);
+		ASSERT(fakeRC, "Failed to initialise OpenGL");
+
+		ok = wglMakeCurrent(fakeDC, fakeRC);
+		ASSERT(ok, "Failed to initialise OpenGL");
+
+		gladLoadGL();
+
+		// Load create real OpenGL context.
+		PFNWGLCHOOSEPIXELFORMATARBPROC wglChoosePixelFormatARB = nullptr;
+		wglChoosePixelFormatARB = (PFNWGLCHOOSEPIXELFORMATARBPROC)wglGetProcAddress("wglChoosePixelFormatARB");
+		ASSERT(wglChoosePixelFormatARB, "Failed to get ARB Pixel Format extension");
+
+		PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB = nullptr;
+		wglCreateContextAttribsARB = (PFNWGLCREATECONTEXTATTRIBSARBPROC)wglGetProcAddress("wglCreateContextAttribsARB");
+		ASSERT(wglCreateContextAttribsARB, "Failed to get ARB Context Attribs extension");
+
+		HDC realDC = m_DeviceContextHandle;
+		const int pixelAttribs[] = {
+			WGL_DRAW_TO_WINDOW_ARB, GL_TRUE,
+			WGL_SUPPORT_OPENGL_ARB, GL_TRUE,
+			WGL_DOUBLE_BUFFER_ARB, GL_TRUE,
+			WGL_PIXEL_TYPE_ARB, WGL_TYPE_RGBA_ARB,
+			WGL_ACCELERATION_ARB, WGL_FULL_ACCELERATION_ARB,
+			WGL_COLOR_BITS_ARB, 32,
+			WGL_ALPHA_BITS_ARB, 8,
+			WGL_DEPTH_BITS_ARB, 24,
+			WGL_STENCIL_BITS_ARB, 8,
+			0
+		};
+
+		int pixelFormatID; UINT numFormats;
+		ok = wglChoosePixelFormatARB(realDC, pixelAttribs, NULL, 1, &pixelFormatID, &numFormats);
+		ASSERT(ok && numFormats, "Failed to choose ARB pixel format");
+
+		PIXELFORMATDESCRIPTOR pfd;
+		DescribePixelFormat(realDC, pixelFormatID, sizeof(pfd), &pfd);
+		SetPixelFormat(realDC, pixelFormatID, &pfd);
+
+		List<int> contextAttribs = {
+			WGL_CONTEXT_MAJOR_VERSION_ARB, props.VersionMajor,
+			WGL_CONTEXT_MINOR_VERSION_ARB, props.VersionMinor
+		};
+
+		if (props.CoreProfile == true)
+		{
+			contextAttribs.push_back(WGL_CONTEXT_PROFILE_MASK_ARB);
+			contextAttribs.push_back(WGL_CONTEXT_CORE_PROFILE_BIT_ARB);
+		}
+
+		if (props.DebugContext == true)
+		{
+			contextAttribs.push_back(WGL_CONTEXT_FLAGS_ARB);
+			contextAttribs.push_back(WGL_CONTEXT_DEBUG_BIT_ARB);
+		}
+
+		contextAttribs.push_back(0);
+
+		HGLRC realRC = wglCreateContextAttribsARB(realDC, 0, contextAttribs.data());
+		ASSERT(realRC, "Failed to create ARB context attribs");
+
+		// Delete fake context and window.
+		wglMakeCurrent(NULL, NULL);
+		wglDeleteContext(fakeRC);
+		ReleaseDC(fakeWnd, fakeDC);
+		DestroyWindow(fakeWnd);
+
+		ASSERT(wglMakeCurrent(realDC, realRC), "Could not make OpenGL context current");
+
+		gladLoadGL();
+
+		LOG_INFO("Loaded Open GL version {}", glGetString(GL_VERSION));
+		LOG_INFO("\tVendor {}", glGetString(GL_VENDOR));
+		LOG_INFO("\tRenderer {}", glGetString(GL_RENDERER));
+
+		glViewport(0, 0, props.ViewportSize.x, props.ViewportSize.y);
+
+		return new OpenGLContext(realRC, props);
+	}
+
+	void WindowsWindow::DeleteOpenGLContext(OpenGLContext* context) const
+	{
+		HGLRC rc = (HGLRC)context->GetHandle();
+
+		if (wglGetCurrentContext() == rc)
+		{
+			wglMakeCurrent(m_DeviceContextHandle, NULL);
+		}
+
+		wglDeleteContext(rc);
 	}
 
 }

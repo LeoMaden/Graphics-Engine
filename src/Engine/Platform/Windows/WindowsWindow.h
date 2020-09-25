@@ -16,8 +16,8 @@ namespace Engine {
 		WindowsWindow(Window::Properties props);
 		~WindowsWindow();
 
-		virtual OpenGLContext CreateOpenGLContext(OpenGLContextProperties props) override;
-		virtual void DeleteOpenGLContext(OpenGLContext context) override;
+		virtual RenderContext* CreateRenderContext(const RenderContextProperties& props) override;
+		virtual void DeleteRenderContext(RenderContext* context) override;
 
 		virtual void SetCallback(CallbackFunc func) override { m_Callback = func; }
 
@@ -54,6 +54,11 @@ namespace Engine {
 		static KeyCode GetEngineKeyCode(WPARAM winCode);
 		static KeyFlags GetKeyFlags(LPARAM lParam);
 		static ModifierKeys GetModKeys(WPARAM wParam);
+
+	// Rendering API specific context creation.
+	private:
+		OpenGLContext* CreateOpenGLContext(const OpenGLContextProperties& props) const;
+		void DeleteOpenGLContext(OpenGLContext* context) const;
 
 	private:
 		HWND m_WindowHandle;	// Handle to this window.

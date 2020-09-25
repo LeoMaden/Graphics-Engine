@@ -7,7 +7,7 @@
 
 void EventHandler(Engine::Event& e)
 {
-	LOG_TRACE("Event!");
+	//LOG_TRACE("Event!");
 }
 
 int main()
@@ -16,7 +16,12 @@ int main()
 	Log::Init();
 
 	Window* window = Window::Create(Window::Properties());
-	OpenGLContext glContext = window->CreateOpenGLContext(OpenGLContextProperties());
+
+	OpenGLContextProperties glProps;
+	glProps.DebugContext = true;
+	glProps.ViewportSize = { 800, 600 };
+	RenderContext* glContext = window->CreateRenderContext(glProps);
+
 	window->SetCallback(&EventHandler);
 
 	Vector2 size = window->GetClientSize();
@@ -31,10 +36,9 @@ int main()
 		window->SwapBuffers();
 	}
 
-	window->DeleteOpenGLContext(glContext);
+	window->DeleteRenderContext(glContext);
 
 	delete window;
-
 	return 0;
 }
 
