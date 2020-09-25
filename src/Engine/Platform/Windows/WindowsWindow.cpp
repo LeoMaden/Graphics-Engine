@@ -161,6 +161,27 @@ namespace Engine {
 		return Vector2(clientRect.right, clientRect.bottom);
 	}
 
+	KeyState WindowsWindow::GetKeyState(KeyCode key) const
+	{
+		WPARAM winCode = GetWinKeyCode(key);
+		short winState = ::GetKeyState(winCode);
+
+		KeyState state;
+		state.IsDown = winState & (1 << 15);
+		state.IsToggled = winState & (1);
+
+		return state;
+	}
+
+	Vector2 WindowsWindow::GetMousePosition() const
+	{
+		POINT point;
+		ASSERT(GetCursorPos(&point), "Could not retrieve cursor position");
+		ScreenToClient(m_WindowHandle, &point);
+
+		return Vector2(point.x, point.y);
+	}
+
 
 	void WindowsWindow::Close()
 	{

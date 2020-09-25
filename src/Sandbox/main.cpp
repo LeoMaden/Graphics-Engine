@@ -1,5 +1,6 @@
 #include "Core/Window.h"
 #include "Pch.h"
+#include "Core/Input.h"
 
 #include "Platform/OpenGL/OpenGLContextProperties.h"
 
@@ -24,8 +25,7 @@ int main()
 
 	window->SetCallback(&EventHandler);
 
-	Vector2 size = window->GetClientSize();
-	LOG_WARN("Size: {}, {}", size.x, size.y);
+	Input::SetProvider(window);
 
 	while (window->IsOpen())
 	{

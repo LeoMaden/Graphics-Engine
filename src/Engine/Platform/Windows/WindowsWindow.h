@@ -30,6 +30,11 @@ namespace Engine {
 		virtual bool IsOpen() const override { return m_IsOpen; }
 		virtual Vector2 GetClientSize() const override;
 
+	// InputProvidor functions inherited from Window.
+	public:
+		virtual KeyState GetKeyState(KeyCode key) const override;
+		virtual Vector2 GetMousePosition() const override;
+
 	// Window proc handler functions.
 	private:
 		friend LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);

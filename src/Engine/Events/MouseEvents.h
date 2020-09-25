@@ -1,6 +1,6 @@
 #pragma once
 #include "Event.h"
-#include "KeyCodes.h"
+#include "Core/KeyCodes.h"
 
 #include <glm/glm.hpp>
 

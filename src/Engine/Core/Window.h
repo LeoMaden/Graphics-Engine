@@ -2,13 +2,14 @@
 #include "Pch.h"
 #include "Math/Math.h"
 #include "Events/Event.h"
+#include "Core/InputProvider.h"
 
 #include "Platform/OpenGL/OpenGLContext.h"
 #include "RenderContext.h"
 
 namespace Engine {
 
-	class Window 
+	class Window : public InputProvider
 	{
 	public:
 		struct Properties
