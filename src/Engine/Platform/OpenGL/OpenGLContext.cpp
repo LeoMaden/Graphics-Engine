@@ -5,7 +5,7 @@
 
 namespace Engine {
 
-	OpenGLContext::OpenGLContext(HGLRC handle, const OpenGLContextProperties& props)
+	OpenGLContext::OpenGLContext(void* handle, const OpenGLContextProperties& props)
 		:m_Handle(handle), m_Properties(props)
 	{
 		if (props.DebugContext == true)
