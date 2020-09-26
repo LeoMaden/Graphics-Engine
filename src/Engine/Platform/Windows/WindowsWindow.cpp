@@ -1,5 +1,6 @@
 #include "Pch.h"
 #include "WindowsWindow.h"
+#include "Core/CurrentContext.h"
 
 #include <glad/glad.h>
 #include <GL/wglext.h>
@@ -93,19 +94,25 @@ namespace Engine {
 	RenderContext* WindowsWindow::CreateRenderContext(const RenderContextProperties& props)
 	{
 		RenderingApi api = props.GetRenderingApi();
+		RenderContext* context;
 		switch (api)
 		{
 			case RenderingApi::OpenGL:
 			{
 				const OpenGLContextProperties & glProps = *(OpenGLContextProperties*)&props;
-				return CreateOpenGLContext(glProps);
+				context = CreateOpenGLContext(glProps);
+				break;
 			}
 			default:
 			{
 				ASSERT(false, "Rendering API not supported");
-				return nullptr;
+				context = nullptr;
+				break;
 			}
 		}
+
+		CurrentContext::Set(context);
+		return context;
 	}
 
 	void WindowsWindow::DeleteRenderContext(RenderContext* context)
@@ -504,7 +511,7 @@ namespace Engine {
 
 		glViewport(0, 0, props.ViewportSize.x, props.ViewportSize.y);
 
-		return new OpenGLContext(realRC, props);
+		return new OpenGLContext(realRC, props, this);
 	}
 
 	void WindowsWindow::DeleteOpenGLContext(OpenGLContext* context) const

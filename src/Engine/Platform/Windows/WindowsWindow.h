@@ -5,6 +5,8 @@
 #include "Events/MouseEvents.h"
 #include "Events/WindowEvents.h"
 
+#include "Platform/OpenGL/OpenGLContext.h"
+
 #include <Windows.h>
 #include <windowsx.h>
 

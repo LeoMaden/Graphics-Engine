@@ -3,9 +3,7 @@
 #include "Math/Math.h"
 #include "Events/Event.h"
 #include "Core/InputProvider.h"
-
-#include "Platform/OpenGL/OpenGLContext.h"
-#include "RenderContext.h"
+#include "Core/RenderContext.h"
 
 namespace Engine {
 

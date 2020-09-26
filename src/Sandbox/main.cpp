@@ -1,6 +1,7 @@
 #include "Core/Window.h"
 #include "Pch.h"
 #include "Core/Input.h"
+#include "Core/CurrentContext.h"
 
 #include "Platform/OpenGL/OpenGLContextProperties.h"
 
@@ -21,11 +22,12 @@ int main()
 	OpenGLContextProperties glProps;
 	glProps.DebugContext = true;
 	glProps.ViewportSize = { 800, 600 };
-	RenderContext* glContext = window->CreateRenderContext(glProps);
+	window->CreateRenderContext(glProps);
 
 	window->SetCallback(&EventHandler);
 
 	Input::SetProvider(window);
+	CurrentContext::Get()->SetViewPort(ViewportProperties());
 
 	while (window->IsOpen())
 	{
@@ -36,7 +38,7 @@ int main()
 		window->SwapBuffers();
 	}
 
-	window->DeleteRenderContext(glContext);
+	window->DeleteRenderContext(CurrentContext::Get());
 
 	delete window;
 	return 0;

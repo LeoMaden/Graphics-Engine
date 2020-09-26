@@ -1,13 +1,11 @@
 #include "Pch.h"
 #include "OpenGLContext.h"
 
-#include "Core/Window.h"
-
 #include <glad/glad.h>
 
 namespace Engine {
 
-	OpenGLContext::OpenGLContext(void* handle, const OpenGLContextProperties& props, const Window* const parent)
+	OpenGLContext::OpenGLContext(void* handle, const OpenGLContextProperties& props, const Window* parent)
 		:m_Handle(handle), m_Properties(props), m_ParentWindow(parent)
 	{
 		if (props.DebugContext == true)
