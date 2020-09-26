@@ -41,7 +41,7 @@ namespace Engine {
 	}
 
 
-	WindowsWindow::WindowsWindow(Window::Properties props)
+	WindowsWindow::WindowsWindow(const WindowProperties& props)
 	{
 		// Register the window class.
 		WNDCLASS wc = { };

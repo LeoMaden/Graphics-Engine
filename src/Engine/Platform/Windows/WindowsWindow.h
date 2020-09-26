@@ -1,4 +1,5 @@
 #pragma once
+#include "Core/Core.h"
 #include "Core/Window.h"
 
 #include "Events/KeyEvents.h"
@@ -15,7 +16,7 @@ namespace Engine {
 	class WindowsWindow : public Window
 	{
 	public:
-		WindowsWindow(Window::Properties props);
+		WindowsWindow(const WindowProperties& props);
 		~WindowsWindow();
 
 		virtual RenderContext* CreateRenderContext(const RenderContextProperties& props) override;

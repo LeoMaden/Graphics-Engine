@@ -2,6 +2,7 @@
 #include "Pch.h"
 #include "Math/Math.h"
 #include "Events/Event.h"
+#include "Core/WindowProperties.h"
 #include "Core/InputProvider.h"
 #include "Core/RenderContext.h"
 
@@ -9,23 +10,9 @@ namespace Engine {
 
 	class Window : public InputProvider
 	{
-	public:
-		struct Properties
-		{
-			// Size of content area in pixels (width, height).
-			Vector2 Size = Vector2(1280, 720);	
-
-			// Position of centre of window in pixels.
-			Vector2 Position = Vector2();	
-
-			// The text displayed at the top of the window.
-			String Text = "New Window";				
-		};
-
-
 	// Static.
 	public:
-		static Window* Create(Properties props);
+		static Window* Create(const WindowProperties& props);
 
 	// Instance.
 	public:

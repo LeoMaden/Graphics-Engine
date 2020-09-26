@@ -5,7 +5,7 @@
 
 namespace Engine {
 
-	Window* Window::Create(Properties props)
+	Window* Window::Create(const WindowProperties& props)
 	{
 		return new WindowsWindow(props);
 	}

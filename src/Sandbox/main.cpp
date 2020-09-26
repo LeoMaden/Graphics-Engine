@@ -1,46 +1,43 @@
-#include "Core/Window.h"
-#include "Pch.h"
-#include "Core/Input.h"
+#include "Core/Application.h"
 #include "Core/CurrentContext.h"
-
 #include "Platform/OpenGL/OpenGLContextProperties.h"
 
 #include <glad/glad.h>
 
-void EventHandler(Engine::Event& e)
+class App : public Engine::Application
 {
-	//LOG_TRACE("Event!");
-}
+public:
+	App(const Engine::ApplicationProperties& props) 
+		: Application(props)
+	{
+	}
+
+protected:
+	virtual void OnUpdate(float ts) override
+	{
+		glClear(GL_COLOR_BUFFER_BIT);
+		glClearColor(1, 0, 0, 1);
+	}
+};
 
 int main()
 {
 	using namespace Engine;
 	Log::Init();
 
-	Window* window = Window::Create(Window::Properties());
-
 	OpenGLContextProperties glProps;
 	glProps.DebugContext = true;
 	glProps.ViewportSize = { 800, 600 };
-	window->CreateRenderContext(glProps);
 
-	window->SetCallback(&EventHandler);
+	ApplicationProperties appProps;
+	appProps.ContextProps = &glProps;
 
-	Input::SetProvider(window);
+	Application::Create<App>(appProps);
 	CurrentContext::Get()->SetViewPort(ViewportProperties());
+	Application::Start();
 
-	while (window->IsOpen())
-	{
-		glClear(GL_COLOR_BUFFER_BIT);
-		glClearColor(1, 0, 0, 1);
+	Application::Destroy();
 
-		window->PollEvents();
-		window->SwapBuffers();
-	}
-
-	window->DeleteRenderContext(CurrentContext::Get());
-
-	delete window;
 	return 0;
 }
 
