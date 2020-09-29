@@ -4,6 +4,7 @@
 
 #include "Renderer/RenderUtils.h"
 #include "BufferType.h"
+#include "..\..\..\rendering\VertexBuffer.h"
 
 namespace Engine {
 

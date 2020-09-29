@@ -16,6 +16,18 @@ namespace Engine {
 
 		virtual void SetViewPort(ViewportProperties props) const override;
 
+		virtual void SetVertexBuffer(VertexBuffer& buffer) override;
+		virtual VertexBuffer* GetVertexBuffer() override;
+
+		virtual void SetIndexBuffer(IndexBuffer& buffer) override;
+		virtual IndexBuffer* GetIndexBuffer() override;
+
+		virtual void SetPrimitiveTopology(PrimitiveTopology topology) override;
+		virtual PrimitiveTopology GetPrimitiveTopology() const override;
+
+		virtual void Draw(uint32_t count) const override;
+		virtual void DrawIndexed(uint32_t count) const override;
+
 	private:
 		void CreateDebugCallback() const;
 
@@ -23,6 +35,10 @@ namespace Engine {
 		void* m_Handle;
 		OpenGLContextProperties m_Properties;
 		const Window* m_ParentWindow;
+
+		VertexBuffer* m_VertexBuffer = nullptr;
+		IndexBuffer* m_IndexBuffer = nullptr;
+		PrimitiveTopology m_Primitive = PrimitiveTopology::TriangleList;
 	};
 
 }
